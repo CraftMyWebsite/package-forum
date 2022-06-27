@@ -1,6 +1,6 @@
 <?php
 
-namespace CMW\Models\Forums;
+namespace CMW\Model\Forums;
 
 use CMW\Entity\Forums\categoryEntity;
 use CMW\Entity\Forums\forumEntity;
@@ -229,7 +229,6 @@ class forumsModel extends manager
     }
 
     /*=> CONSTRUCTORS */
-
 
     public function createCategory($name, $description): ?categoryEntity
     {

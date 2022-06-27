@@ -4,7 +4,7 @@
 namespace CMW\Controller\Forums;
 
 use CMW\Controller\coreController;
-use CMW\Models\Forums\forumsModel;
+use CMW\Model\Forums\forumsModel;
 use CMW\Utils\Utils;
 
 /**
