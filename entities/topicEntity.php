@@ -2,6 +2,7 @@
 
 namespace CMW\Entity\Forums;
 
+use CMW\Entity\Users\userEntity;
 use CMW\Model\Users\usersModel;
 
 class topicEntity
@@ -11,9 +12,9 @@ class topicEntity
     private string $topicName;
     private string $topicContent;
     private forumEntity $topicForum;
-    private usersModel $topicUser;
+    private userEntity $topicUser;
 
-    public function __construct(int $id, string $name, string $content, forumEntity $forum, usersModel $user)
+    public function __construct(int $id, string $name, string $content, forumEntity $forum, userEntity $user)
     {
         $this->topicId = $id;
         $this->topicName = $name;
@@ -55,9 +56,9 @@ class topicEntity
     }
 
     /**
-     * @return \CMW\Model\Users\usersModel
+     * @return \CMW\Entity\Users\userEntity
      */
-    public function getUser(): usersModel
+    public function getUser(): userEntity
     {
         return $this->topicUser;
     }

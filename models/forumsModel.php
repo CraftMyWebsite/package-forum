@@ -18,6 +18,15 @@ use CMW\Model\Users\usersModel;
 class forumsModel extends manager
 {
 
+    private usersModel $userModel;
+
+    public function __construct()
+    {
+
+        $this->userModel = new usersModel();
+
+    }
+
     /*=> GETTERS */
 
     public function getCategoryById(int $id): ?categoryEntity
@@ -84,12 +93,10 @@ class forumsModel extends manager
 
         $res = $res->fetch();
 
-        $user = new usersModel($res["user_id"]);
-        $user->fetch($res["used_id"]);
-
+        $user = $this->userModel->getUserById($id);
         $forum = $this->getForumById($res["forum_id"]);
 
-        if (is_null($forum) || is_null($user->userPseudo)) {
+        if (is_null($forum) || is_null($user?->getUsername())) {
             return null;
         }
 
@@ -117,12 +124,10 @@ class forumsModel extends manager
 
         $res = $res->fetch();
 
-        $user = new usersModel($res["user_id"]);
-        $user->fetch($res["used_id"]);
-
+        $user = $this->userModel->getUserById($id);
         $topic = $this->getTopicById($res["forum_topic_id"]);
 
-        if (is_null($topic) || is_null($user->userPseudo)) {
+        if (is_null($topic) || is_null($user?->getUsername())) {
             return null;
         }
 
