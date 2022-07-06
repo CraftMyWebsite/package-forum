@@ -4,6 +4,7 @@
 namespace CMW\Controller\Forums;
 
 use CMW\Controller\coreController;
+use CMW\Controller\Users\usersController;
 use CMW\Model\Forums\forumsModel;
 use CMW\Utils\Utils;
 
@@ -26,21 +27,16 @@ class forumsController extends coreController
 
     public function adminAddCategoryView(): void
     {
-
-        $forum = new forumsModel();
-        view('forums', 'categories/addCategory.admin', ["forum" => $forum], 'admin');
+        view('forums', 'categories/addCategory.admin', [], 'admin');
     }
 
     public function adminListCategoryView(): void
     {
-
-        $forum = new forumsModel();
-        view('forums', 'categories/listCategory.admin', ["forum" => $forum], 'admin');
+        view('forums', 'categories/listCategory.admin', ["forum" => $this->forumsModel], 'admin');
     }
 
     public function adminAddCategoryPost(): void
     {
-
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
             echo -1;
             return;
@@ -71,4 +67,51 @@ class forumsController extends coreController
         die();
     }
 
+    public function adminListForumView(): void
+    {
+        view('forums', 'forums/listForum.admin', ["forum" => $this->forumsModel], 'admin');
+    }
+
+    public function publicBaseView(): void
+    {
+        $forum = $this->forumsModel;
+
+        view('forums', 'index', ["forum" => $forum], 'public');
+    }
+
+    public function publicForumView($forumSlug): void
+    {
+        $forum = $this->forumsModel->getForumBySlug($forumSlug);
+        $forumModel = $this->forumsModel;
+
+        view('forums', 'forum', ["forum" => $forum, "forumModel" => $forumModel], 'public');
+    }
+
+    public function publicTopicView($topicSlug): void
+    {
+        $topic = $this->forumsModel->getTopicBySlug($topicSlug);
+        $forumModel = $this->forumsModel;
+        view('forums', 'topic', ["topic" => $topic, "forumModel" => $forumModel], 'public');
+    }
+
+    public function publicTopicPost($topicSlug): void
+    {
+        usersController::isAdminLogged(); //TODO Need to "Is User Logged" && Permissions
+
+        $topic = $this->forumsModel->getTopicBySlug($topicSlug);
+        $forumModel = $this->forumsModel;
+
+        if(!$topic) {
+            return;
+        }
+
+        if(Utils::isValuesEmpty($_POST, "topicResponse")) {
+            return;
+        }
+
+        $content = filter_input(INPUT_POST, "topicResponse");
+
+        $forumModel->createResponse($content, $_SESSION["cmwUserId"], $topic->getId());
+        header("refresh: 0");
+    }
 }

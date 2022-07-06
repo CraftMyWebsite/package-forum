@@ -1,7 +1,7 @@
 <?php
 
-$title = FORUMS_CATEGORY_LIST_TITLE;
-$description = FORUMS_CATEGORY_LIST_DESC;
+$title = FORUMS_FORUM_LIST_TITLE;
+$description = FORUMS_FORUM_LIST_DESC;
 
 
 /** @var \CMW\Model\Forums\forumsModel $forum */
@@ -16,6 +16,7 @@ $id = FORUMS_ID;
 $name = FORUMS_NAME;
 $description = FORUMS_DESC;
 $action = FORUMS_ACTION;
+$parent = FORUMS_PARENT;
 
 $styles = '<link rel="stylesheet" href="' . getenv("PATH_SUBFOLDER") . 'admin/resources/vendors/simple-datatables/css/simple-datatables.css" />';
 $scripts = '<script src="' . getenv("PATH_SUBFOLDER") . 'admin/resources/vendors/simple-datatables/js/simple-datatables.js"></script>';
@@ -28,6 +29,7 @@ $scripts .= <<<HTML
                     "$id",
                     "$name",
                     "$description",
+                    "$parent",
                     "$action"
                 ]
             }
@@ -58,18 +60,19 @@ $scripts .= <<<HTML
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><?= FORUMS_CATEGORY_LIST_CARD_TITLE ?></h3>
+                                <h3 class="card-title"><?= FORUMS_FORUM_LIST_CARD_TITLE ?></h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table id="myTable" class="table table-bordered table-striped">
                                 <tbody>
-                                <?php foreach ($forum->getCategories() as $category) : ?>
+                                <?php foreach ($forum->getForums() as $forum) : ?>
                                     <tr>
-                                        <td><?= $category->getId() ?></td>
-                                        <td><?= $category->getName() ?></td>
-                                        <td><?= $category->getDescription() ?></td>
-                                        <td><a href="<?= $category->getAdminDeleteLink() ?>">Supprimer</a></td>
+                                        <td><?= $forum->getId() ?></td>
+                                        <td><?= $forum->getName() ?></td>
+                                        <td><?= $forum->getDescription() ?></td>
+                                        <td><?= ($forum->isParentCategory() ? "<i class='fa fa-book'></i>" : "<i class='fa fa-envelope-open-text'></i>" ) ?> <?= $forum->getName()  ?></td>
+                                        <td><a href="<?= $forum->getAdminDeleteLink() ?>">Supprimer</a></td>
                                     </tr>
                                 <?php endforeach; ?>
                                 </tbody>
@@ -79,7 +82,7 @@ $scripts .= <<<HTML
                                 <div class="col-12">
                                     <div class="w-50 ml-auto text-right">
                                         <a href="./add" class="btn btn-primary">
-                                            Ajouter une catégorie
+                                            Ajouter un forum
                                         </a>
                                     </div>
                                 </div>

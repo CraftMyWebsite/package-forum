@@ -34,3 +34,22 @@ $router->scope('/cmw-admin/forum/forums', function (Router $router) {
     })->with('id', '[0-9]+');
 
 });
+
+$router->scope("/forum", function(Router $router) {
+    $forumController = new forumsController();
+
+
+    $router->get("/", "forums#publicBaseView");
+
+    $router->get("/f/:forumSlug", function($slug) use ($forumController) {
+        $forumController->publicForumView($slug);
+    })->with('slug', '.*?');
+
+    $router->get("/t/:topicSlug", function($slug) use ($forumController) {
+        $forumController->publicTopicView($slug);
+    })->with('slug', '.*?');
+
+    $router->post("/t/:topicSlug", function($slug) use ($forumController) {
+        $forumController->publicTopicPost($slug);
+    })->with('slug', '.*?');
+});

@@ -11,14 +11,18 @@ class topicEntity
     private int $topicId;
     private string $topicName;
     private string $topicContent;
+    private string $topicSlug;
+    private bool $topicPinned;
     private forumEntity $topicForum;
     private userEntity $topicUser;
 
-    public function __construct(int $id, string $name, string $content, forumEntity $forum, userEntity $user)
+    public function __construct(int $id, string $name, string $content, string $topicSlug, bool $topicPinned, forumEntity $forum, userEntity $user)
     {
         $this->topicId = $id;
         $this->topicName = $name;
         $this->topicContent = $content;
+        $this->topicSlug = $topicSlug;
+        $this->topicPinned = $topicPinned;
         $this->topicForum = $forum;
         $this->topicUser = $user;
     }
@@ -48,6 +52,22 @@ class topicEntity
     }
 
     /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->topicSlug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPinned(): bool
+    {
+        return $this->topicPinned;
+    }
+
+    /**
      * @return \CMW\Entity\Forums\forumEntity
      */
     public function getForum(): forumEntity
@@ -61,6 +81,11 @@ class topicEntity
     public function getUser(): userEntity
     {
         return $this->topicUser;
+    }
+
+    public function getLink(): string
+    {
+        return "forum/t/$this->topicSlug";
     }
 
 }

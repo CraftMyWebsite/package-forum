@@ -51,5 +51,4 @@ class responseEntity
     {
         return $this->responseUser;
     }
-
 }

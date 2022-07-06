@@ -8,13 +8,15 @@ class forumEntity
     private int $forumId;
     private string $forumName;
     private string $forumDescription;
+    private string $forumSlug;
     private forumEntity|categoryEntity $forumParent;
 
-    public function __construct(int $id, string $name, string $desc, forumEntity|categoryEntity $parent)
+    public function __construct(int $id, string $name, string $desc, string $forumSlug, forumEntity|categoryEntity $parent)
     {
         $this->forumId = $id;
         $this->forumName = $name;
         $this->forumDescription = $desc;
+        $this->forumSlug = $forumSlug;
         $this->forumParent = $parent;
     }
 
@@ -42,6 +44,19 @@ class forumEntity
         return $this->forumDescription;
     }
 
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->forumSlug;
+    }
+
+    public function getLink(): string
+    {
+        return "forum/f/$this->forumSlug";
+    }
+
     public function getParent(): forumEntity|categoryEntity
     {
         return $this->forumParent;
@@ -49,8 +64,11 @@ class forumEntity
 
     public function isParentCategory(): bool
     {
-        $categoryClassName = substr(strrchr(get_class((object)categoryEntity::class), "\\"), 1);
-        return get_class($this->forumParent) === $categoryClassName;
+        return get_class($this->forumParent) !== get_class($this);
+    }
+
+    public function getAdminDeleteLink(): string {
+        return "./delete/$this->forumId";
     }
 
 

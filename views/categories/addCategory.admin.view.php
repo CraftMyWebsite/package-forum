@@ -3,8 +3,6 @@
 $title = FORUMS_CATEGORY_ADD_TITLE;
 $description = FORUMS_CATEGORY_ADD_DESC;
 
-
-/** @var \CMW\Entity\Forums\forumEntity $forum */
 ?>
 
 <?php ob_start(); ?>
