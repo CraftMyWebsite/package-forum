@@ -1,30 +1,30 @@
 <?php
 
-namespace CMW\Model\Forums;
+namespace CMW\Model\Forum;
 
-use CMW\Entity\Forums\categoryEntity;
-use CMW\Entity\Forums\forumEntity;
-use CMW\Entity\Forums\responseEntity;
-use CMW\Entity\Forums\topicEntity;
-use CMW\Model\manager;
+use CMW\Entity\Forum\categoryEntity;
+use CMW\Entity\Forum\forumEntity;
+use CMW\Entity\Forum\responseEntity;
+use CMW\Entity\Forum\topicEntity;
+use CMW\Manager\Database\DatabaseManager;
 use CMW\Model\Users\usersModel;
 use CMW\Utils\Utils;
 
 /**
- * Class: @forumsModel
- * @package Forums
+ * Class: @ForumModel
+ * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class forumsModel extends Manager
+class ForumModel extends DatabaseManager
 {
 
-    private usersModel $userModel;
+    private UsersModel $userModel;
 
     public function __construct()
     {
 
-        $this->userModel = new usersModel();
+        $this->userModel = new UsersModel();
 
     }
 
@@ -41,7 +41,7 @@ class forumsModel extends Manager
     {
         $sql = "select * from cmw_forums_categories where forum_category_id = :category_id";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -62,7 +62,7 @@ class forumsModel extends Manager
     {
         $sql = "select * from cmw_forums where forum_id = :forum_id";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -92,7 +92,7 @@ class forumsModel extends Manager
 
         $sql = "select * from cmw_forums_topics where forum_topic_id = :topic_id";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -102,7 +102,7 @@ class forumsModel extends Manager
 
         $res = $res->fetch();
 
-        if(!$res) {
+        if (!$res) {
             return null;
         }
 
@@ -129,7 +129,7 @@ class forumsModel extends Manager
 
         $sql = "select * from cmw_forums_response where forum_response_id = :response_id ";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -155,13 +155,13 @@ class forumsModel extends Manager
     }
 
     /**
-     * @return \CMW\Entity\Forums\categoryEntity[]
+     * @return \CMW\Entity\Forum\categoryEntity[]
      */
     public function getCategories(): array
     {
 
         $sql = "select forum_category_id from cmw_forums_categories";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -180,12 +180,12 @@ class forumsModel extends Manager
     }
 
     /**
-     * @return \CMW\Entity\Forums\forumEntity[]
+     * @return \CMW\Entity\Forum\forumEntity[]
      */
     public function getForums(): array
     {
         $sql = "select forum_id from cmw_forums";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -203,12 +203,12 @@ class forumsModel extends Manager
     }
 
     /**
-     * @return \CMW\Entity\Forums\forumEntity[]
+     * @return \CMW\Entity\Forum\forumEntity[]
      */
     public function getForumByParent($id, $isForumId = false): array
     {
         $sql = !$isForumId ? "select forum_id from cmw_forums WHERE forum_category_id = :forum_id" : "select forum_id from cmw_forums WHERE forum_subforum_id = :forum_id";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -229,7 +229,7 @@ class forumsModel extends Manager
     {
         $sql = "select forum_id from cmw_forums WHERE forum_slug = :forum_slug";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -250,7 +250,7 @@ class forumsModel extends Manager
     {
         $sql = "select forum_topic_id from cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -268,13 +268,13 @@ class forumsModel extends Manager
     }
 
     /**
-     * @return \CMW\Entity\Forums\topicEntity[]
+     * @return \CMW\Entity\Forum\topicEntity[]
      */
     public function getTopicByForum($id): array
     {
 
         $sql = "select forum_topic_id from cmw_forums_topics WHERE forum_id = :forum_id ORDER BY forum_topic_pinned desc";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -297,7 +297,7 @@ class forumsModel extends Manager
     public function countTopicInForum($id): mixed
     {
         $sql = "select COUNT(forum_topic_id) from cmw_forums_topics WHERE forum_id = :forum_id";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -309,12 +309,12 @@ class forumsModel extends Manager
     }
 
     /**
-     * @return \CMW\Entity\Forums\responseEntity[]
+     * @return \CMW\Entity\Forum\responseEntity[]
      */
     public function getResponseByTopic($id): array
     {
         $sql = "select forum_response_id from cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
         $res = $db->prepare($sql);
 
         if (!$res->execute(array("forum_topic_id" => $id))) {
@@ -333,7 +333,7 @@ class forumsModel extends Manager
     public function countResponseInTopic($id): mixed
     {
         $sql = "select COUNT(forum_response_id) from cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -345,11 +345,10 @@ class forumsModel extends Manager
     }
 
 
-
     public function hasSubForums($id): bool
     {
         $sql = "select COUNT(forum_id) from cmw_forums WHERE forum_subforum_id = :forum_id";
-        $db = self::dbConnect();
+        $db = self::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -372,7 +371,7 @@ class forumsModel extends Manager
 
         $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_description) VALUES (:category_name, :category_description)";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -394,7 +393,7 @@ class forumsModel extends Manager
 
         $sql = "INSERT INTO cmw_forums(forum_id, forum_name, forum_slug, forum_description, (!$isCategory) ? forum_subforum_id : forum_category_id) VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -416,7 +415,7 @@ class forumsModel extends Manager
 
         $sql = "UPDATE cmw_forums SET forum_slug = :forum_slug WHERE forum_id = :forum_id";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
         $req = $db->prepare($sql);
 
         $req->execute($data);
@@ -435,7 +434,7 @@ class forumsModel extends Manager
 
         $sql = "INSERT INTO cmw_forums_topics(forum_topic_name, forum_topic_content, forum_topic_slug, user_id, forum_id) VALUES (:topic_name, :topic_content, :topic_slug, :user_id, :forum_id)";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -457,7 +456,7 @@ class forumsModel extends Manager
 
         $sql = "UPDATE cmw_forums_topics SET forum_topic_slug = :topic_slug WHERE forum_topic_id = :topic_id";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -475,7 +474,7 @@ class forumsModel extends Manager
 
         $sql = "INSERT INTO cmw_forums_response(forum_response_content, forum_topic_id, user_id) VALUES (:response_content, :topic_id, :user_id)";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -492,7 +491,7 @@ class forumsModel extends Manager
     {
         $sql = "delete from cmw_forums_categories where forum_category_id = :category_id";
 
-        $db = manager::dbConnect();
+        $db = self::getInstance();
 
         return $db->prepare($sql)->execute(array("category_id" => $categoryModel->getId()));
     }

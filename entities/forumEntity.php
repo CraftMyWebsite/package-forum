@@ -1,6 +1,6 @@
 <?php
 
-namespace CMW\Entity\Forums;
+namespace CMW\Entity\Forum;
 
 class forumEntity
 {
@@ -67,7 +67,8 @@ class forumEntity
         return get_class($this->forumParent) !== get_class($this);
     }
 
-    public function getAdminDeleteLink(): string {
+    public function getAdminDeleteLink(): string
+    {
         return "./delete/$this->forumId";
     }
 

@@ -1,9 +1,8 @@
 <?php
-/** @var \CMW\Entity\Forums\forumEntity $forum */
-/** @var \CMW\Model\Forums\forumsModel $forumModel */
+/** @var \CMW\Entity\Forum\forumEntity $forum */
+/** @var \CMW\Model\Forum\forumModel $forumModel */
 $title = "Titre de la page";
 $description = "Description de votre page";
-ob_start();
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,5 +30,4 @@ ob_start();
         <a href="/<?= $topic->getLink() ?>">Aller vers ce Topic</a>
     <?php endforeach; ?>
 </div>
-<?php $content = ob_get_clean(); ?>
 

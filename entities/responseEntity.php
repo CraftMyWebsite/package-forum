@@ -1,6 +1,6 @@
 <?php
 
-namespace CMW\Entity\Forums;
+namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 
@@ -37,7 +37,7 @@ class responseEntity
     }
 
     /**
-     * @return \CMW\Entity\Forums\topicEntity
+     * @return \CMW\Entity\Forum\topicEntity
      */
     public function getResponseTopic(): topicEntity
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace CMW\Entity\Forums;
+namespace CMW\Entity\Forum;
 
 class categoryEntity
 {

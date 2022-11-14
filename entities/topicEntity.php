@@ -1,9 +1,8 @@
 <?php
 
-namespace CMW\Entity\Forums;
+namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
-use CMW\Model\Users\usersModel;
 
 class topicEntity
 {
@@ -68,7 +67,7 @@ class topicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forums\forumEntity
+     * @return \CMW\Entity\Forum\forumEntity
      */
     public function getForum(): forumEntity
     {
