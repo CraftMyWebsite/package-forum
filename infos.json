@@ -2,11 +2,11 @@
   "name": "forum",
   "menus": [
     {
-      "name_menu": "Forum",
+      "name_menu_fr": "Forum",
       "name_menu_en": "Forum",
       "icon_menu": "fas fa-comment",
       "url_menu": "",
-      "urls_submenu": {
+      "urls_submenu_fr": {
         "Gérer les catégories": "forum/categories/list",
         "Gérer les forums": "forum/forums/list"
       },
@@ -16,7 +16,12 @@
       }
     }
   ],
-  "description": "Gérer complètement un Forum",
+  "description": [
+    {
+      "fr": "Gérez complètement les forums de votre site",
+      "en": "Manage your website forums"
+    }
+  ],
   "version": "1.0.0",
   "author": "CraftMyWebsite Team"
 }
