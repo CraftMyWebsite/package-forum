@@ -11,7 +11,7 @@ $description = "Description de votre page";
                 <?php foreach ($forum->getForumByParent($category->getId()) as $forumObj): ?>
                     <h3 style="margin-left: 3em">
                         <?= $forumObj->getId() . ". " . $forumObj->getName() ?>
-                        <?= $forum->countTopicInForum($forumObj->getId()) ?>
+                        Nombre de topic :<?= $forum->countTopicInForum($forumObj->getId()) ?><br>
                         <a href="/<?= $forumObj->getLink() ?>">Aller vers ce Forum</a>
                     </h3>
                 <?php endforeach; ?>

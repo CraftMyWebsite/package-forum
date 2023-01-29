@@ -6,7 +6,7 @@ namespace CMW\Controller\Forum;
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Model\Forum\ForumModel;
-use CMW\Model\Users\UsersModel;
+use CMW\Model\users\UsersModel;
 use CMW\Router\Link;
 use CMW\Utils\Utils;
 use CMW\Utils\View;
@@ -21,11 +21,13 @@ class ForumController extends CoreController
 {
 
     private ForumModel $forumModel;
+    private UsersModel $usersModel;
 
     public function __construct($theme_path = null)
     {
         parent::__construct($theme_path);
         $this->forumModel = new ForumModel();
+        $this->usersModel = new UsersModel();
     }
 
     #[Link("/add", Link::GET, [], "/cmw-admin/forum/categories")]
@@ -106,7 +108,7 @@ class ForumController extends CoreController
      */
 
 
-    #[Link("/", Link::POST, [], "/forum")]
+    #[Link("/", Link::GET, [], "/forum")]
     public function publicBaseView(): void
     {
         $view = new View("forum", "main");
@@ -148,13 +150,11 @@ class ForumController extends CoreController
             return;
         }
 
-        if (Utils::isValuesEmpty($_POST, "topicResponse")) {
-            return;
-        }
+        $userEntity = $this->usersModel->getUserById($_SESSION['cmwUserId']);
+        $userId = $userEntity?->getId();
+        [$topicId, $content] = Utils::filterInput('topicId', 'topicResponse');
 
-        $content = Utils::filterInput("topicResponse");
-
-        $forumModel->createResponse($content, UsersModel::getCurrentUser(), $topic->getId());
+        $forumModel->createResponse($content, $userId, $topicId);
         header("refresh: 0");
     }
 }

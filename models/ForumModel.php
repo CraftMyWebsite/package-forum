@@ -305,7 +305,8 @@ class ForumModel extends DatabaseManager
             return 0;
         }
 
-        return $res->fetch()[0];
+        $return = $res->fetch(0);
+        return implode($return);
     }
 
     /**
@@ -341,7 +342,7 @@ class ForumModel extends DatabaseManager
             return 0;
         }
 
-        return $res->fetch()[0];
+        return $res->fetch(0);
     }
 
 
@@ -356,7 +357,7 @@ class ForumModel extends DatabaseManager
             return false;
         }
 
-        return (bool)$res->fetch()[0];
+        return (bool)$res->fetch(0);
     }
 
     /*=> CONSTRUCTORS */
@@ -463,10 +464,10 @@ class ForumModel extends DatabaseManager
         $req->execute($data);
     }
 
-    public function createResponse($content, $userId, $topicId): ?responseEntity
+    public function createResponse(string $content, int $userId, int $topicId): ?responseEntity
     {
 
-        $data = array(
+        $var = array(
             "response_content" => $content,
             "user_id" => $userId,
             "topic_id" => $topicId
@@ -477,7 +478,7 @@ class ForumModel extends DatabaseManager
         $db = self::getInstance();
         $req = $db->prepare($sql);
 
-        if ($req->execute($data)) {
+        if ($req->execute($var)) {
             return $this->getResponseById($db->lastInsertId());
         }
 
