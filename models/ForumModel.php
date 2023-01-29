@@ -7,7 +7,7 @@ use CMW\Entity\Forum\forumEntity;
 use CMW\Entity\Forum\responseEntity;
 use CMW\Entity\Forum\topicEntity;
 use CMW\Manager\Database\DatabaseManager;
-use CMW\Model\Users\usersModel;
+use CMW\Model\users\UsersModel;
 use CMW\Utils\Utils;
 
 /**
