@@ -1,16 +1,16 @@
 # To-Do File | Forum Part
 
 ### Basic Part:
-- Section
-    - [ ] Create
+- Categories
+    - [x] Create
     - [ ] Edit
-    - [ ] Delete
+    - [x] Delete
 - Post
-    - [ ] Create
+    - [x] Create
     - [ ] Edit
     - [ ] Delete
 - Reply
-    - [ ] Create
+    - [x] Create
     - [ ] Edit
     - [ ] Delete
 - React
@@ -30,7 +30,7 @@
 - [ ] Force Log-In
 - [ ] Count views
 - [ ] Prepare post (with date & time)
-- [ ] Pin Posts
+- [x] Pin Topics
 
 ### +++ Part
 - [ ] Permit to change view role name

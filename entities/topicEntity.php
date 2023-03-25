@@ -82,9 +82,16 @@ class topicEntity
         return $this->topicUser;
     }
 
+    /**
+     * @return string
+     */
     public function getLink(): string
     {
         return "forum/t/$this->topicSlug";
     }
 
+    public function getPinnedLink(): string
+    {
+        return "forum/t/$this->topicSlug/pinned";
+    }
 }

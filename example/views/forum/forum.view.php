@@ -1,6 +1,10 @@
 <?php
 /** @var \CMW\Entity\Forum\forumEntity $forum */
+
 /** @var \CMW\Model\Forum\forumModel $forumModel */
+
+use CMW\Utils\Utils;
+
 $title = "Titre de la page";
 $description = "Description de votre page";
 ?>
@@ -25,9 +29,14 @@ $description = "Description de votre page";
 <?php endif ?>
 <h1>Topics</h1>
 <div class="container">
+    <a href="<?= $forum->getSlug() ?>/add" class="btn">Ajouter un topic</a>
     <?php foreach ($forumModel->getTopicByForum($forum->getId()) as $topic): ?>
-        <h3><?= $topic->getId() . ". " . $topic->getName() ?></h3>
+        <h3><?= $topic->getId() . ". " . $topic->getName() ?> <?= $topic->isPinned() ? " - épinglé" : "" ?></h3>
         <a href="/<?= $topic->getLink() ?>">Aller vers ce Topic</a>
+        =>
+        <a href="<?= Utils::getEnv()->getValue('PATH_SUBFOLDER') ?><?= $topic->getPinnedLink() ?>">
+            <?= $topic->isPinned() ? " Désépingler ce topic" : " Épingler ce topic" ?>
+        </a>
     <?php endforeach; ?>
 </div>
 

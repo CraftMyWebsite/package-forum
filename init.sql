@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics
     forum_topic_id      INT AUTO_INCREMENT PRIMARY KEY,
     forum_topic_name    TEXT         NOT NULL,
     forum_topic_slug    VARCHAR(255) NOT NULL,
-    forum_topic_content VARCHAR(50)  NULL,
-    forum_topic_pinned  TINYINT      NOT NULL DEFAULT 0,
+    forum_topic_content MEDIUMTEXT   NULL,
+    forum_topic_pinned  TINYINT(1)   NOT NULL DEFAULT 0,
     user_id             INT          NULL,
     forum_id            INT          NOT NULL,
     CONSTRAINT fk_forum_id

@@ -32,14 +32,14 @@ class ForumModel extends DatabaseManager
 
     private function generateSlug(int $id, string $name): string
     {
-        return Utils::normalizeForSlug($name) . ".$id";
+        return Utils::normalizeForSlug($name) . "-$id";
     }
 
     /*=> GETTERS */
 
     public function getCategoryById(int $id): ?categoryEntity
     {
-        $sql = "select * from cmw_forums_categories where forum_category_id = :category_id";
+        $sql = "SELECT * FROM cmw_forums_categories WHERE forum_category_id = :category_id";
 
         $db = self::getInstance();
 
@@ -60,7 +60,7 @@ class ForumModel extends DatabaseManager
 
     public function getForumById(int $id): ?forumEntity
     {
-        $sql = "select * from cmw_forums where forum_id = :forum_id";
+        $sql = "SELECT * FROM cmw_forums WHERE forum_id = :forum_id";
 
         $db = self::getInstance();
 
@@ -89,8 +89,7 @@ class ForumModel extends DatabaseManager
 
     public function getTopicById(int $id): ?topicEntity
     {
-
-        $sql = "select * from cmw_forums_topics where forum_topic_id = :topic_id";
+        $sql = "SELECT * FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
 
         $db = self::getInstance();
 
@@ -127,7 +126,7 @@ class ForumModel extends DatabaseManager
     public function getResponseById(int $id): ?responseEntity
     {
 
-        $sql = "select * from cmw_forums_response where forum_response_id = :response_id ";
+        $sql = "SELECT * FROM cmw_forums_response WHERE forum_response_id = :response_id ";
 
         $db = self::getInstance();
 
@@ -160,7 +159,7 @@ class ForumModel extends DatabaseManager
     public function getCategories(): array
     {
 
-        $sql = "select forum_category_id from cmw_forums_categories";
+        $sql = "SELECT forum_category_id FROM cmw_forums_categories";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -184,7 +183,7 @@ class ForumModel extends DatabaseManager
      */
     public function getForums(): array
     {
-        $sql = "select forum_id from cmw_forums";
+        $sql = "SELECT forum_id FROM cmw_forums";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -207,7 +206,7 @@ class ForumModel extends DatabaseManager
      */
     public function getForumByParent($id, $isForumId = false): array
     {
-        $sql = !$isForumId ? "select forum_id from cmw_forums WHERE forum_category_id = :forum_id" : "select forum_id from cmw_forums WHERE forum_subforum_id = :forum_id";
+        $sql = !$isForumId ? "SELECT forum_id FROM cmw_forums WHERE forum_category_id = :forum_id" : "SELECT forum_id FROM cmw_forums WHERE forum_subforum_id = :forum_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -227,7 +226,7 @@ class ForumModel extends DatabaseManager
 
     public function getForumBySlug($slug): ?forumEntity
     {
-        $sql = "select forum_id from cmw_forums WHERE forum_slug = :forum_slug";
+        $sql = "SELECT forum_id FROM cmw_forums WHERE forum_slug = :forum_slug";
 
         $db = self::getInstance();
 
@@ -248,7 +247,7 @@ class ForumModel extends DatabaseManager
 
     public function getTopicBySlug($slug): ?topicEntity
     {
-        $sql = "select forum_topic_id from cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
+        $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
 
         $db = self::getInstance();
 
@@ -273,7 +272,7 @@ class ForumModel extends DatabaseManager
     public function getTopicByForum($id): array
     {
 
-        $sql = "select forum_topic_id from cmw_forums_topics WHERE forum_id = :forum_id ORDER BY forum_topic_pinned desc";
+        $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id ORDER BY forum_topic_pinned DESC";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -296,7 +295,7 @@ class ForumModel extends DatabaseManager
 
     public function countTopicInForum($id): mixed
     {
-        $sql = "select COUNT(forum_topic_id) from cmw_forums_topics WHERE forum_id = :forum_id";
+        $sql = "SELECT COUNT(forum_topic_id) FROM cmw_forums_topics WHERE forum_id = :forum_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -314,7 +313,7 @@ class ForumModel extends DatabaseManager
      */
     public function getResponseByTopic($id): array
     {
-        $sql = "select forum_response_id from cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
+        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
         $db = self::getInstance();
         $res = $db->prepare($sql);
 
@@ -333,7 +332,7 @@ class ForumModel extends DatabaseManager
 
     public function countResponseInTopic($id): mixed
     {
-        $sql = "select COUNT(forum_response_id) from cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
+        $sql = "SELECT COUNT(forum_response_id) FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -348,7 +347,7 @@ class ForumModel extends DatabaseManager
 
     public function hasSubForums($id): bool
     {
-        $sql = "select COUNT(forum_id) from cmw_forums WHERE forum_subforum_id = :forum_id";
+        $sql = "SELECT COUNT(forum_id) FROM cmw_forums WHERE forum_subforum_id = :forum_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -392,7 +391,11 @@ class ForumModel extends DatabaseManager
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = "INSERT INTO cmw_forums(forum_id, forum_name, forum_slug, forum_description, (!$isCategory) ? forum_subforum_id : forum_category_id) VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)";
+        $sql = $isCategory ? "INSERT INTO cmw_forums(forum_name, forum_slug, forum_description, forum_category_id)
+                VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)"
+            : "INSERT INTO cmw_forums(forum_name, forum_slug, forum_description,  forum_subforum_id)
+                VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)";
+
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
@@ -425,7 +428,7 @@ class ForumModel extends DatabaseManager
     public function createTopic($name, $content, $userId, $forumId): ?topicEntity
     {
 
-        $data = array(
+        $var = array(
             "topic_name" => $name,
             "topic_content" => $content,
             "topic_slug" => "NOT DEFINED",
@@ -433,13 +436,14 @@ class ForumModel extends DatabaseManager
             "forum_id" => $forumId
         );
 
-        $sql = "INSERT INTO cmw_forums_topics(forum_topic_name, forum_topic_content, forum_topic_slug, user_id, forum_id) VALUES (:topic_name, :topic_content, :topic_slug, :user_id, :forum_id)";
+        $sql = "INSERT INTO cmw_forums_topics (forum_topic_name, forum_topic_content, forum_topic_slug, user_id, forum_id) 
+                VALUES (:topic_name, :topic_content, :topic_slug, :user_id, :forum_id)";
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
 
-        if ($req->execute($data)) {
-            $this->setTopicSlug($db->lastInsertId(), $name);
+        if ($req->execute($var)) {
+            $this->setTopicSlug($db->lastInsertId("forum_topic_id"), $name);
             return $this->getTopicById($db->lastInsertId());
         }
 
@@ -462,6 +466,25 @@ class ForumModel extends DatabaseManager
         $req = $db->prepare($sql);
 
         $req->execute($data);
+    }
+
+    public function pinTopic(topicEntity $topic): bool
+    {
+        $data = array(
+            "topic_id" => $topic->getId(),
+            "status" => $topic->isPinned() ? 0 : 1,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET forum_topic_pinned = :status WHERE forum_topic_id = :topic_id";
+
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if($req->execute($data)){
+            return $req->rowCount() === 1;
+        }
+        return false;
     }
 
     public function createResponse(string $content, int $userId, int $topicId): ?responseEntity
@@ -490,7 +513,7 @@ class ForumModel extends DatabaseManager
 
     public function deleteCategory(categoryEntity $categoryModel): bool
     {
-        $sql = "delete from cmw_forums_categories where forum_category_id = :category_id";
+        $sql = "DELETE FROM cmw_forums_categories WHERE forum_category_id = :category_id";
 
         $db = self::getInstance();
 

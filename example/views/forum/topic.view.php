@@ -3,7 +3,7 @@
 /** @var \CMW\Entity\Forum\topicEntity $topic
  */
 
-use CMW\Utils\SecurityService;
+use CMW\Manager\Security\SecurityManager;
 
 $title = "Titre de la page";
 $description = "Description de votre page";
@@ -31,7 +31,7 @@ $description = "Description de votre page";
 
 <section>
     <form action="" method="post">
-        <?php (new SecurityService())->insertHiddenToken() ?>
+        <?php (new SecurityManager())->insertHiddenToken() ?>
         <label style="display:block;" for="topicResponse">Votre réponse : </label>
         <input hidden type="text" name="topicId" value="<?= $topic->getId()?>">
         <textarea required name="topicResponse" id="topicResponse" cols="30" rows="10"></textarea>

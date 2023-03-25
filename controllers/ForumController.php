@@ -5,9 +5,11 @@ namespace CMW\Controller\Forum;
 
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Lang\LangManager;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\users\UsersModel;
 use CMW\Router\Link;
+use CMW\Utils\Response;
 use CMW\Utils\Utils;
 use CMW\Utils\View;
 
@@ -45,15 +47,20 @@ class ForumController extends CoreController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
-            echo -1;
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("forum.category.toaster.error.empty_input"));
+            Utils::refreshPage();
             return;
         }
 
         [$name, $description] = Utils::filterInput("name", "description");
 
-        $res = $this->forumModel->createCategory($name, $description);
+        $this->forumModel->createCategory($name, $description);
 
-        echo is_null($res) ? -2 : $res->getId();
+        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.category.toaster.success"));
+
+        header("location: list");
     }
 
     #[Link("/list", Link::GET, [], "/cmw-admin/forum/categories")]
@@ -68,23 +75,27 @@ class ForumController extends CoreController
             ->view();
     }
 
-    #[Link("/list/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
     public function adminDeleteCategoryPost(int $id): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         $category = $this->forumModel->getCategoryById($id);
 
         if (is_null($category)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+
+            header("location: ../list/");
             return;
         }
 
-        $res = $this->forumModel->deleteCategory($category);
+        $this->forumModel->deleteCategory($category);
 
-        echo $res ? 1 : -1;
+        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.category.delete.success"));
 
         header("location: ../list/");
-        die();
     }
 
     #[Link("/list", Link::GET, [], "/cmw-admin/forum/forums")]
@@ -97,6 +108,31 @@ class ForumController extends CoreController
             ->addStyle("admin/resources/vendors/simple-datatables/css/simple-datatables.css")
             ->addScriptBefore("admin/resources/vendors/simple-datatables/js/simple-datatables.js")
             ->view();
+    }
+
+    #[Link("/add", Link::GET, [], "/cmw-admin/forum/forums")]
+    public function adminAddForumView(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+
+        View::createAdminView("forum", "forums/addForum")
+            ->addVariableList(["categories" => $this->forumModel->getCategories()])
+            ->view();
+    }
+
+    #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
+    public function adminAddForumPost(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+
+        [$name, $description, $categoryId] = Utils::filterInput("name", "description", "category_id");
+
+        $this->forumModel->createForum($name, $description, $categoryId);
+
+        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.forum.add.toaster.success"));
+
+        header("location: list");
     }
 
 
@@ -127,6 +163,45 @@ class ForumController extends CoreController
         $view->view();
     }
 
+    #[Link("/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
+    public function publicForumAddTopicView(string $forumSlug): void
+    {
+        $forum = $this->forumModel->getForumBySlug($forumSlug);
+
+        $view = new View("forum", "addTopic");
+        $view->addVariableList(["forum" => $forum]);
+        $view->view();
+    }
+
+    #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAddTopicPost(string $forumSlug): void
+    {
+        [$name, $content] = Utils::filterInput('name', 'content');
+
+        $forum = $this->forumModel->getForumBySlug($forumSlug);
+
+        if (is_null($forum) || Utils::hasOneNullValue($name, $content)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Utils::refreshPage();
+            return;
+        }
+
+        $res = $this->forumModel->createTopic($name, $content, UsersModel::getLoggedUser(), $forum?->getId());
+
+        if (is_null($res)) { //TODO Fix this error ?
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Utils::refreshPage();
+            return;
+        }
+
+        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.topic.add.success"));
+
+        header("location: ../");
+    }
+
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(string $topicSlug): void
     {
@@ -138,6 +213,27 @@ class ForumController extends CoreController
         $view->view();
     }
 
+    #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicPinned(string $topicSlug): void
+    {
+        $topic = $this->forumModel->getTopicBySlug($topicSlug);
+        if (is_null($topic)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            return;
+        }
+
+        if ($this->forumModel->pinTopic($topic)) {
+
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+                $topic->isPinned() ?
+                    LangManager::translate("forum.topic.unpinned.success") :
+                    LangManager::translate("forum.topic.pinned.success"));
+
+            header("location: ../../f/{$topic->getForum()->getSlug()}");
+        }
+    }
+
     #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
     public function publicTopicPost(string $topicSlug): void
     {
@@ -147,14 +243,16 @@ class ForumController extends CoreController
         $forumModel = $this->forumModel;
 
         if (!$topic) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        $userEntity = $this->usersModel->getUserById($_SESSION['cmwUserId']);
+        $userEntity = $this->usersModel->getUserById(UsersModel::getLoggedUser());
         $userId = $userEntity?->getId();
         [$topicId, $content] = Utils::filterInput('topicId', 'topicResponse');
 
         $forumModel->createResponse($content, $userId, $topicId);
-        header("refresh: 0");
+        Utils::refreshPage();
     }
 }
