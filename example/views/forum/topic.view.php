@@ -51,3 +51,23 @@ $description = "Description de votre page";
     </section>
 
 <?php endif; ?>
+
+<?php if ($topic->getTags() === []): ?>
+
+    <div class="container" style="margin-top: 25px">
+        <h5>Ce topic ne possède pas de tags</h5>
+    </div>
+
+<?php else: ?>
+
+    <div class="container" style="margin-top: 25px">
+        Voici les tags de ce topic:
+
+        <ul>
+            <?php foreach ($topic->getTags() as $tag): ?>
+                <li>#<?= $tag->getContent() ?></li>
+            <?php endforeach; ?>
+        </ul>
+
+    </div>
+<?php endif; ?>

@@ -3,6 +3,7 @@
 namespace CMW\Model\Forum;
 
 use CMW\Entity\Forum\topicEntity;
+use CMW\Entity\Forum\TopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Model\Users\UsersModel;
 
@@ -82,7 +83,8 @@ class TopicModel extends DatabaseManager
             $res["forum_topic_disallow_replies"],
             $res["forum_topic_important"],
             $user,
-            $forum
+            $forum,
+            $this->getTagsForTopicById($res["forum_topic_id"])
         );
     }
 
@@ -181,5 +183,124 @@ class TopicModel extends DatabaseManager
             return $req->rowCount() === 1;
         }
         return false;
+    }
+
+    public function deleteTopic(int $topicId): bool
+    {
+        $sql = "DELETE FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
+
+        $db = self::getInstance();
+
+        return $db->prepare($sql)->execute(array("topic_id" => $topicId));
+    }
+
+    public function addTag(string $content, int $topicId): ?TopicTagEntity
+    {
+        $sql = "INSERT INTO cmw_forums_topics_tags (forums_topics_tags_content, forums_topics_tags_topic_id) 
+                VALUES (:content, :topic_id)";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute(array("content" => $content, "topic_id" => $topicId))) {
+            return $this->getTagById($db->lastInsertId());
+        }
+
+        return null;
+    }
+
+    public function getTagById(int $tagId): ?TopicTagEntity
+    {
+
+        $sql = "SELECT * FROM cmw_forums_topics_tags WHERE forums_topics_tags_id = :tag_id";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(array('tag_id' => $tagId))) {
+            return null;
+        }
+
+        $res = $req->fetch();
+        return new TopicTagEntity(
+            $res['forums_topics_tags_id'],
+            $res['forums_topics_tags_content']
+        );
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\TopicTagEntity[]
+     */
+    public function getTags(): array
+    {
+        $sql = "SELECT forums_topics_tags_id FROM cmw_forums_topics_tags";
+
+        $db = self::getInstance();
+
+        $req = $db->query($sql);
+
+        $toReturn = array();
+
+        while ($data = $req->fetch()) {
+            $toReturn[] = $this->getTagById($data["forums_topics_tags_id"]);
+        }
+
+        return $toReturn;
+    }
+
+    /**
+     * @param int $topicId
+     * @return \CMW\Entity\Forum\TopicTagEntity[]
+     */
+    public function getTagsForTopicById(int $topicId): array
+    {
+        $toReturn = array();
+
+        $sql = "SELECT forums_topics_tags_id  FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(array("topic_id" => $topicId))) {
+            return $toReturn;
+        }
+
+        while ($data = $req->fetch()) {
+            $toReturn[] = $this->getTagById($data["forums_topics_tags_id"]);
+        }
+
+        return $toReturn;
+    }
+
+    public function editTag(int $tagId, string $content, int $topicId): ?TopicTagEntity
+    {
+        $var = array(
+            "tag_id" => $tagId,
+            "content" => $content,
+            "topic_id" => $topicId
+        );
+
+        $sql = "UPDATE cmw_forums_topics_tags SET forums_topics_tags_content = :content, 
+                                  forums_topics_tags_topic_id = :topic_id WHERE forums_topics_tags_id = :tag_id";
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req->execute($var)) {
+            return null;
+        }
+
+        return new TopicTagEntity(
+            $tagId,
+            $content,
+        );
+    }
+
+    public function deleteTag(int $tagId): bool
+    {
+        $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_id = :tag_id";
+
+        $db = self::getInstance();
+
+        return $db->prepare($sql)->execute(array("tag_id" => $tagId));
     }
 }

@@ -75,7 +75,7 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
     public function publicForumAddTopicPost(string $forumSlug): void
     {
-        [$name, $content, $disallowReplies, $important] = Utils::filterInput('name', 'content', 'disallow_replies', 'important');
+        [$name, $content, $disallowReplies, $important, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'tags');
 
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
@@ -94,6 +94,21 @@ class ForumPublicController extends CoreController
                 LangManager::translate("core.toaster.internalError"));
             Utils::refreshPage();
             return;
+        }
+
+        // Add tags
+
+        $tags = explode(",", $tags);
+
+        foreach ($tags as $tag) {
+            //Clean tag
+            $tag = mb_strtolower(trim($tag));
+
+            if (empty($tag)) {
+                continue;
+            }
+
+            $this->topicModel->addTag($tag, $res->getId());
         }
 
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
@@ -148,7 +163,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        if ($topic->isDisallowReplies()){
+        if ($topic->isDisallowReplies()) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.topic.replies.error.disallow_replies"));
             Utils::refreshPage();
@@ -192,7 +207,7 @@ class ForumPublicController extends CoreController
 
         $reply = $this->responseModel->getResponseById($replyId);
 
-        if (!$reply?->isSelfReply()){
+        if (!$reply?->isSelfReply()) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.reply.delete.errors.no_access"));
             return;
@@ -201,7 +216,7 @@ class ForumPublicController extends CoreController
         if ($this->responseModel->deleteResponse($replyId)) {
 
             Response::sendAlert("success", LangManager::translate("core.toaster.success"),
-                 LangManager::translate("forum.reply.delete.success"));
+                LangManager::translate("forum.reply.delete.success"));
 
             header("location: ../../{$topic->getSlug()}");
         }

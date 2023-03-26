@@ -16,6 +16,8 @@ class topicEntity
     private bool $important;
     private userEntity $topicUser;
     private forumEntity $topicForum;
+    /* @var \CMW\Entity\Forum\TopicTagEntity[] $tags */
+    private array $tags;
 
     /**
      * @param int $topicId
@@ -25,10 +27,13 @@ class topicEntity
      * @param bool $topicPinned
      * @param bool $disallowReplies
      * @param bool $important
-     *  * @param \CMW\Entity\Users\userEntity $topicUser
+     * @param \CMW\Entity\Users\userEntity $topicUser
      * @param \CMW\Entity\Forum\forumEntity $topicForum
+     * @param \CMW\Entity\Forum\TopicTagEntity[] $tags
      */
-    public function __construct(int $topicId, string $topicName, string $topicSlug, string $topicContent, bool $topicPinned, bool $disallowReplies, bool $important,  userEntity $topicUser, forumEntity $topicForum)
+    public function __construct(int $topicId, string $topicName, string $topicSlug, string $topicContent,
+                                bool $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
+                                forumEntity $topicForum, array $tags)
     {
         $this->topicId = $topicId;
         $this->topicName = $topicName;
@@ -39,6 +44,7 @@ class topicEntity
         $this->important = $important;
         $this->topicUser = $topicUser;
         $this->topicForum = $topicForum;
+        $this->tags = $tags;
     }
 
     /**
@@ -124,5 +130,13 @@ class topicEntity
     public function getPinnedLink(): string
     {
         return "forum/t/$this->topicSlug/pinned";
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\TopicTagEntity[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags;
     }
 }

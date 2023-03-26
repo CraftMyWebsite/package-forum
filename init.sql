@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
     forum_category_id          INT AUTO_INCREMENT PRIMARY KEY,
     forum_category_name        VARCHAR(50) NOT NULL,
     forum_category_description TEXT        NULL
-);
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS cmw_forums
 (
@@ -17,7 +18,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums
         FOREIGN KEY (forum_category_id) REFERENCES cmw_forums_categories (forum_category_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_forum_forum_id
         FOREIGN KEY (forum_subforum_id) REFERENCES cmw_forums (forum_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_topics
 (
@@ -34,7 +36,19 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics
         FOREIGN KEY (forum_id) REFERENCES cmw_forums (forum_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_topics_user_id
         FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE SET NULL
-);
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `cmw_forums_topics_tags`
+(
+    `forums_topics_tags_id`       INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `forums_topics_tags_content`  VARCHAR(50) NOT NULL,
+    `forums_topics_tags_topic_id` INT         NOT NULL,
+    INDEX (`forums_topics_tags_topic_id`),
+    CONSTRAINT fk_topic_id FOREIGN KEY (forums_topics_tags_topic_id)
+        REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_response
 (
@@ -46,5 +60,6 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response
         FOREIGN KEY (forum_topic_id) REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_response_user_id
         FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 

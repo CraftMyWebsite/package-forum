@@ -28,6 +28,13 @@ $description = "Ajoutez un topic au forum {$forum->getName()}";
 
             <br>
 
+            <label> Tags
+                <input type="text" name="tags">
+            </label>
+            <small>TIPS: Si vous voulez plusieurs tags, vous pouvez les séparer en tapant ','</small>
+
+            <br>
+
             <label> Désactiver les réponses
                 <input type="checkbox" name="disallow_replies" value="1">
             </label>
