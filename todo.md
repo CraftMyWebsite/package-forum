@@ -14,7 +14,7 @@
       - [x] Title
       - [x] Content
       - [ ] Prefix
-      - [ ] Tags (separate with ",")
+      - [x] Tags (separate with ",")
       - [ ] Attached files
       - [x] Disallow replies
       - [x] Important ? (Need specific perms)
