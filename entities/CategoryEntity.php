@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-class categoryEntity
+class CategoryEntity
 {
 
     private int $categoryId;

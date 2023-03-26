@@ -2,7 +2,7 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\topicEntity;
+use CMW\Entity\Forum\TopicEntity;
 use CMW\Entity\Forum\TopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Model\Users\UsersModel;
@@ -28,7 +28,7 @@ class TopicModel extends DatabaseManager
 
     }
 
-    public function getTopicBySlug(string $slug): ?topicEntity
+    public function getTopicBySlug(string $slug): ?TopicEntity
     {
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
 
@@ -49,7 +49,7 @@ class TopicModel extends DatabaseManager
         return $this->getTopicById($res["forum_topic_id"]);
     }
 
-    public function getTopicById(int $id): ?topicEntity
+    public function getTopicById(int $id): ?TopicEntity
     {
         $sql = "SELECT * FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
 
@@ -74,7 +74,7 @@ class TopicModel extends DatabaseManager
             return null;
         }
 
-        return new topicEntity(
+        return new TopicEntity(
             $res["forum_topic_id"],
             $res["forum_topic_name"],
             $res["forum_topic_slug"],
@@ -89,7 +89,7 @@ class TopicModel extends DatabaseManager
     }
 
     /**
-     * @return \CMW\Entity\Forum\topicEntity[]
+     * @return \CMW\Entity\Forum\TopicEntity[]
      */
     public function getTopicByForum(int $id): array
     {
@@ -116,7 +116,7 @@ class TopicModel extends DatabaseManager
         return $toReturn;
     }
 
-    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important): ?topicEntity
+    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important): ?TopicEntity
     {
 
         $var = array(
@@ -166,7 +166,7 @@ class TopicModel extends DatabaseManager
     }
 
 
-    public function pinTopic(topicEntity $topic): bool
+    public function pinTopic(TopicEntity $topic): bool
     {
         $data = array(
             "topic_id" => $topic->getId(),

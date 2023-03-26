@@ -2,7 +2,7 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\responseEntity;
+use CMW\Entity\Forum\ResponseEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Model\Users\UsersModel;
 
@@ -27,7 +27,7 @@ class ResponseModel extends DatabaseManager
     }
 
     /**
-     * @return \CMW\Entity\Forum\responseEntity[]
+     * @return \CMW\Entity\Forum\ResponseEntity[]
      */
     public function getResponseByTopic(int $id): array
     {
@@ -48,7 +48,7 @@ class ResponseModel extends DatabaseManager
         return $toReturn;
     }
 
-    public function getResponseById(int $id): ?responseEntity
+    public function getResponseById(int $id): ?ResponseEntity
     {
 
         $sql = "SELECT * FROM cmw_forums_response WHERE forum_response_id = :response_id ";
@@ -70,7 +70,7 @@ class ResponseModel extends DatabaseManager
             return null;
         }
 
-        return new responseEntity(
+        return new ResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
             $topic,
@@ -93,7 +93,7 @@ class ResponseModel extends DatabaseManager
     }
 
 
-    public function createResponse(string $content, int $userId, int $topicId): ?responseEntity
+    public function createResponse(string $content, int $userId, int $topicId): ?ResponseEntity
     {
 
         $var = array(

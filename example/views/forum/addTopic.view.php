@@ -1,5 +1,5 @@
 <?php
-/** @var \CMW\Entity\Forum\forumEntity $forum */
+/** @var \CMW\Entity\Forum\ForumEntity $forum */
 
 
 use CMW\Manager\Security\SecurityManager;

@@ -2,7 +2,7 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\forumEntity;
+use CMW\Entity\Forum\ForumEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Utils\Utils;
 
@@ -24,7 +24,7 @@ class ForumModel extends DatabaseManager
     /*==> UTILS */
 
     /**
-     * @return \CMW\Entity\Forum\forumEntity[]
+     * @return \CMW\Entity\Forum\ForumEntity[]
      */
     public function getForums(): array
     {
@@ -48,7 +48,7 @@ class ForumModel extends DatabaseManager
 
     /*=> GETTERS */
 
-    public function getForumById(int $id): ?forumEntity
+    public function getForumById(int $id): ?ForumEntity
     {
         $sql = "SELECT * FROM cmw_forums WHERE forum_id = :forum_id";
 
@@ -68,7 +68,7 @@ class ForumModel extends DatabaseManager
             return null;
         }
 
-        return new forumEntity(
+        return new ForumEntity(
             $res["forum_id"],
             $res["forum_name"],
             $res["forum_description"] ?? "",
@@ -78,7 +78,7 @@ class ForumModel extends DatabaseManager
     }
 
     /**
-     * @return \CMW\Entity\Forum\forumEntity[]
+     * @return \CMW\Entity\Forum\ForumEntity[]
      */
     public function getForumByParent(int $id, bool $isForumId = false): array
     {
@@ -100,7 +100,7 @@ class ForumModel extends DatabaseManager
         return $toReturn;
     }
 
-    public function getForumBySlug(string $slug): ?forumEntity
+    public function getForumBySlug(string $slug): ?ForumEntity
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_slug = :forum_slug";
 
@@ -149,7 +149,7 @@ class ForumModel extends DatabaseManager
         return (bool)$res->fetch(0);
     }
 
-    public function createForum(string $name, string $description, int $reattached_Id, bool $isCategory = true): ?forumEntity
+    public function createForum(string $name, string $description, int $reattached_Id, bool $isCategory = true): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,

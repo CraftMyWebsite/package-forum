@@ -5,15 +5,15 @@ namespace CMW\Entity\Forum;
 use CMW\Entity\Users\userEntity;
 use CMW\Model\Users\UsersModel;
 
-class responseEntity
+class ResponseEntity
 {
 
     private int $responseId;
     private string $responseContent;
-    private topicEntity $responseTopic;
+    private TopicEntity $responseTopic;
     private userEntity $responseUser;
 
-    public function __construct(int $id, string $content, topicEntity $topic, userEntity $user)
+    public function __construct(int $id, string $content, TopicEntity $topic, userEntity $user)
     {
         $this->responseId = $id;
         $this->responseContent = $content;
@@ -38,9 +38,9 @@ class responseEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\topicEntity
+     * @return \CMW\Entity\Forum\TopicEntity
      */
-    public function getResponseTopic(): topicEntity
+    public function getResponseTopic(): TopicEntity
     {
         return $this->responseTopic;
     }

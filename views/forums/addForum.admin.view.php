@@ -6,7 +6,7 @@ use CMW\Manager\Security\SecurityManager;
 $title = LangManager::translate("forum.forum.add.title");
 $description = LangManager::translate("forum.forum.add.description");
 
-/* @var \CMW\Entity\Forum\categoryEntity[] $categories */
+/* @var \CMW\Entity\Forum\CategoryEntity[] $categories */
 
 ?>
 

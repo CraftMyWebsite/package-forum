@@ -4,7 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 
-class topicEntity
+class TopicEntity
 {
 
     private int $topicId;
@@ -15,7 +15,7 @@ class topicEntity
     private bool $disallowReplies;
     private bool $important;
     private userEntity $topicUser;
-    private forumEntity $topicForum;
+    private ForumEntity $topicForum;
     /* @var \CMW\Entity\Forum\TopicTagEntity[] $tags */
     private array $tags;
 
@@ -28,12 +28,12 @@ class topicEntity
      * @param bool $disallowReplies
      * @param bool $important
      * @param \CMW\Entity\Users\userEntity $topicUser
-     * @param \CMW\Entity\Forum\forumEntity $topicForum
+     * @param \CMW\Entity\Forum\ForumEntity $topicForum
      * @param \CMW\Entity\Forum\TopicTagEntity[] $tags
      */
-    public function __construct(int $topicId, string $topicName, string $topicSlug, string $topicContent,
-                                bool $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
-                                forumEntity $topicForum, array $tags)
+    public function __construct(int         $topicId, string $topicName, string $topicSlug, string $topicContent,
+                                bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
+                                ForumEntity $topicForum, array $tags)
     {
         $this->topicId = $topicId;
         $this->topicName = $topicName;
@@ -104,9 +104,9 @@ class topicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\forumEntity
+     * @return \CMW\Entity\Forum\ForumEntity
      */
-    public function getForum(): forumEntity
+    public function getForum(): ForumEntity
     {
         return $this->topicForum;
     }

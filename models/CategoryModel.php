@@ -2,7 +2,7 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\categoryEntity;
+use CMW\Entity\Forum\CategoryEntity;
 use CMW\Manager\Database\DatabaseManager;
 
 
@@ -16,7 +16,7 @@ class CategoryModel extends DatabaseManager
 {
 
     /**
-     * @return \CMW\Entity\Forum\categoryEntity[]
+     * @return \CMW\Entity\Forum\CategoryEntity[]
      */
     public function getCategories(): array
     {
@@ -40,7 +40,7 @@ class CategoryModel extends DatabaseManager
 
     }
 
-    public function getCategoryById(int $id): ?categoryEntity
+    public function getCategoryById(int $id): ?CategoryEntity
     {
         $sql = "SELECT * FROM cmw_forums_categories WHERE forum_category_id = :category_id";
 
@@ -54,14 +54,14 @@ class CategoryModel extends DatabaseManager
 
         $res = $res->fetch();
 
-        return new categoryEntity(
+        return new CategoryEntity(
             $res["forum_category_id"],
             $res["forum_category_name"],
             $res["forum_category_description"] ?? ""
         );
     }
 
-    public function createCategory(string $name, string $description): ?categoryEntity
+    public function createCategory(string $name, string $description): ?CategoryEntity
     {
 
         $data = array(
@@ -76,7 +76,7 @@ class CategoryModel extends DatabaseManager
 
         if ($req->execute($data)) {
             $id = $db->lastInsertId();
-            return new categoryEntity($id, $name, $description);
+            return new CategoryEntity($id, $name, $description);
         }
 
         return null;

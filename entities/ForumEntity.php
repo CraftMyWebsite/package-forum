@@ -2,16 +2,16 @@
 
 namespace CMW\Entity\Forum;
 
-class forumEntity
+class ForumEntity
 {
 
     private int $forumId;
     private string $forumName;
     private string $forumDescription;
     private string $forumSlug;
-    private forumEntity|categoryEntity $forumParent;
+    private ForumEntity|CategoryEntity $forumParent;
 
-    public function __construct(int $id, string $name, string $desc, string $forumSlug, forumEntity|categoryEntity $parent)
+    public function __construct(int $id, string $name, string $desc, string $forumSlug, ForumEntity|CategoryEntity $parent)
     {
         $this->forumId = $id;
         $this->forumName = $name;
@@ -57,7 +57,7 @@ class forumEntity
         return "forum/f/$this->forumSlug";
     }
 
-    public function getParent(): forumEntity|categoryEntity
+    public function getParent(): ForumEntity|CategoryEntity
     {
         return $this->forumParent;
     }
