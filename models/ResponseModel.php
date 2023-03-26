@@ -114,4 +114,18 @@ class ResponseModel extends DatabaseManager
         return null;
     }
 
+    public function deleteResponse(int $id): bool
+    {
+        $sql = "DELETE FROM cmw_forums_response WHERE forum_response_id = :id";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(array("id" => $id))) {
+            return false;
+        }
+
+        return $req->rowCount() === 1;
+    }
+
 }

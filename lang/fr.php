@@ -64,6 +64,15 @@ return [
         ],
     ],
 
+    "reply" => [
+        "delete" => [
+            "success" => "Réponse supprimée avec succès !",
+            "errors" => [
+                "no_access" => "Vous ne pouvez pas supprimer cette réponse !"
+            ],
+        ],
+    ],
+
     "id" => "ID",
     "name" => "Nom",
     "description" => "Description",

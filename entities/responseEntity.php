@@ -3,6 +3,7 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
+use CMW\Model\Users\UsersModel;
 
 class responseEntity
 {
@@ -50,5 +51,18 @@ class responseEntity
     public function getUser(): userEntity
     {
         return $this->responseUser;
+    }
+
+    public function isSelfReply(): bool
+    {
+        return $this->getUser()->getId() === UsersModel::getLoggedUser();
+    }
+
+    /**
+     * @return string
+     */
+    public function deleteLink(): string
+    {
+        return "{$this->responseTopic->getSlug()}/delete/$this->responseId";
     }
 }

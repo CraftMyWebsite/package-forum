@@ -180,5 +180,32 @@ class ForumPublicController extends CoreController
         Utils::refreshPage();
     }
 
+    #[Link("/t/:topicSlug/delete/:replyId", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
+    public function publicTopicReplyDelete(string $topicSlug, int $replyId): void
+    {
+        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        if (is_null($topic)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            return;
+        }
+
+        $reply = $this->responseModel->getResponseById($replyId);
+
+        if (!$reply?->isSelfReply()){
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("forum.reply.delete.errors.no_access"));
+            return;
+        }
+
+        if ($this->responseModel->deleteResponse($replyId)) {
+
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+                 LangManager::translate("forum.reply.delete.success"));
+
+            header("location: ../../{$topic->getSlug()}");
+        }
+    }
+
 
 }

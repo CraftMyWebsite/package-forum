@@ -17,13 +17,13 @@
       - [ ] Tags (separate with ",")
       - [ ] Attached files
       - [x] Disallow replies
-      - [ ] Important ? (Need specific perms)
+      - [x] Important ? (Need specific perms)
     - [ ] Edit
     - [ ] Delete
 - Reply
     - [x] Create
     - [ ] Edit
-    - [ ] Delete
+    - [x] Delete
 - React
     - Add / Remove
         - [ ] Like

@@ -64,6 +64,15 @@ return [
         ],
     ],
 
+    "reply" => [
+        "delete" => [
+            "success" => "Reply delete with success !",
+            "errors" => [
+                "no_access" => "You can't delete this reply !"
+            ],
+        ],
+    ],
+
     "id" => "ID",
     "name" => "Name",
     "description" => "Description",
