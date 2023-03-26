@@ -9,36 +9,36 @@ class topicEntity
 
     private int $topicId;
     private string $topicName;
-    private string $topicContent;
     private string $topicSlug;
+    private string $topicContent;
     private bool $topicPinned;
     private bool $disallowReplies;
     private bool $important;
-    private forumEntity $topicForum;
     private userEntity $topicUser;
+    private forumEntity $topicForum;
 
     /**
      * @param int $topicId
      * @param string $topicName
-     * @param string $topicContent
      * @param string $topicSlug
+     * @param string $topicContent
      * @param bool $topicPinned
      * @param bool $disallowReplies
      * @param bool $important
+     *  * @param \CMW\Entity\Users\userEntity $topicUser
      * @param \CMW\Entity\Forum\forumEntity $topicForum
-     * @param \CMW\Entity\Users\userEntity $topicUser
      */
-    public function __construct(int $topicId, string $topicName, string $topicContent, string $topicSlug, bool $topicPinned, bool $disallowReplies, bool $important, forumEntity $topicForum, userEntity $topicUser)
+    public function __construct(int $topicId, string $topicName, string $topicSlug, string $topicContent, bool $topicPinned, bool $disallowReplies, bool $important,  userEntity $topicUser, forumEntity $topicForum)
     {
         $this->topicId = $topicId;
         $this->topicName = $topicName;
-        $this->topicContent = $topicContent;
         $this->topicSlug = $topicSlug;
+        $this->topicContent = $topicContent;
         $this->topicPinned = $topicPinned;
         $this->disallowReplies = $disallowReplies;
         $this->important = $important;
-        $this->topicForum = $topicForum;
         $this->topicUser = $topicUser;
+        $this->topicForum = $topicForum;
     }
 
     /**

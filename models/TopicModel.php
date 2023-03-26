@@ -76,13 +76,13 @@ class TopicModel extends DatabaseManager
         return new topicEntity(
             $res["forum_topic_id"],
             $res["forum_topic_name"],
+            $res["forum_topic_slug"],
             $res["forum_topic_content"] ?? "",
+            $res["forum_topic_pinned"],
             $res["forum_topic_disallow_replies"],
             $res["forum_topic_important"],
-            $res["forum_topic_slug"],
-            $res["forum_topic_pinned"],
-            $forum,
-            $user
+            $user,
+            $forum
         );
     }
 
