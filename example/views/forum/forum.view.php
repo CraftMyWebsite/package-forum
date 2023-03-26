@@ -1,7 +1,9 @@
 <?php
 /** @var \CMW\Entity\Forum\forumEntity $forum */
 
-/** @var \CMW\Model\Forum\forumModel $forumModel */
+/** @var \CMW\Model\Forum\TopicModel $topicModel */
+
+/** @var \CMW\Model\Forum\ForumModel $forumModel */
 
 use CMW\Utils\Utils;
 
@@ -30,7 +32,7 @@ $description = "Description de votre page";
 <h1>Topics</h1>
 <div class="container">
     <a href="<?= $forum->getSlug() ?>/add" class="btn">Ajouter un topic</a>
-    <?php foreach ($forumModel->getTopicByForum($forum->getId()) as $topic): ?>
+    <?php foreach ($topicModel->getTopicByForum($forum->getId()) as $topic): ?>
         <h3><?= $topic->getId() . ". " . $topic->getName() ?> <?= $topic->isPinned() ? " - épinglé" : "" ?></h3>
         <a href="/<?= $topic->getLink() ?>">Aller vers ce Topic</a>
         =>

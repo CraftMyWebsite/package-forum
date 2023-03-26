@@ -12,18 +12,33 @@ class topicEntity
     private string $topicContent;
     private string $topicSlug;
     private bool $topicPinned;
+    private bool $disallowReplies;
+    private bool $important;
     private forumEntity $topicForum;
     private userEntity $topicUser;
 
-    public function __construct(int $id, string $name, string $content, string $topicSlug, bool $topicPinned, forumEntity $forum, userEntity $user)
+    /**
+     * @param int $topicId
+     * @param string $topicName
+     * @param string $topicContent
+     * @param string $topicSlug
+     * @param bool $topicPinned
+     * @param bool $disallowReplies
+     * @param bool $important
+     * @param \CMW\Entity\Forum\forumEntity $topicForum
+     * @param \CMW\Entity\Users\userEntity $topicUser
+     */
+    public function __construct(int $topicId, string $topicName, string $topicContent, string $topicSlug, bool $topicPinned, bool $disallowReplies, bool $important, forumEntity $topicForum, userEntity $topicUser)
     {
-        $this->topicId = $id;
-        $this->topicName = $name;
-        $this->topicContent = $content;
+        $this->topicId = $topicId;
+        $this->topicName = $topicName;
+        $this->topicContent = $topicContent;
         $this->topicSlug = $topicSlug;
         $this->topicPinned = $topicPinned;
-        $this->topicForum = $forum;
-        $this->topicUser = $user;
+        $this->disallowReplies = $disallowReplies;
+        $this->important = $important;
+        $this->topicForum = $topicForum;
+        $this->topicUser = $topicUser;
     }
 
     /**
@@ -64,6 +79,22 @@ class topicEntity
     public function isPinned(): bool
     {
         return $this->topicPinned;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisallowReplies(): bool
+    {
+        return $this->disallowReplies;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImportant(): bool
+    {
+        return $this->important;
     }
 
     /**

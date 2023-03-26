@@ -5,8 +5,19 @@
     - [x] Create
     - [ ] Edit
     - [x] Delete
-- Post
+- Forums
     - [x] Create
+    - [ ] Edit
+    - [x] Delete
+- Topic
+    - [x] Create
+      - [x] Title
+      - [x] Content
+      - [ ] Prefix
+      - [ ] Tags (separate with ",")
+      - [ ] Attached files
+      - [ ] Disallow replies
+      - [ ] Important ? (Need specific perms)
     - [ ] Edit
     - [ ] Delete
 - Reply
@@ -17,6 +28,13 @@
     - Add / Remove
         - [ ] Like
         - [ ] Dislike
+- Prefix
+    - [ ] Add
+      - [ ] Name
+      - [ ] Background Color
+      - [ ] Text Color
+    - [ ] Edit
+    - [ ] Remove
 
 ### Advance Part
 - Permissions
@@ -31,8 +49,17 @@
 - [ ] Count views
 - [ ] Prepare post (with date & time)
 - [x] Pin Topics
+- [ ] Search bar
+- [ ] Topic preview
+- [ ] Follow post and receive mails when action on this post
 
 ### +++ Part
 - [ ] Permit to change view role name
 - [ ] Add Labels (like Approved, Refused...)
 - [ ] Add Embedded Msg (for Discord ?)
+- [ ] Add Polls
+  - [ ] Question / Replies
+  - [ ] Unique choice OR multiple choices
+  - [ ] Authorize changes ?
+  - [ ] Show public votes
+  - [ ] Auto close this poll after X hours / X days / X weeks / X months

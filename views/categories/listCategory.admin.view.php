@@ -2,7 +2,7 @@
 
 use CMW\Manager\Lang\LangManager;
 
-/** @var \CMW\Model\Forum\ForumModel $forum */
+/** @var \CMW\Model\Forum\CategoryModel $categoryModel */
 
 $title = LangManager::translate("forum.category.list.title");
 $description = LangManager::translate("forum.category.list.description");
@@ -54,7 +54,7 @@ $scripts = <<<HTML
                     <div class="card-body">
                         <table id="myTable" class="table table-bordered table-striped">
                             <tbody>
-                            <?php foreach ($forum->getCategories() as $category) : ?>
+                            <?php foreach ($categoryModel->getCategories() as $category) : ?>
                                 <tr>
                                     <td><?= $category->getId() ?></td>
                                     <td><?= $category->getName() ?></td>

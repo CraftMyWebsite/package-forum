@@ -39,6 +39,9 @@ return [
                 "success" => "Forum added with success !"
             ],
         ],
+        "delete" => [
+            "success" => "Forum delete with success !",
+        ],
         "name" => "Name of forum",
         "description" => "Forum description"
     ],
@@ -52,6 +55,9 @@ return [
         ],
         "unpinned" => [
             "success" => "You unpinned this topic with success !"
+        ],
+        "replies" => [
+            "success" => "Réponse ajoutée !",
         ],
     ],
 

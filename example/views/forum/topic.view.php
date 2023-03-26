@@ -1,5 +1,6 @@
 <?php
-/** @var \CMW\Model\Forum\forumModel $forumModel */
+/** @var \CMW\Model\Forum\ResponseModel $responseModel */
+
 /** @var \CMW\Entity\Forum\topicEntity $topic
  */
 
@@ -17,10 +18,10 @@ $description = "Description de votre page";
     </div>
     <div class="container">
         <h3>Réponses :</h3>
-        <?php if (!$forumModel->countResponseInTopic($topic->getId())): ?>
+        <?php if (!$responseModel->countResponseInTopic($topic->getId())): ?>
             <h4 style="text-align: center">Aucune réponse...</h4>
         <?php endif; ?>
-        <?php foreach ($forumModel->getResponseByTopic($topic->getId()) as $response) : ?>
+        <?php foreach ($responseModel->getResponseByTopic($topic->getId()) as $response) : ?>
             <h4><?= $response->getContent() ?></h4>
             <h6><?= $response->getUser()->getUsername() ?></h6>
             <button></button>
@@ -33,7 +34,7 @@ $description = "Description de votre page";
     <form action="" method="post">
         <?php (new SecurityManager())->insertHiddenToken() ?>
         <label style="display:block;" for="topicResponse">Votre réponse : </label>
-        <input hidden type="text" name="topicId" value="<?= $topic->getId()?>">
+        <input hidden type="text" name="topicId" value="<?= $topic->getId() ?>">
         <textarea required name="topicResponse" id="topicResponse" cols="30" rows="10"></textarea>
         <input type="submit" value="Envoyer !">
     </form>
