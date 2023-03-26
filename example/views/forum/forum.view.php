@@ -33,7 +33,10 @@ $description = "Description de votre page";
 <div class="container">
     <a href="<?= $forum->getSlug() ?>/add" class="btn">Ajouter un topic</a>
     <?php foreach ($topicModel->getTopicByForum($forum->getId()) as $topic): ?>
-        <h3><?= $topic->getId() . ". " . $topic->getName() ?> <?= $topic->isPinned() ? " - épinglé" : "" ?></h3>
+
+        <h3 <?= $topic->isImportant() ? " style='color: red'" : "" ?>>
+            <?= $topic->getId() . ". " . $topic->getName() ?> <?= $topic->isPinned() ? " - épinglé" : "" ?>
+        </h3>
         <a href="/<?= $topic->getLink() ?>">Aller vers ce Topic</a>
         =>
         <a href="<?= Utils::getEnv()->getValue('PATH_SUBFOLDER') ?><?= $topic->getPinnedLink() ?>">

@@ -75,7 +75,7 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
     public function publicForumAddTopicPost(string $forumSlug): void
     {
-        [$name, $content] = Utils::filterInput('name', 'content');
+        [$name, $content, $disallowReplies, $important] = Utils::filterInput('name', 'content', 'disallow_replies', 'important');
 
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
@@ -86,9 +86,10 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = $this->topicModel->createTopic($name, $content, UsersModel::getLoggedUser(), $forum?->getId());
+        $res = $this->topicModel->createTopic($name, $content, UsersModel::getLoggedUser(), $forum->getId(),
+            (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1));
 
-        if (is_null($res)) { //TODO Fix this error ?
+        if (is_null($res)) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             Utils::refreshPage();
@@ -98,7 +99,7 @@ class ForumPublicController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
-        header("location: ../");
+        header("location: ../$forumSlug");
     }
 
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
@@ -133,7 +134,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicPost(string $topicSlug): void
+    public function publicTopicResponsePost(string $topicSlug): void
     {
         usersController::isAdminLogged(); //TODO Need to "Is User Logged" && Permissions
 
@@ -143,6 +144,14 @@ class ForumPublicController extends CoreController
         if (!$topic) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
+            Utils::refreshPage();
+            return;
+        }
+
+        if ($topic->isDisallowReplies()){
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("forum.topic.replies.error.disallow_replies"));
+            Utils::refreshPage();
             return;
         }
 

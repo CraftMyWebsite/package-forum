@@ -58,6 +58,9 @@ return [
         ],
         "replies" => [
             "success" => "Réponse ajoutée !",
+            "errors" => [
+                "disallow_replies" => "Replies are disabled for this topic !",
+            ],
         ],
     ],
 

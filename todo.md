@@ -16,7 +16,7 @@
       - [ ] Prefix
       - [ ] Tags (separate with ",")
       - [ ] Attached files
-      - [ ] Disallow replies
+      - [x] Disallow replies
       - [ ] Important ? (Need specific perms)
     - [ ] Edit
     - [ ] Delete

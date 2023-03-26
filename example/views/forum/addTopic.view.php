@@ -9,28 +9,40 @@ $description = "Ajoutez un topic au forum {$forum->getName()}";
 ?>
 
 <section class="container px-4 px-lg-5 h-100" style="margin-top: 80px">
-   <form action="" method="post">
-       <?php (new SecurityManager())->insertHiddenToken() ?>
+    <form action="" method="post">
+        <?php (new SecurityManager())->insertHiddenToken() ?>
 
-       <div class="align-items-center">
-           <h1 class="text-dark font-weight-bold">Ajouter un topic au forum <?= $forum->getName() ?></h1>
-           <hr class="divider" />
+        <div class="align-items-center">
+            <h1 class="text-dark font-weight-bold">Ajouter un topic au forum <?= $forum->getName() ?></h1>
+            <hr class="divider" />
 
-           <label> Nom du topic
-               <input type="text" name="name" required>
-           </label>
+            <label> Nom du topic
+                <input type="text" name="name" required>
+            </label>
 
-           <br>
+            <br>
 
-           <label> Contenu
-               <textarea name="content" required></textarea>
-           </label>
+            <label> Contenu
+                <textarea name="content" required></textarea>
+            </label>
 
-           <br>
+            <br>
 
-           <button type="submit">Envoyer</button>
+            <label> Désactiver les réponses
+                <input type="checkbox" name="disallow_replies" value="1">
+            </label>
 
-       </div>
-   </form>
+            <br>
+
+            <label> Topic important ?
+                <input type="checkbox" name="important" value="1">
+            </label>
+
+            <br>
+
+            <button type="submit">Envoyer</button>
+
+        </div>
+    </form>
 
 </section>

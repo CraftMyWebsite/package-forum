@@ -92,7 +92,8 @@ class TopicModel extends DatabaseManager
     public function getTopicByForum(int $id): array
     {
 
-        $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id ORDER BY forum_topic_pinned DESC";
+        $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id 
+                                             ORDER BY forum_topic_pinned DESC, forum_topic_important DESC ";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -113,26 +114,31 @@ class TopicModel extends DatabaseManager
         return $toReturn;
     }
 
-    public function createTopic(string $name, string $content, int $userId, int $forumId): ?topicEntity
+    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important): ?topicEntity
     {
 
         $var = array(
             "topic_name" => $name,
             "topic_content" => $content,
             "topic_slug" => "NOT DEFINED",
+            "disallow_replies" => $disallowReplies,
+            "important" => $important,
             "user_id" => $userId,
             "forum_id" => $forumId
         );
 
-        $sql = "INSERT INTO cmw_forums_topics (forum_topic_name, forum_topic_content, forum_topic_slug, user_id, forum_id) 
-                VALUES (:topic_name, :topic_content, :topic_slug, :user_id, :forum_id)";
+        $sql = "INSERT INTO cmw_forums_topics (forum_topic_name, forum_topic_content, forum_topic_slug, 
+                               forum_topic_disallow_replies, forum_topic_important, user_id, forum_id) 
+                VALUES (:topic_name, :topic_content, :topic_slug, :disallow_replies, :important, :user_id, :forum_id)";
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($var)) {
-            $this->setTopicSlug($db->lastInsertId("forum_topic_id"), $name);
-            return $this->getTopicById($db->lastInsertId());
+            $id = $db->lastInsertId();
+
+            $this->setTopicSlug($id, $name);
+            return $this->getTopicById($id);
         }
 
         return null;

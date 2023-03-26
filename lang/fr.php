@@ -58,6 +58,9 @@ return [
         ],
         "replies" => [
             "success" => "Réponse ajoutée !",
+            "errors" => [
+                "disallow_replies" => "Les réponses sont désactivées sur ce topic !",
+            ],
         ],
     ],
 
