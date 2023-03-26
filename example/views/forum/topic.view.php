@@ -23,8 +23,10 @@ $description = "Description de votre page";
             <?php endif; ?>
             <?php foreach ($responseModel->getResponseByTopic($topic->getId()) as $response) : ?>
                 <h4><?= $response->getContent() ?></h4>
-                <h6><?= $response->getUser()->getUsername() ?></h6>
-                <button></button>
+                <span><?= $response->getUser()->getUsername() ?></span>
+                <?php if ($response->isSelfReply()): ?>
+                    <a href="<?= $response->deleteLink() ?>">Supprimer ma réponse</a>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
         <hr>
