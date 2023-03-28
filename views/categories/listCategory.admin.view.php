@@ -59,6 +59,8 @@ $scripts = <<<HTML
                                     <td><?= $category->getId() ?></td>
                                     <td><?= $category->getName() ?></td>
                                     <td><?= $category->getDescription() ?></td>
+                                    <td><?= $category->getCreated() ?></td>
+                                    <td><?= $category->getUpdate() ?></td>
                                     <td>
                                         <a href="<?= $category->getAdminDeleteLink() ?>"><?= LangManager::translate("core.btn.delete") ?></a>
                                     </td>

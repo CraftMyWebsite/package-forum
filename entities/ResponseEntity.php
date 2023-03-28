@@ -4,19 +4,24 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Model\Users\UsersModel;
+use CMW\Controller\Core\CoreController;
 
 class ResponseEntity
 {
 
     private int $responseId;
     private string $responseContent;
+    private string $responseCreated;
+    private string $responseUpdated;
     private TopicEntity $responseTopic;
     private userEntity $responseUser;
 
-    public function __construct(int $id, string $content, TopicEntity $topic, userEntity $user)
+    public function __construct(int $id, string $content, string $created, string $updated, TopicEntity $topic, userEntity $user)
     {
         $this->responseId = $id;
         $this->responseContent = $content;
+        $this->responseCreated = $created;
+        $this->responseUpdated = $updated;
         $this->responseTopic = $topic;
         $this->responseUser = $user;
     }
@@ -35,6 +40,22 @@ class ResponseEntity
     public function getContent(): string
     {
         return $this->responseContent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreated(): string
+    {
+        return CoreController::formatDate($this->responseCreated);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdate(): string
+    {
+        return CoreController::formatDate($this->responseUpdated);
     }
 
     /**

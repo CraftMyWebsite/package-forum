@@ -3,6 +3,7 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
+use CMW\Controller\Core\CoreController;
 
 class TopicEntity
 {
@@ -11,6 +12,8 @@ class TopicEntity
     private string $topicName;
     private string $topicSlug;
     private string $topicContent;
+    private string $topicCreated;
+    private string $topicUpdate;
     private bool $topicPinned;
     private bool $disallowReplies;
     private bool $important;
@@ -24,6 +27,8 @@ class TopicEntity
      * @param string $topicName
      * @param string $topicSlug
      * @param string $topicContent
+     * @param string $topicCreated
+     * @param string $topicUpdate
      * @param bool $topicPinned
      * @param bool $disallowReplies
      * @param bool $important
@@ -31,7 +36,7 @@ class TopicEntity
      * @param \CMW\Entity\Forum\ForumEntity $topicForum
      * @param \CMW\Entity\Forum\TopicTagEntity[] $tags
      */
-    public function __construct(int         $topicId, string $topicName, string $topicSlug, string $topicContent,
+    public function __construct(int         $topicId, string $topicName, string $topicSlug, string $topicContent, string $topicCreated, string $topicUpdate,
                                 bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
                                 ForumEntity $topicForum, array $tags)
     {
@@ -39,6 +44,8 @@ class TopicEntity
         $this->topicName = $topicName;
         $this->topicSlug = $topicSlug;
         $this->topicContent = $topicContent;
+        $this->topicCreated = $topicCreated;
+        $this->topicUpdate = $topicUpdate;
         $this->topicPinned = $topicPinned;
         $this->disallowReplies = $disallowReplies;
         $this->important = $important;
@@ -69,6 +76,22 @@ class TopicEntity
     public function getContent(): string
     {
         return $this->topicContent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreated(): string
+    {
+        return CoreController::formatDate($this->topicCreated);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdate(): string
+    {
+        return CoreController::formatDate($this->topicUpdate);
     }
 
     /**

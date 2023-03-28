@@ -37,6 +37,7 @@ $description = "Description de votre page";
         <h3 <?= $topic->isImportant() ? " style='color: red'" : "" ?>>
             <?= $topic->getId() . ". " . $topic->getName() ?> <?= $topic->isPinned() ? " - épinglé" : "" ?>
         </h3>
+        <p><?= $topic->getCreated() ?> ----- <?= $topic->getUpdate() ?></p>
         <a href="/<?= $topic->getLink() ?>">Aller vers ce Topic</a>
         =>
         <a href="<?= Utils::getEnv()->getValue('PATH_SUBFOLDER') ?><?= $topic->getPinnedLink() ?>">
