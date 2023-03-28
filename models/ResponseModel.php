@@ -73,6 +73,8 @@ class ResponseModel extends DatabaseManager
         return new ResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
+            $res["forum_response_created"],
+            $res["forum_response_updated"],
             $topic,
             $user
         );

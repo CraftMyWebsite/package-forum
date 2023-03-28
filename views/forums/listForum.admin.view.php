@@ -63,6 +63,8 @@ $scripts = <<<HTML
                                     <td><?= $forum->getId() ?></td>
                                     <td><?= $forum->getName() ?></td>
                                     <td><?= $forum->getDescription() ?></td>
+                                    <td><?= $forum->getCreated() ?></td>
+                                    <td><?= $forum->getUpdate() ?></td>
                                     <td><?= ($forum->isParentCategory() ? "<i class='fa fa-book'></i>" : "<i class='fa fa-envelope-open-text'></i>") ?> <?= $forum->getName() ?></td>
                                     <td>
                                         <a href="<?= $forum->getAdminDeleteLink() ?>"><?= LangManager::translate("core.btn.delete") ?></a>

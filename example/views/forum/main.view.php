@@ -8,6 +8,7 @@ $description = "Description de votre page";
     <div class="container">
         <?php foreach ($categoryModel->getCategories() as $category) : ?>
             <h1><?= $category->getId() . ". " . $category->getName() ?></h1>
+            <small><?= $category->getCreated() . ". " . $category->getUpdate() ?></small>
             <div class="container">
                 <?php foreach ($forumModel->getForumByParent($category->getId()) as $forumObj): ?>
                     <h3 style="margin-left: 3em">

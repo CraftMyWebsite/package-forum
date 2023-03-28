@@ -79,6 +79,8 @@ class TopicModel extends DatabaseManager
             $res["forum_topic_name"],
             $res["forum_topic_slug"],
             $res["forum_topic_content"] ?? "",
+            $res["forum_topic_created"],
+            $res["forum_topic_updated"],
             $res["forum_topic_pinned"],
             $res["forum_topic_disallow_replies"],
             $res["forum_topic_important"],

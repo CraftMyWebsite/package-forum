@@ -2,6 +2,8 @@
 
 namespace CMW\Entity\Forum;
 
+use CMW\Controller\Core\CoreController;
+
 class ForumEntity
 {
 
@@ -9,14 +11,18 @@ class ForumEntity
     private string $forumName;
     private string $forumDescription;
     private string $forumSlug;
+    private string $forumCreated;
+    private string $forumUpdated;
     private ForumEntity|CategoryEntity $forumParent;
 
-    public function __construct(int $id, string $name, string $desc, string $forumSlug, ForumEntity|CategoryEntity $parent)
+    public function __construct(int $id, string $name, string $desc, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|CategoryEntity $parent)
     {
         $this->forumId = $id;
         $this->forumName = $name;
         $this->forumDescription = $desc;
         $this->forumSlug = $forumSlug;
+        $this->forumCreated = $forumCreated;
+        $this->forumUpdated = $forumUpdated;
         $this->forumParent = $parent;
     }
 
@@ -50,6 +56,22 @@ class ForumEntity
     public function getSlug(): string
     {
         return $this->forumSlug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreated(): string
+    {
+        return CoreController::formatDate($this->forumCreated);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdate(): string
+    {
+        return CoreController::formatDate($this->forumUpdated);
     }
 
     public function getLink(): string

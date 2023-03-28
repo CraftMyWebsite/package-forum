@@ -73,6 +73,8 @@ class ForumModel extends DatabaseManager
             $res["forum_name"],
             $res["forum_description"] ?? "",
             $res["forum_slug"],
+            $res["forum_created"],
+            $res["forum_updated"],
             $element
         );
     }

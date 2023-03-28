@@ -1,6 +1,7 @@
 <?php
 
 namespace CMW\Entity\Forum;
+use CMW\Controller\Core\CoreController;
 
 class CategoryEntity
 {
@@ -8,11 +9,15 @@ class CategoryEntity
     private int $categoryId;
     private string $categoryName;
     private string $categoryDescription;
+    private string $categoryCreated;
+    private string $categoryUpdate;
 
-    public function __construct(int $id, string $name, string $desc = "")
+    public function __construct(int $id, string $name,string $categoryCreated, string $categoryUpdate, string $desc = "")
     {
         $this->categoryId = $id;
         $this->categoryName = $name;
+        $this->categoryCreated = $categoryCreated;
+        $this->categoryUpdate = $categoryUpdate;
         $this->categoryDescription = $desc;
     }
 
@@ -38,6 +43,22 @@ class CategoryEntity
     public function getDescription(): string
     {
         return $this->categoryDescription;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreated(): string
+    {
+        return CoreController::formatDate($this->categoryCreated);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdate(): string
+    {
+        return CoreController::formatDate($this->categoryUpdate);
     }
 
     public function getAdminDeleteLink(): string

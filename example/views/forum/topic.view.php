@@ -24,6 +24,8 @@ $description = "Description de votre page";
             <?php foreach ($responseModel->getResponseByTopic($topic->getId()) as $response) : ?>
                 <h4><?= $response->getContent() ?></h4>
                 <span><?= $response->getUser()->getUsername() ?></span>
+                <span><?= $response->getCreated() ?></span>
+                <span><?= $response->getUpdate() ?></span>
                 <?php if ($response->isSelfReply()): ?>
                     <a href="<?= $response->deleteLink() ?>">Supprimer ma réponse</a>
                 <?php endif; ?>
