@@ -47,9 +47,9 @@ class ForumController extends CoreController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
 
-        [$name, $description, $categoryId] = Utils::filterInput("name", "description", "category_id");
+        [$name, $icon, $description, $categoryId] = Utils::filterInput("name", "icon", "description", "category_id");
 
-        $this->forumModel->createForum($name, $description, $categoryId);
+        $this->forumModel->createForum($name, $icon, $description, $categoryId);
 
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
@@ -68,7 +68,7 @@ class ForumController extends CoreController
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
 
-            header("location: ../manage/");
+            header("location: ../../manage/");
             return;
         }
 
@@ -77,7 +77,7 @@ class ForumController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.delete.success"));
 
-        header("location: ../manage/");
+        header("location: ../../manage/");
     }
 
 }

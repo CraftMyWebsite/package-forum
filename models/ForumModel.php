@@ -71,6 +71,7 @@ class ForumModel extends DatabaseManager
         return new ForumEntity(
             $res["forum_id"],
             $res["forum_name"],
+            $res["forum_icon"],
             $res["forum_description"] ?? "",
             $res["forum_slug"],
             $res["forum_created"],
@@ -151,17 +152,18 @@ class ForumModel extends DatabaseManager
         return (bool)$res->fetch(0);
     }
 
-    public function createForum(string $name, string $description, int $reattached_Id, bool $isCategory = true): ?ForumEntity
+    public function createForum(string $name, string $icon, string $description, int $reattached_Id, bool $isCategory = true): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,
+            "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = $isCategory ? "INSERT INTO cmw_forums(forum_name, forum_slug, forum_description, forum_category_id)
-                VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)"
+        $sql = $isCategory ? "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_category_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)"
             : "INSERT INTO cmw_forums(forum_name, forum_slug, forum_description,  forum_subforum_id)
                 VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)";
 

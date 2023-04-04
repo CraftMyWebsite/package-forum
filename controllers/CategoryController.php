@@ -59,9 +59,9 @@ class CategoryController extends CoreController
             return;
         }
 
-        [$name, $description] = Utils::filterInput("name", "description");
+        [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        $this->categoryModel->createCategory($name, $description);
+        $this->categoryModel->createCategory($name, $icon, $description);
 
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.toaster.success"));
@@ -80,7 +80,7 @@ class CategoryController extends CoreController
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
 
-            header("location: ../manage");
+            header("location: ../../manage");
             return;
         }
 
@@ -89,6 +89,6 @@ class CategoryController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.delete.success"));
 
-        header("location: ../manage");
+        header("location: ../../manage");
     }
 }

@@ -57,21 +57,23 @@ class CategoryModel extends DatabaseManager
         return new CategoryEntity(
             $res["forum_category_id"],
             $res["forum_category_name"],
+            $res["forum_category_icon"],
             $res["forum_category_description"] ?? "",
             $res["forum_category_created"],
             $res["forum_category_updated"]
         );
     }
 
-    public function createCategory(string $name, string $description): ?CategoryEntity
+    public function createCategory(string $name, string $icon, string $description): ?CategoryEntity
     {
 
         $data = array(
             "category_name" => $name,
+            "category_icon" => $icon,
             "category_description" => $description
         );
 
-        $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_description) VALUES (:category_name, :category_description)";
+        $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_icon, forum_category_description) VALUES (:category_name, :category_icon, :category_description)";
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
