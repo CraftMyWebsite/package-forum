@@ -49,6 +49,7 @@ class ForumPublicController extends CoreController
     {
         $view = new View("forum", "main");
         $view->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel]);
+        $view->addStyle("admin/resources/vendors/fontawesome-free/css/fa-all.min.css");
         $view->view();
     }
 
