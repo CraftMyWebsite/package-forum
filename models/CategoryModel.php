@@ -57,9 +57,9 @@ class CategoryModel extends DatabaseManager
         return new CategoryEntity(
             $res["forum_category_id"],
             $res["forum_category_name"],
+            $res["forum_category_description"] ?? "",
             $res["forum_category_created"],
-            $res["forum_category_updated"],
-            $res["forum_category_description"] ?? ""
+            $res["forum_category_updated"]
         );
     }
 
@@ -78,7 +78,7 @@ class CategoryModel extends DatabaseManager
 
         if ($req->execute($data)) {
             $id = $db->lastInsertId();
-            return new CategoryEntity($id, $name, $description);
+            return $this->getCategoryById($id);
         }
 
         return null;

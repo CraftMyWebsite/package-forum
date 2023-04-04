@@ -37,16 +37,17 @@ class CategoryController extends CoreController
     }
 
 
-    #[Link("/add", Link::GET, [], "/cmw-admin/forum/categories")]
-    public function adminAddCategoryView(): void
+    #[Link("/manage", Link::GET, [], "/cmw-admin/forum")]
+    public function adminListCategoryView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
-        View::createAdminView("forum", "categories/addCategory")
+        View::createAdminView("forum", "list")
+            ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel])
             ->view();
     }
 
-    #[Link("/add", Link::POST, [], "/cmw-admin/forum/categories")]
+    #[Link("/categorie/add", Link::POST, [], "/cmw-admin/forum")]
     public function adminAddCategoryPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
@@ -65,22 +66,10 @@ class CategoryController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.toaster.success"));
 
-        header("location: list");
+        header("location: ../manage");
     }
 
-    #[Link("/list", Link::GET, [], "/cmw-admin/forum/categories")]
-    public function adminListCategoryView(): void
-    {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
-
-        View::createAdminView("forum", "categories/listCategory")
-            ->addVariableList(["categoryModel" => $this->categoryModel])
-            ->addStyle("admin/resources/vendors/simple-datatables/css/simple-datatables.css")
-            ->addScriptBefore("admin/resources/vendors/simple-datatables/js/simple-datatables.js")
-            ->view();
-    }
-
-    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    #[Link("/categorie/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
     public function adminDeleteCategory(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
@@ -91,7 +80,7 @@ class CategoryController extends CoreController
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
 
-            header("location: ../list/");
+            header("location: ../manage");
             return;
         }
 
@@ -100,6 +89,6 @@ class CategoryController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.delete.success"));
 
-        header("location: ../list/");
+        header("location: ../manage");
     }
 }

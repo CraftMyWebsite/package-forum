@@ -12,7 +12,7 @@ class CategoryEntity
     private string $categoryCreated;
     private string $categoryUpdate;
 
-    public function __construct(int $id, string $name,string $categoryCreated, string $categoryUpdate, string $desc = "")
+    public function __construct(int $id, string $name, string $desc = "",string $categoryCreated, string $categoryUpdate)
     {
         $this->categoryId = $id;
         $this->categoryName = $name;

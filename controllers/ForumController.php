@@ -42,29 +42,7 @@ class ForumController extends CoreController
         $this->usersModel = new UsersModel();
     }
 
-    #[Link("/list", Link::GET, [], "/cmw-admin/forum/forums")]
-    public function adminListForumView(): void
-    {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.list");
-
-        View::createAdminView("forum", "forums/listForum")
-            ->addVariableList(["forum" => $this->forumModel])
-            ->addStyle("admin/resources/vendors/simple-datatables/css/simple-datatables.css")
-            ->addScriptBefore("admin/resources/vendors/simple-datatables/js/simple-datatables.js")
-            ->view();
-    }
-
-    #[Link("/add", Link::GET, [], "/cmw-admin/forum/forums")]
-    public function adminAddForumView(): void
-    {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
-
-        View::createAdminView("forum", "forums/addForum")
-            ->addVariableList(["categories" => $this->categoryModel->getCategories()])
-            ->view();
-    }
-
-    #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
+    #[Link("/forum/add", Link::POST, [], "/cmw-admin/forum")]
     public function adminAddForumPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
@@ -76,10 +54,10 @@ class ForumController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
 
-        header("location: list");
+        header("location: ../manage");
     }
 
-    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/forums")]
+    #[Link("/forum/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
     public function adminDeleteForum(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.forum.delete");
@@ -90,7 +68,7 @@ class ForumController extends CoreController
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
 
-            header("location: ../list/");
+            header("location: ../manage/");
             return;
         }
 
@@ -99,7 +77,7 @@ class ForumController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.delete.success"));
 
-        header("location: ../list/");
+        header("location: ../manage/");
     }
 
 }
