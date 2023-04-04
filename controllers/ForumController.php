@@ -42,7 +42,7 @@ class ForumController extends CoreController
         $this->usersModel = new UsersModel();
     }
 
-    #[Link("/forum/add", Link::POST, [], "/cmw-admin/forum")]
+    #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
     public function adminAddForumPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
@@ -57,7 +57,7 @@ class ForumController extends CoreController
         header("location: ../manage");
     }
 
-    #[Link("/forum/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
+    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/forums")]
     public function adminDeleteForum(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.forum.delete");

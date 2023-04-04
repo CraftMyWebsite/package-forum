@@ -46,7 +46,7 @@ $description = LangManager::translate("forum.forum.list.description");
 								                <h5 class="modal-title white" id="myModalLabel160">Ajout d'un forum dans <?= $category->getName() ?></h5>
 								            </div>
 								            <div class="modal-body">
-								                <form method="post" action="forum/add">
+								                <form method="post" action="forums/add">
 								                    <?php (new SecurityManager())->insertHiddenToken() ?>       
 													<input hidden type="text" name="category_id" value="<?= $category->getId() ?>" required>
 														<h6>Icon :</h6>
@@ -103,7 +103,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <i class="bx bx-x"></i>
                                                     <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                                                 </button>
-                                                <a href="categorie/delete/<?= $category->getId() ?>" class="btn btn-danger ml-1">
+                                                <a href="categories/delete/<?= $category->getId() ?>" class="btn btn-danger ml-1">
                                                     <i class="bx bx-check"></i>
                                                     <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
                                                 </a>                                
@@ -125,6 +125,9 @@ $description = LangManager::translate("forum.forum.list.description");
                                         </a>
                                     </td> 
                                 </tr>
+                                <!--
+                                    --MODAL SUPRESSION FORUM--
+                                -->
                                 <div class="modal fade text-left" id="deletee-<?= $forumObj->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                         <div class="modal-content">
@@ -139,7 +142,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <i class="bx bx-x"></i>
                                                     <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                                                 </button>
-                                                <a href="forum/delete/<?= $forumObj->getId() ?>" class="btn btn-danger ml-1">
+                                                <a href="forums/delete/<?= $forumObj->getId() ?>" class="btn btn-danger ml-1">
                                                     <i class="bx bx-check"></i>
                                                     <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
                                                 </a>                                
@@ -166,6 +169,9 @@ $description = LangManager::translate("forum.forum.list.description");
 </section>
 
 
+<!--
+    --MODAL AJOUT CATEGORIE--
+-->
 <div class="modal fade " id="add-cat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
@@ -173,7 +179,7 @@ $description = LangManager::translate("forum.forum.list.description");
                 <h5 class="modal-title white" id="myModalLabel160"><?= LangManager::translate("wiki.title.add_category") ?></h5>
             </div>
             <div class="modal-body">
-                <form method="post" action="categorie/add">
+                <form method="post" action="categories/add">
                     <?php (new SecurityManager())->insertHiddenToken() ?>    
                     	<h6>Icon :</h6>
                         <div class="form-group position-relative has-icon-left">
