@@ -172,7 +172,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                     </td>
                                     <td class="text-end">
                                         <a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
-                                        <a type="button" data-bs-toggle="modal" data-bs-target="edit-forums-<?= $forumObj->getId() ?>">
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $forumObj->getId() ?>">
                                             <i class="text-primary me-3 fas fa-edit"></i>
                                         </a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#deletee-<?= $forumObj->getId() ?>">
@@ -191,8 +191,18 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <h5 class="modal-title white" id="myModalLabel160">Édition de <?= $forumObj->getName() ?></h5>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="post" action="categories/edit/<?= $forumObj->getId() ?>">
-                                                    <?php (new SecurityManager())->insertHiddenToken() ?>       
+                                                <form method="post" action="forums/edit/<?= $forumObj->getId() ?>">
+                                                    <?php (new SecurityManager())->insertHiddenToken() ?>   
+                                                    <h6>Changer de catégorie :</h6>
+                                                    <div class="form-group">
+                                                        <select class="choices form-select" name="categoryId" required>
+                                                            <?php foreach ($categories as $category): ?>
+                                                                <option value="<?= $category->getId() ?>">
+                                                                    <?= $category->getId() ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>    
                                                         <h6>Icon :</h6>
                                                         <div class="form-group position-relative has-icon-left">
                                                             <input type="text" class="form-control" name="icon" required placeholder="fas fa-users" value="<?= $forumObj->getIcon() ?>">

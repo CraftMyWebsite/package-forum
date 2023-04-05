@@ -70,8 +70,8 @@ class ForumController extends CoreController
             return;
         }
 
-        [$name, $icon, $description, $categoryId] = Utils::filterInput("name", "icon", "description", "category_id");
-
+        [$name, $icon, $description, $categoryId] = Utils::filterInput("name", "icon", "description", "categoryId");
+        Response::sendAlert("error", "Debug", "Cat : " . $categoryId);
          $this->forumModel->editForum($id, $name, $icon, $description, $categoryId);
 
         header("location: ../../manage");
