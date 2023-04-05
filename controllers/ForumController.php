@@ -57,6 +57,26 @@ class ForumController extends CoreController
         header("location: ../manage");
     }
 
+    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/forums")]
+    public function adminEditCategory(int $id): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
+
+        $category = $this->categoryModel->getCategoryById($id);
+
+        if (Utils::isValuesEmpty($_POST, "name", "description")) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),"ça va pas du tout !");
+            Utils::refreshPage();
+            return;
+        }
+
+        [$name, $icon, $description, $categoryId] = Utils::filterInput("name", "icon", "description", "category_id");
+
+         $this->forumModel->editForum($id, $name, $icon, $description, $categoryId);
+
+        header("location: ../../manage");
+    }
+
     #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/forums")]
     public function adminDeleteForum(int $id): void
     {

@@ -29,7 +29,9 @@ $description = LangManager::translate("forum.forum.list.description");
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#add-forum-<?= $category->getId() ?>">
                                             <i class="text-success me-3 fa-solid fa-circle-plus"></i>
                                         </a>
-                                        <a href="categorie/edit/<?= $category->getId() ?>"><i class="text-primary me-3 fas fa-edit"></i></a>
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="#edit-categories-<?= $category->getId() ?>">
+                                            <i class="text-primary me-3 fas fa-edit"></i>
+                                        </a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#delete-<?= $category->getId() ?>">
                                             <i class="text-danger fas fa-trash-alt"></i>
                                         </a>
@@ -86,6 +88,57 @@ $description = LangManager::translate("forum.forum.list.description");
 								        </div>
 								    </div>
 								</div>
+
+                                <!--
+                                    --MODAL EDITION CATEGORIE--
+                                -->
+                                <div class="modal fade " id="edit-categories-<?= $category->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary">
+                                                <h5 class="modal-title white" id="myModalLabel160">Édition de <?= $category->getName() ?></h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="categories/edit/<?= $category->getId() ?>">
+                                                    <?php (new SecurityManager())->insertHiddenToken() ?>       
+                                                        <h6>Icon :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="icon" required placeholder="fas fa-users" value="<?= $category->getIcon() ?>">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-icons"></i>
+                                                            </div>
+                                                            <small class="form-text">Retrouvez la liste des icones sur le site de <a href="https://fontawesome.com/search?o=r&m=free" target="_blank">FontAwesome.com</a></small>
+                                                        </div>  
+                                                        <h6>Nom :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="name" required placeholder="Général" value="<?= $category->getName() ?>">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-heading"></i>
+                                                            </div>
+                                                        </div>
+                                                        <h6>Déscription :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="description" required placeholder="Parlez de tout et de rien" value="<?= $category->getDescription() ?>">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-paragraph"></i>
+                                                            </div>
+                                                        </div>         
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                                    <i class="bx bx-x"></i>
+                                                    <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                                </button>
+                                                <button type="submit" class="btn btn-primary ml-1">
+                                                    <i class="bx bx-check"></i>
+                                                    <span class=""><?= LangManager::translate("core.btn.edit") ?></span>
+                                                </button>    
+                                                </form>                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 								<!--
                                 	--MODAL SUPPRESSION CATEGORIE--
                                 -->
@@ -119,12 +172,65 @@ $description = LangManager::translate("forum.forum.list.description");
                                     </td>
                                     <td class="text-end">
                                         <a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
-                                        <a href="forum/edit/<?= $forumObj->getId() ?>"><i class="text-primary me-3 fas fa-edit"></i></a>
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="edit-forums-<?= $forumObj->getId() ?>">
+                                            <i class="text-primary me-3 fas fa-edit"></i>
+                                        </a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#deletee-<?= $forumObj->getId() ?>">
                                             <i class="text-danger fas fa-trash-alt"></i>
                                         </a>
                                     </td> 
                                 </tr>
+
+                                <!--
+                                    --MODAL EDITION FORUM--
+                                -->
+                                <div class="modal fade " id="edit-forums-<?= $forumObj->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary">
+                                                <h5 class="modal-title white" id="myModalLabel160">Édition de <?= $forumObj->getName() ?></h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="categories/edit/<?= $forumObj->getId() ?>">
+                                                    <?php (new SecurityManager())->insertHiddenToken() ?>       
+                                                        <h6>Icon :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="icon" required placeholder="fas fa-users" value="<?= $forumObj->getIcon() ?>">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-icons"></i>
+                                                            </div>
+                                                            <small class="form-text">Retrouvez la liste des icones sur le site de <a href="https://fontawesome.com/search?o=r&m=free" target="_blank">FontAwesome.com</a></small>
+                                                        </div>  
+                                                        <h6>Nom :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="name" required placeholder="Général" value="<?= $forumObj->getName() ?>">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-heading"></i>
+                                                            </div>
+                                                        </div>
+                                                        <h6>Déscription :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="description" required placeholder="Parlez de tout et de rien" value="<?= $forumObj->getDescription() ?>">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-paragraph"></i>
+                                                            </div>
+                                                        </div>         
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                                    <i class="bx bx-x"></i>
+                                                    <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                                </button>
+                                                <button type="submit" class="btn btn-primary ml-1">
+                                                    <i class="bx bx-check"></i>
+                                                    <span class=""><?= LangManager::translate("core.btn.edit") ?></span>
+                                                </button>    
+                                                </form>                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!--
                                     --MODAL SUPRESSION FORUM--
                                 -->

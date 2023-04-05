@@ -180,6 +180,32 @@ class ForumModel extends DatabaseManager
         return null;
     }
 
+    public function editForum(int $id, string $name, string $icon, string $description, int $reattached_Id, bool $isCategory = true): ?ForumEntity
+    {
+        $data = array(
+            "forum_id" => $id,
+            "forum_name" => $name,
+            "forum_icon" => $icon,
+            "forum_slug" => "NOT_DEFINED",
+            "forum_description" => $description,
+            "reattached_Id" => $reattached_Id
+        );
+
+        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_category_id=:reattached_Id WHERE forum_id=:forum_id";
+
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            $id = $db->lastInsertId();
+            $this->setForumSlug($id, $name);
+            return $this->getForumById($id);
+        }
+
+        return null;
+    }
+
     /*=> CONSTRUCTORS */
 
     private function setForumSlug(int $id, string $name): void

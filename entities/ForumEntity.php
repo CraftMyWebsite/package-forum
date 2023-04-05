@@ -55,6 +55,14 @@ class ForumEntity
     /**
      * @return string
      */
+    public function getIcon(): string
+    {
+        return $this->forumIcon;
+    }
+
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return $this->forumDescription;

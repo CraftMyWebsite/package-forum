@@ -50,6 +50,14 @@ class CategoryEntity
     /**
      * @return string
      */
+    public function getIcon(): string
+    {
+        return $this->categoryIcon;
+    }
+
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return $this->categoryDescription;

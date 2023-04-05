@@ -69,6 +69,27 @@ class CategoryController extends CoreController
         header("location: ../manage");
     }
 
+    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    public function adminEditCategory(int $id): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
+
+        $category = $this->categoryModel->getCategoryById($id);
+
+        if (Utils::isValuesEmpty($_POST, "name", "description")) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("forum.category.toaster.error.empty_input"));
+            Utils::refreshPage();
+            return;
+        }
+
+        [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
+
+        $this->categoryModel->editCategory($id, $name, $icon, $description);
+
+        header("location: ../../manage");
+    }
+
     #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
     public function adminDeleteCategory(int $id): void
     {

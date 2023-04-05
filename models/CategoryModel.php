@@ -86,6 +86,27 @@ class CategoryModel extends DatabaseManager
         return null;
     }
 
+    public function editCategory(int $id, string $name, string $icon, string $description): ?CategoryEntity
+    {
+
+        $data = array(
+            "category_id" => $id,
+            "category_name" => $name,
+            "category_icon" => $icon,
+            "category_description" => $description
+        );
+
+        $sql = "UPDATE cmw_forums_categories SET forum_category_name=:category_name, forum_category_icon=:category_icon, forum_category_description=:category_description WHERE forum_category_id=:category_id";
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            return $this->getCategoryById($id);
+        }
+
+        return null;
+    }
+
     public function deleteCategory(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_categories WHERE forum_category_id = :category_id";
