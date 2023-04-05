@@ -195,15 +195,15 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <?php (new SecurityManager())->insertHiddenToken() ?>   
                                                     <h6>Changer de catégorie :</h6>
                                                     <div class="form-group">
-                                                        <select class="choices form-select" name="categoryId" required>
+                                                        <select class="form-select" name="category_id" required>
                                                             <?php foreach ($categoryModel->getCategories() as $category): ?>
                                                                 <option value="<?= $category->getId() ?>">
                                                                     <?= $category->getName() ?>
                                                                 </option>
                                                             <?php endforeach; ?>
                                                         </select>
-                                                    </div>    
-                                                        <h6>Icon :</h6>
+                                                    </div>
+                                                    <h6>Icon :</h6>
                                                         <div class="form-group position-relative has-icon-left">
                                                             <input type="text" class="form-control" name="icon" required placeholder="fas fa-users" value="<?= $forumObj->getIcon() ?>">
                                                             <div class="form-control-icon">
@@ -224,7 +224,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                             <div class="form-control-icon">
                                                                 <i class="fas fa-paragraph"></i>
                                                             </div>
-                                                        </div>         
+                                                        </div>                                                       
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">

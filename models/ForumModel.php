@@ -200,7 +200,6 @@ class ForumModel extends DatabaseManager
         if ($req->execute($data)) {
             $id = $db->lastInsertId();
             $this->setForumSlug($id, $name);
-            return $this->getForumById($id);
         }
 
         return null;
