@@ -70,6 +70,8 @@ class ForumPublicController extends CoreController
 
         $view = new View("forum", "addTopic");
         $view->addVariableList(["forum" => $forum]);
+        $view->addStyle("admin/resources/vendors/summernote/summernote-lite.css","admin/resources/assets/css/pages/summernote.css");
+        $view->addScriptAfter("admin/resources/vendors/jquery/jquery.min.js","admin/resources/vendors/summernote/summernote-lite.min.js","admin/resources/assets/js/pages/summernote.js");
         $view->view();
     }
 
@@ -125,6 +127,8 @@ class ForumPublicController extends CoreController
 
         $view = new View("forum", "topic");
         $view->addVariableList(["topic" => $topic, "responseModel" => $this->responseModel]);
+        $view->addStyle("admin/resources/vendors/summernote/summernote-lite.css","admin/resources/assets/css/pages/summernote.css");
+        $view->addScriptAfter("admin/resources/vendors/jquery/jquery.min.js","admin/resources/vendors/summernote/summernote-lite.min.js","admin/resources/assets/js/pages/summernote.js");
         $view->view();
     }
 

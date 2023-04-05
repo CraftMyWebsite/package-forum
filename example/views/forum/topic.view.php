@@ -47,7 +47,7 @@ $description = "Description de votre page";
             <?php (new SecurityManager())->insertHiddenToken() ?>
             <label style="display:block;" for="topicResponse">Votre réponse : </label>
             <input hidden type="text" name="topicId" value="<?= $topic->getId() ?>">
-            <textarea required name="topicResponse" id="topicResponse" cols="30" rows="10"></textarea>
+            <textarea required name="topicResponse" id="summernote-1" cols="30" rows="10"></textarea>
             <input type="submit" value="Envoyer !">
         </form>
     </section>
