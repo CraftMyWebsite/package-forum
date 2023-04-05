@@ -24,7 +24,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         <table class="table-borderless table table-hover mt-1">
                             <thead>
                                 <tr>
-                                    <th id="categorie-<?= $category->getId() ?>"> <i class="<?= $category->getIcon() ?>"></i> <?= $category->getName() ?> -<i> <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i></th>
+                                    <th id="categorie-<?= $category->getId() ?>"> <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?> -<i> <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i></th>
                                     <th class="text-end">
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#add-forum-<?= $category->getId() ?>">
                                             <i class="text-success me-3 fa-solid fa-circle-plus"></i>
@@ -115,7 +115,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             <tbody>
                                 <?php foreach ($forumModel->getForumByParent($category->getId()) as $forumObj): ?>
                                 <tr id="forum-<?= $forumObj->getId() ?>">
-                                    <td class="ps-4 text-bold-500"><i class="<?= $forumObj->getIcon() ?>"></i> <?= $forumObj->getName() ?> - <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
+                                    <td class="ps-4 text-bold-500"><?= $forumObj->getFontAwesomeIcon() ?> <?= $forumObj->getName() ?> - <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
                                     </td>
                                     <td class="text-end">
                                         <a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>

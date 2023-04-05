@@ -47,9 +47,9 @@ class ForumEntity
     /**
      * @return string
      */
-    public function getIcon(): string
+    public function getFontAwesomeIcon(): string
     {
-        return $this->forumIcon;
+        return '<i class="' . $this->forumIcon . '"></i>';
     }
 
     /**

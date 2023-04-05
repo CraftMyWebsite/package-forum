@@ -13,14 +13,14 @@ class CategoryEntity
     private string $categoryCreated;
     private string $categoryUpdate;
 
-    public function __construct(int $id, string $name, string $icon, string $desc = "",string $categoryCreated, string $categoryUpdate)
+    public function __construct(int $id, string $name, string $icon,string $categoryCreated, string $categoryUpdate, string $desc = "")
     {
         $this->categoryId = $id;
         $this->categoryName = $name;
         $this->categoryIcon = $icon;
+        $this->categoryDescription = $desc;
         $this->categoryCreated = $categoryCreated;
         $this->categoryUpdate = $categoryUpdate;
-        $this->categoryDescription = $desc;
     }
 
     /**
@@ -42,9 +42,9 @@ class CategoryEntity
     /**
      * @return string
      */
-    public function getIcon(): string
+    public function getFontAwesomeIcon(): string
     {
-        return $this->categoryIcon;
+        return '<i class="' . $this->categoryIcon . '"></i>';
     }
 
     /**
