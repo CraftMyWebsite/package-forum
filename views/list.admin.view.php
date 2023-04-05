@@ -196,9 +196,9 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <h6>Changer de catégorie :</h6>
                                                     <div class="form-group">
                                                         <select class="choices form-select" name="categoryId" required>
-                                                            <?php foreach ($categories as $category): ?>
+                                                            <?php foreach ($categoryModel->getCategories() as $category): ?>
                                                                 <option value="<?= $category->getId() ?>">
-                                                                    <?= $category->getId() ?>
+                                                                    <?= $category->getName() ?>
                                                                 </option>
                                                             <?php endforeach; ?>
                                                         </select>

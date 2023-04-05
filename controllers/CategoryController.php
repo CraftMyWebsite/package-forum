@@ -43,7 +43,7 @@ class CategoryController extends CoreController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         View::createAdminView("forum", "list")
-            ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel, "categories" => $this->categoryModel->getCategories()])
+            ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel])
             ->view();
     }
 
