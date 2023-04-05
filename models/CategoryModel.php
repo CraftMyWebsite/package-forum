@@ -58,9 +58,9 @@ class CategoryModel extends DatabaseManager
             $res["forum_category_id"],
             $res["forum_category_name"],
             $res["forum_category_icon"],
-            $res["forum_category_description"] ?? "",
             $res["forum_category_created"],
-            $res["forum_category_updated"]
+            $res["forum_category_updated"],
+            $res["forum_category_description"] ?? ""
         );
     }
 
