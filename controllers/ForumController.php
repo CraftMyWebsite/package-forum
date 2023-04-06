@@ -62,8 +62,6 @@ class ForumController extends CoreController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
-        $category = $this->categoryModel->getCategoryById($id);
-
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),"ça va pas du tout !");
             Utils::refreshPage();
