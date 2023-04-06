@@ -7,12 +7,12 @@ $description = "Description de votre page";
 <section>
     <div class="container">
         <?php foreach ($categoryModel->getCategories() as $category) : ?>
-            <h1><?= $category->getFontAwesomeIcon() ?> <?= $category->getId() . ". " . $category->getName() ?></h1>
+            <h1><?= $category->getFontAwesomeIcon("fa-xl") ?> <?= $category->getId() . ". " . $category->getName() ?></h1>
             <small><?= $category->getCreated() . ". " . $category->getUpdate() ?></small>
             <div class="container">
                 <?php foreach ($forumModel->getForumByParent($category->getId()) as $forumObj): ?>
                     <h3 style="margin-left: 3em">
-                        <?= $forumObj->getFontAwesomeIcon() ?> <?= $forumObj->getId() . ". " . $forumObj->getName() ?>
+                        <?= $forumObj->getFontAwesomeIcon("fa-xl") ?> <?= $forumObj->getId() . ". " . $forumObj->getName() ?>
                         Nombre de topic :<?= $forumModel->countTopicInForum($forumObj->getId()) ?><br>
                         <a href="/<?= $forumObj->getLink() ?>">Aller vers ce Forum</a>
                     </h3>

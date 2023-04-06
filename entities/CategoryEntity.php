@@ -42,9 +42,9 @@ class CategoryEntity
     /**
      * @return string
      */
-    public function getFontAwesomeIcon(): string
+    public function getFontAwesomeIcon(?string $param = null): string
     {
-        return '<i class="' . $this->categoryIcon . '"></i>';
+        return '<i class="' . $this->categoryIcon . '  ' . $param . '"></i>';
     }
 
     /**
