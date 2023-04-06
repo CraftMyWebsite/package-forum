@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
 (
     forum_category_id          INT AUTO_INCREMENT PRIMARY KEY,
     forum_category_name        VARCHAR(50) NOT NULL,
+    forum_category_icon        VARCHAR(50) NULL,
     forum_category_description TEXT        NULL,
     forum_category_created TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_category_updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums
 (
     forum_id          INT AUTO_INCREMENT PRIMARY KEY,
     forum_name        VARCHAR(50)  NOT NULL,
+    forum_icon        VARCHAR(50) NULL,
     forum_slug        VARCHAR(255) NOT NULL,
     forum_description TEXT         NULL,
     forum_subforum_id INT          NULL,
@@ -70,4 +72,3 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response
         FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
-

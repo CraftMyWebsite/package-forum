@@ -9,16 +9,18 @@ class ForumEntity
 
     private int $forumId;
     private string $forumName;
+    private string $forumIcon;
     private string $forumDescription;
     private string $forumSlug;
     private string $forumCreated;
     private string $forumUpdated;
     private ForumEntity|CategoryEntity $forumParent;
 
-    public function __construct(int $id, string $name, string $desc, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|CategoryEntity $parent)
+    public function __construct(int $id, string $name, string $icon, string $desc, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|CategoryEntity $parent)
     {
         $this->forumId = $id;
         $this->forumName = $name;
+        $this->forumIcon = $icon;
         $this->forumDescription = $desc;
         $this->forumSlug = $forumSlug;
         $this->forumCreated = $forumCreated;
@@ -40,6 +42,22 @@ class ForumEntity
     public function getName(): string
     {
         return $this->forumName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFontAwesomeIcon(): string
+    {
+        return '<i class="' . $this->forumIcon . '"></i>';
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return $this->forumIcon;
     }
 
     /**

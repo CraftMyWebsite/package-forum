@@ -42,41 +42,39 @@ class ForumController extends CoreController
         $this->usersModel = new UsersModel();
     }
 
-    #[Link("/list", Link::GET, [], "/cmw-admin/forum/forums")]
-    public function adminListForumView(): void
-    {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.list");
-
-        View::createAdminView("forum", "forums/listForum")
-            ->addVariableList(["forum" => $this->forumModel])
-            ->addStyle("admin/resources/vendors/simple-datatables/css/simple-datatables.css")
-            ->addScriptBefore("admin/resources/vendors/simple-datatables/js/simple-datatables.js")
-            ->view();
-    }
-
-    #[Link("/add", Link::GET, [], "/cmw-admin/forum/forums")]
-    public function adminAddForumView(): void
-    {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
-
-        View::createAdminView("forum", "forums/addForum")
-            ->addVariableList(["categories" => $this->categoryModel->getCategories()])
-            ->view();
-    }
-
     #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
     public function adminAddForumPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
 
-        [$name, $description, $categoryId] = Utils::filterInput("name", "description", "category_id");
+        [$name, $icon, $description, $categoryId] = Utils::filterInput("name", "icon", "description", "category_id");
 
-        $this->forumModel->createForum($name, $description, $categoryId);
+        $this->forumModel->createForum($name, $icon, $description, $categoryId);
 
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
 
-        header("location: list");
+        header("location: ../manage");
+    }
+
+    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/forums")]
+    public function adminEditCategory(int $id): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
+
+        $category = $this->categoryModel->getCategoryById($id);
+
+        if (Utils::isValuesEmpty($_POST, "name", "description")) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),"ça va pas du tout !");
+            Utils::refreshPage();
+            return;
+        }
+
+        [$name, $icon, $description, $category_id] = Utils::filterInput("name", "icon", "description", "category_id");
+        
+        $this->forumModel->editForum($id, $name, $icon, $description, $category_id);
+
+        header("location: ../../manage");
     }
 
     #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/forums")]
@@ -90,7 +88,7 @@ class ForumController extends CoreController
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
 
-            header("location: ../list/");
+            header("location: ../../manage/");
             return;
         }
 
@@ -99,7 +97,7 @@ class ForumController extends CoreController
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.delete.success"));
 
-        header("location: ../list/");
+        header("location: ../../manage/");
     }
 
 }
