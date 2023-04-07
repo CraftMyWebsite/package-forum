@@ -187,6 +187,25 @@ class TopicModel extends DatabaseManager
         return false;
     }
 
+    public function DisallowReplies(TopicEntity $topic): bool
+    {
+        $data = array(
+            "topic_id" => $topic->getId(),
+            "status" => $topic->isDisallowReplies() ? 0 : 1,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET forum_topic_disallow_replies = :status WHERE forum_topic_id = :topic_id";
+
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            return $req->rowCount() === 1;
+        }
+        return false;
+    }
+
     public function deleteTopic(int $topicId): bool
     {
         $sql = "DELETE FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";

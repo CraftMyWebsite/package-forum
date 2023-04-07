@@ -155,6 +155,11 @@ class TopicEntity
         return "forum/t/$this->topicSlug/pinned";
     }
 
+    public function getDisallowRepliesLink(): string
+    {
+        return "forum/t/$this->topicSlug/disallowreplies";
+    }
+
     /**
      * @return \CMW\Entity\Forum\TopicTagEntity[]
      */
