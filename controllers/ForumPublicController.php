@@ -59,7 +59,7 @@ class ForumPublicController extends CoreController
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
         $view = new View("forum", "forum");
-        $view->addVariableList(["forum" => $forum, "topicModel" => $this->topicModel, "forumModel" => $this->forumModel]);
+        $view->addVariableList(["forum" => $forum, "topicModel" => $this->topicModel, "forumModel" => $this->forumModel, "responseModel" => $this->responseModel]);
         $view->view();
     }
 
