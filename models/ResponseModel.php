@@ -66,7 +66,7 @@ class ResponseModel extends DatabaseManager
         $user = $this->userModel->getUserById($res["user_id"]);
         $topic = $this->topicModel->getTopicById($res["forum_topic_id"]);
 
-        if (is_null($topic) || is_null($user?->getUsername())) {
+        if (is_null($topic) || is_null($user?->getPseudo())) {
             return null;
         }
 

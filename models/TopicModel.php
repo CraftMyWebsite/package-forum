@@ -70,7 +70,7 @@ class TopicModel extends DatabaseManager
         $user = $this->userModel->getUserById($res["user_id"]);
         $forum = $this->forumModel->getForumById($res["forum_id"]);
 
-        if (is_null($forum) || is_null($user?->getUsername())) {
+        if (is_null($forum) || is_null($user?->getPseudo())) {
             return null;
         }
 
