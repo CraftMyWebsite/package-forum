@@ -23,7 +23,7 @@ $description = "Description de votre page";
             <?php endif; ?>
             <?php foreach ($responseModel->getResponseByTopic($topic->getId()) as $response) : ?>
                 <h4><?= $response->getContent() ?></h4>
-                <span><?= $response->getUser()->getUsername() ?></span>
+                <span><?= $response->getUser()->getPseudo() ?></span>
                 <span><?= $response->getCreated() ?></span>
                 <span><?= $response->getUpdate() ?></span>
                 <?php if ($response->isSelfReply()): ?>
