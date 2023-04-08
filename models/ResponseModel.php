@@ -82,7 +82,7 @@ class ResponseModel extends DatabaseManager
 
     public function countResponseInTopic(int $id): mixed
     {
-        $sql = "SELECT COUNT(forum_response_id) FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
+        $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -91,7 +91,7 @@ class ResponseModel extends DatabaseManager
             return 0;
         }
 
-        return $res->fetch(0);
+        return $res->fetch(0)['count'];
     }
 
 
