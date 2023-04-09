@@ -78,7 +78,7 @@ class ForumController extends CoreController
     #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/forums")]
     public function adminDeleteForum(int $id): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.forum.delete");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.delete");
 
         $forum = $this->forumModel->getForumById($id);
 
