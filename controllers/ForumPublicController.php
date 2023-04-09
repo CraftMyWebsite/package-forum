@@ -120,6 +120,44 @@ class ForumPublicController extends CoreController
         header("location: ../$forumSlug");
     }
 
+    #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAdminEditTopicPost(string $forumSlug): void
+    {
+        [$topicId, $name, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags');
+
+        $forum = $this->forumModel->getForumBySlug($forumSlug);
+
+        if (is_null($forum)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Utils::refreshPage();
+            return;
+        }
+
+        $res = $this->topicModel->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
+
+        // Add tags
+
+
+        $tags = explode(",", $tags);
+        //Need to clear tag befor update
+        $this->topicModel->clearTag($topicId);
+        foreach ($tags as $tag) {
+            //Clean tag
+            $tag = mb_strtolower(trim($tag));
+
+            if (empty($tag)) {
+                continue;
+            }
+            
+            $this->topicModel->addTag($tag, $topicId);
+        }
+
+        //Response::sendAlert("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
+
+        header("location: ../$forumSlug");
+    }
+
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(string $topicSlug): void
     {

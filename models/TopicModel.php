@@ -149,6 +149,34 @@ class TopicModel extends DatabaseManager
         return null;
     }
 
+    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin): ?TopicEntity
+    {
+
+        $var = array(
+            "topicId" => $topicId,
+            "name" => $name,
+            "disallow_replies" => $disallowReplies,
+            "important" => $important,
+            "pin" => $pin,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET 
+            forum_topic_name = :name,
+            forum_topic_disallow_replies = :disallow_replies,
+            forum_topic_important = :important,
+            forum_topic_pinned = :pin
+            WHERE forum_topic_id = :topicId";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($var)) {
+            $this->setTopicSlug($topicId, $name);
+        }
+
+        return null;
+    }
+
 
     private function setTopicSlug(int $id, string $name): void
     {
@@ -247,6 +275,19 @@ class TopicModel extends DatabaseManager
             return $this->getTagById($db->lastInsertId());
         }
 
+        return null;
+    }
+
+    public function clearTag(int $topicId): ?TopicTagEntity
+    {
+
+        $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
+        
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+        if ($req->execute(array("topic_id" => $topicId))) {
+            return null;
+        }
         return null;
     }
 
