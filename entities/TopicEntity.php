@@ -160,6 +160,11 @@ class TopicEntity
         return "forum/t/$this->topicSlug/disallowreplies";
     }
 
+    public function getIsImportantLink(): string
+    {
+        return "forum/t/$this->topicSlug/isimportant";
+    }
+
     /**
      * @return \CMW\Entity\Forum\TopicTagEntity[]
      */

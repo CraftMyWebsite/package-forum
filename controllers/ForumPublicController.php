@@ -174,6 +174,27 @@ class ForumPublicController extends CoreController
         }
     }
 
+    #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsImportant(string $topicSlug): void
+    {
+        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        if (is_null($topic)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            return;
+        }
+
+        if ($this->topicModel->ImportantTopic($topic)) {
+
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+                $topic->isPinned() ?
+                    LangManager::translate("forum.topic.unpinned.success") :
+                    LangManager::translate("forum.topic.pinned.success"));
+
+            header("location: ../../f/{$topic->getForum()->getSlug()}");
+        }
+    }
+
     #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
     public function publicTopicResponsePost(string $topicSlug): void
     {
