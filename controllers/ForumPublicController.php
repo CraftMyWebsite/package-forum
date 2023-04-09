@@ -78,7 +78,7 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
     public function publicForumAddTopicPost(string $forumSlug): void
     {
-        [$name, $content, $disallowReplies, $important, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'tags');
+        [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
 
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
@@ -90,7 +90,7 @@ class ForumPublicController extends CoreController
         }
 
         $res = $this->topicModel->createTopic($name, $content, UsersModel::getLoggedUser(), $forum->getId(),
-            (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1));
+            (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         if (is_null($res)) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
@@ -116,6 +116,44 @@ class ForumPublicController extends CoreController
 
         Response::sendAlert("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
+
+        header("location: ../$forumSlug");
+    }
+
+    #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAdminEditTopicPost(string $forumSlug): void
+    {
+        [$topicId, $name, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags');
+
+        $forum = $this->forumModel->getForumBySlug($forumSlug);
+
+        if (is_null($forum)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Utils::refreshPage();
+            return;
+        }
+
+        $res = $this->topicModel->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
+
+        // Add tags
+
+
+        $tags = explode(",", $tags);
+        //Need to clear tag befor update
+        $this->topicModel->clearTag($topicId);
+        foreach ($tags as $tag) {
+            //Clean tag
+            $tag = mb_strtolower(trim($tag));
+
+            if (empty($tag)) {
+                continue;
+            }
+            
+            $this->topicModel->addTag($tag, $topicId);
+        }
+
+        //Response::sendAlert("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
 
         header("location: ../$forumSlug");
     }
@@ -164,6 +202,27 @@ class ForumPublicController extends CoreController
         }
 
         if ($this->topicModel->DisallowReplies($topic)) {
+
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+                $topic->isPinned() ?
+                    LangManager::translate("forum.topic.unpinned.success") :
+                    LangManager::translate("forum.topic.pinned.success"));
+
+            header("location: ../../f/{$topic->getForum()->getSlug()}");
+        }
+    }
+
+    #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsImportant(string $topicSlug): void
+    {
+        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        if (is_null($topic)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            return;
+        }
+
+        if ($this->topicModel->ImportantTopic($topic)) {
 
             Response::sendAlert("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?

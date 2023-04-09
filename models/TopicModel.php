@@ -118,7 +118,7 @@ class TopicModel extends DatabaseManager
         return $toReturn;
     }
 
-    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important): ?TopicEntity
+    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important, int $pin): ?TopicEntity
     {
 
         $var = array(
@@ -127,13 +127,14 @@ class TopicModel extends DatabaseManager
             "topic_slug" => "NOT DEFINED",
             "disallow_replies" => $disallowReplies,
             "important" => $important,
+            "pin" => $pin,
             "user_id" => $userId,
             "forum_id" => $forumId
         );
 
         $sql = "INSERT INTO cmw_forums_topics (forum_topic_name, forum_topic_content, forum_topic_slug, 
-                               forum_topic_disallow_replies, forum_topic_important, user_id, forum_id) 
-                VALUES (:topic_name, :topic_content, :topic_slug, :disallow_replies, :important, :user_id, :forum_id)";
+                               forum_topic_disallow_replies, forum_topic_important, forum_topic_pinned, user_id, forum_id) 
+                VALUES (:topic_name, :topic_content, :topic_slug, :disallow_replies, :important, :pin, :user_id, :forum_id)";
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
@@ -143,6 +144,34 @@ class TopicModel extends DatabaseManager
 
             $this->setTopicSlug($id, $name);
             return $this->getTopicById($id);
+        }
+
+        return null;
+    }
+
+    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin): ?TopicEntity
+    {
+
+        $var = array(
+            "topicId" => $topicId,
+            "name" => $name,
+            "disallow_replies" => $disallowReplies,
+            "important" => $important,
+            "pin" => $pin,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET 
+            forum_topic_name = :name,
+            forum_topic_disallow_replies = :disallow_replies,
+            forum_topic_important = :important,
+            forum_topic_pinned = :pin
+            WHERE forum_topic_id = :topicId";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($var)) {
+            $this->setTopicSlug($topicId, $name);
         }
 
         return null;
@@ -206,6 +235,25 @@ class TopicModel extends DatabaseManager
         return false;
     }
 
+    public function ImportantTopic(TopicEntity $topic): bool
+    {
+        $data = array(
+            "topic_id" => $topic->getId(),
+            "status" => $topic->isImportant() ? 0 : 1,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET forum_topic_important = :status WHERE forum_topic_id = :topic_id";
+
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            return $req->rowCount() === 1;
+        }
+        return false;
+    }
+
     public function deleteTopic(int $topicId): bool
     {
         $sql = "DELETE FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
@@ -227,6 +275,19 @@ class TopicModel extends DatabaseManager
             return $this->getTagById($db->lastInsertId());
         }
 
+        return null;
+    }
+
+    public function clearTag(int $topicId): ?TopicTagEntity
+    {
+
+        $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
+        
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+        if ($req->execute(array("topic_id" => $topicId))) {
+            return null;
+        }
         return null;
     }
 

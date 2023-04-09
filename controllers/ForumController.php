@@ -57,6 +57,21 @@ class ForumController extends CoreController
         header("location: ../manage");
     }
 
+    #[Link("/add", Link::POST, [], "/cmw-admin/forum/subforums")]
+    public function adminAddSubForumPost(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+
+        [$name, $icon, $description, $forumId] = Utils::filterInput("name", "icon", "description", "forum_id");
+
+        $this->forumModel->createSubForum($name, $icon, $description, $forumId);
+
+        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.forum.add.toaster.success"));
+
+        header("location: ../manage");
+    }
+
     #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/forums")]
     public function adminEditCategory(int $id): void
     {

@@ -83,9 +83,29 @@ class ForumModel extends DatabaseManager
     /**
      * @return \CMW\Entity\Forum\ForumEntity[]
      */
-    public function getForumByParent(int $id, bool $isForumId = false): array
+    public function getForumByCat(int $id): array
     {
-        $sql = !$isForumId ? "SELECT forum_id FROM cmw_forums WHERE forum_category_id = :forum_id" : "SELECT forum_id FROM cmw_forums WHERE forum_subforum_id = :forum_id";
+        $sql = "SELECT forum_id FROM cmw_forums WHERE forum_category_id = :forum_id";
+        $db = self::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("forum_id" => $id))) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($forum = $res->fetch()) {
+            $toReturn[] = $this->getForumById($forum["forum_id"]);
+        }
+
+        return $toReturn;
+    }
+
+    public function getSubforumByForum(int $id): array
+    {
+        $sql = "SELECT forum_id FROM cmw_forums WHERE forum_subforum_id = :forum_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -152,7 +172,7 @@ class ForumModel extends DatabaseManager
         return (bool)$res->fetch(0);
     }
 
-    public function createForum(string $name, string $icon, string $description, int $reattached_Id, bool $isCategory = true): ?ForumEntity
+    public function createForum(string $name, string $icon, string $description, int $reattached_Id): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,
@@ -162,10 +182,34 @@ class ForumModel extends DatabaseManager
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = $isCategory ? "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_category_id)
-                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)"
-            : "INSERT INTO cmw_forums(forum_name, forum_slug, forum_description,  forum_subforum_id)
-                VALUES (:forum_name, :forum_slug, :forum_description, :reattached_Id)";
+        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_category_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)";
+
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            $id = $db->lastInsertId();
+            $this->setForumSlug($id, $name);
+            return $this->getForumById($id);
+        }
+
+        return null;
+    }
+
+    public function createSubForum(string $name, string $icon, string $description, int $reattached_Id): ?ForumEntity
+    {
+        $data = array(
+            "forum_name" => $name,
+            "forum_icon" => $icon,
+            "forum_slug" => "NOT_DEFINED",
+            "forum_description" => $description,
+            "reattached_Id" => $reattached_Id
+        );
+
+        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description,  forum_subforum_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)";
 
 
         $db = self::getInstance();
