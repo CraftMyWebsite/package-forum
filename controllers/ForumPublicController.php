@@ -78,7 +78,7 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
     public function publicForumAddTopicPost(string $forumSlug): void
     {
-        [$name, $content, $disallowReplies, $important, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'tags');
+        [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
 
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
@@ -90,7 +90,7 @@ class ForumPublicController extends CoreController
         }
 
         $res = $this->topicModel->createTopic($name, $content, UsersModel::getLoggedUser(), $forum->getId(),
-            (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1));
+            (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         if (is_null($res)) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),

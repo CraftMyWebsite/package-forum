@@ -118,7 +118,7 @@ class TopicModel extends DatabaseManager
         return $toReturn;
     }
 
-    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important): ?TopicEntity
+    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important, int $pin): ?TopicEntity
     {
 
         $var = array(
@@ -127,13 +127,14 @@ class TopicModel extends DatabaseManager
             "topic_slug" => "NOT DEFINED",
             "disallow_replies" => $disallowReplies,
             "important" => $important,
+            "pin" => $pin,
             "user_id" => $userId,
             "forum_id" => $forumId
         );
 
         $sql = "INSERT INTO cmw_forums_topics (forum_topic_name, forum_topic_content, forum_topic_slug, 
-                               forum_topic_disallow_replies, forum_topic_important, user_id, forum_id) 
-                VALUES (:topic_name, :topic_content, :topic_slug, :disallow_replies, :important, :user_id, :forum_id)";
+                               forum_topic_disallow_replies, forum_topic_important, forum_topic_pinned, user_id, forum_id) 
+                VALUES (:topic_name, :topic_content, :topic_slug, :disallow_replies, :important, :pin, :user_id, :forum_id)";
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
