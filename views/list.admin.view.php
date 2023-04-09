@@ -29,6 +29,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#add-forum-<?= $category->getId() ?>">
                                             <i class="text-success me-3 fa-solid fa-circle-plus"></i>
                                         </a>
+
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#edit-categories-<?= $category->getId() ?>">
                                             <i class="text-primary me-3 fas fa-edit"></i>
                                         </a>
@@ -166,12 +167,15 @@ $description = LangManager::translate("forum.forum.list.description");
                                 </div>
                             </thead>
                             <tbody>
-                                <?php foreach ($forumModel->getForumByParent($category->getId()) as $forumObj): ?>
+                                <?php foreach ($forumModel->getForumByCat($category->getId()) as $forumObj): ?>
                                 <tr id="forum-<?= $forumObj->getId() ?>">
                                     <td class="ps-4 text-bold-500"><?= $forumObj->getFontAwesomeIcon() ?> <?= $forumObj->getName() ?> - <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
                                     </td>
                                     <td class="text-end">
                                         <a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="#add-subforum-<?= $forumObj->getId() ?>">
+                                            <i class="text-success me-3 fas fa-circle-plus"></i>
+                                        </a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $forumObj->getId() ?>">
                                             <i class="text-primary me-3 fas fa-edit"></i>
                                         </a>
@@ -181,6 +185,74 @@ $description = LangManager::translate("forum.forum.list.description");
                                     </td> 
                                 </tr>
 
+                                <!--
+                                    --LISTAGE SOUS-FORUM --
+                                -->
+                                <?php foreach ($forumModel->getSubforumByForum($forumObj->getId()) as $subForumObj): ?>
+                                <tr id="forum-<?= $subForumObj->getId() ?>">
+                                    <td class="ps-5 text-bold-500"><?= $subForumObj->getFontAwesomeIcon() ?> <?= $subForumObj->getName() ?> - <i><small><?= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?></small></i>
+                                    </td>
+                                    <td class="text-end">
+                                        <!--<a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $subForumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $subForumObj->getId() ?>">
+                                            <i class="text-primary me-3 fas fa-edit"></i>
+                                        </a>
+                                        <a type="button" data-bs-toggle="modal" data-bs-target="#deletee-<?= $subForumObj->getId() ?>">
+                                            <i class="text-danger fas fa-trash-alt"></i>
+                                        </a>-->
+                                    </td> 
+                                </tr>
+                                <?php endforeach; ?>
+                                <!--
+                                    --MODAL AJOUT SOUS-FORUM--
+                                -->
+                                <div class="modal fade " id="add-subforum-<?= $forumObj->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-primary">
+                                                <h5 class="modal-title white" id="myModalLabel160">Ajout d'un sous-forum dans <?= $forumObj->getName() ?></h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="post" action="subforums/add">
+                                                    <?php (new SecurityManager())->insertHiddenToken() ?>       
+                                                    <input hidden type="text" name="forum_id" value="<?= $forumObj->getId() ?>" required>
+                                                        <h6>Icon :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="icon" required placeholder="fas fa-users">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-icons"></i>
+                                                            </div>
+                                                            <small class="form-text">Retrouvez la liste des icones sur le site de <a href="https://fontawesome.com/search?o=r&m=free" target="_blank">FontAwesome.com</a></small>
+                                                        </div>  
+                                                        <h6>Nom :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="name" required placeholder="Général">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-heading"></i>
+                                                            </div>
+                                                        </div>
+                                                        <h6>Déscription :</h6>
+                                                        <div class="form-group position-relative has-icon-left">
+                                                            <input type="text" class="form-control" name="description" required placeholder="Parlez de tout et de rien">
+                                                            <div class="form-control-icon">
+                                                                <i class="fas fa-paragraph"></i>
+                                                            </div>
+                                                        </div>         
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                                    <i class="bx bx-x"></i>
+                                                    <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                                </button>
+                                                <button type="submit" class="btn btn-primary ml-1">
+                                                    <i class="bx bx-check"></i>
+                                                    <span class=""><?= LangManager::translate("core.btn.add") ?></span>
+                                                </button>    
+                                                </form>                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!--
                                     --MODAL EDITION FORUM--
                                 -->
