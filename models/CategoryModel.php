@@ -116,5 +116,55 @@ class CategoryModel extends DatabaseManager
         return $db->prepare($sql)->execute(array("category_id" => $id));
     }
 
+    public function getNumberOfTopics(int $categoryId): int
+    {
+        $sql = "SELECT COUNT('forum_topic_id') AS `count` FROM cmw_forums_topics 
+                JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
+                JOIN cmw_forums_categories ON cmw_forums.forum_category_id = cmw_forums_categories.forum_category_id
+                WHERE cmw_forums_categories.forum_category_id = :id";
+
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(['id' => $categoryId])){
+            return 0;
+        }
+
+        $res = $req->fetch();
+
+        if (!$res){
+            return 0;
+        }
+
+        return $res['count'] ?? 0;
+    }
+
+    public function getNumberOfMessages(int $categoryId): int
+    {
+        $sql = "SELECT COUNT('forum_response_id') AS `count` FROM cmw_forums_response 
+                JOIN cmw_forums_topics ON cmw_forums_response.forum_topic_id = cmw_forums_topics.forum_topic_id
+                JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
+                JOIN cmw_forums_categories ON cmw_forums.forum_category_id = cmw_forums_categories.forum_category_id
+                WHERE cmw_forums_categories.forum_category_id = :id";
+
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(['id' => $categoryId])){
+            return 0;
+        }
+
+        $res = $req->fetch();
+
+        if (!$res){
+            return 0;
+        }
+
+        return $res['count'] ?? 0;
+
+    }
+
 
 }
