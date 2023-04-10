@@ -172,4 +172,13 @@ class TopicEntity
     {
         return $this->tags;
     }
+
+    /**
+     * @return string
+     * @desc Return formatted tags for input: "tag1, tag2, tag3"
+     */
+    public function getTagsFormatted(): string
+    {
+        return implode(", ", $this->tags);
+    }
 }
