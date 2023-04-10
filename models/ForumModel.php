@@ -158,6 +158,24 @@ class ForumModel extends DatabaseManager
         return $res->fetch(0)['count'];
     }
 
+    public function countMessagesInForum(int $id): mixed
+    {
+        $sql = "SELECT COUNT('forum_response_id') AS `count` FROM cmw_forums_response 
+                JOIN cmw_forums_topics ON cmw_forums_response.forum_topic_id = cmw_forums_topics.forum_topic_id
+                JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
+                WHERE cmw_forums.forum_id = :forum_id";
+
+        $db = self::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("forum_id" => $id))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['count'];
+    }
+
     public function hasSubForums(int $id): bool
     {
         $sql = "SELECT COUNT(forum_id) FROM cmw_forums WHERE forum_subforum_id = :forum_id";
@@ -247,6 +265,21 @@ class ForumModel extends DatabaseManager
 
         return null;
     }
+
+ /*   public function getLastMessageInForum(int $id): mixed
+    {
+        $sql = "SELECT `user_id`, `forum_response_created` FROM `cmw_forums_response` WHERE `forum_topic_id` = 1 ORDER BY `cmw_forums_response`.`forum_response_id` DESC limit 1 offset 0"
+
+        $db = self::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("forum_id" => $id))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['count'];
+    }*/
 
     /*=> CONSTRUCTORS */
 
