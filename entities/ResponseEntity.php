@@ -86,4 +86,13 @@ class ResponseEntity
     {
         return "{$this->responseTopic->getSlug()}/delete/$this->responseId";
     }
+
+    /**
+     * @return bool
+     * @des Return true if the response was performe by the topic author
+     */
+    public function isTopicAuthor(): bool
+    {
+        return $this->getResponseTopic()->getUser()->getId() === $this->getUser()->getId();
+    }
 }
