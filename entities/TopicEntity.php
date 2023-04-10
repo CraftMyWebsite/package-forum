@@ -4,6 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Controller\Core\CoreController;
+use CMW\Model\Forum\TopicModel;
 
 class TopicEntity
 {
@@ -180,5 +181,17 @@ class TopicEntity
     public function getTagsFormatted(): string
     {
         return implode(", ", $this->tags);
+    }
+
+    public function getLastMessageUserInTopic(): int
+    {
+        $topicModel = new TopicModel();
+        return $topicModel->getLastMessageInTopic($this->topicId)['user_id'];
+    }
+
+    public function getLastMessageDateInTopic(): string
+    {
+        $topicModel = new TopicModel();
+        return $topicModel->getLastMessageInTopic($this->topicId)['forum_response_created'];
     }
 }

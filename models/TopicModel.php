@@ -385,4 +385,21 @@ class TopicModel extends DatabaseManager
 
         return $db->prepare($sql)->execute(array("tag_id" => $tagId));
     }
+
+    public function getLastMessageInTopic(int $id): array
+    {
+        $sql = "SELECT `user_id`, `forum_response_created` FROM `cmw_forums_response` WHERE `forum_topic_id` = :forum_topic_id ORDER BY `cmw_forums_response`.`forum_response_id` DESC limit 1 offset 0";
+        $db = self::getInstance();
+        $res = $db->prepare($sql);
+        
+
+        if (!$res->execute(array("forum_topic_id" => $id))) {
+            return 0;
+        }
+
+        $res = $res->fetch();
+        return $res;
+
+    }
+
 }
