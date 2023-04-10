@@ -2,6 +2,7 @@
 
 namespace CMW\Entity\Forum;
 use CMW\Controller\Core\CoreController;
+use CMW\Model\Forum\CategoryModel;
 
 class CategoryEntity
 {
@@ -82,6 +83,24 @@ class CategoryEntity
     public function getAdminDeleteLink(): string
     {
         return "./delete/$this->categoryId";
+    }
+
+    /**
+     * @return int
+     * @desc Return the number of topics inside the category
+     */
+    public function getNumberOfTopics(): int
+    {
+        return (new CategoryModel())->getNumberOfTopics($this->categoryId);
+    }
+
+    /**
+     * @return int
+     * @desc Return the number of responses inside the topics on the category
+     */
+    public function getNumberOfMessages(): int
+    {
+        return (new CategoryModel())->getNumberOfMessages($this->categoryId);
     }
 
 }
