@@ -170,7 +170,7 @@ class ForumModel extends DatabaseManager
                 JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
                 WHERE cmw_forums_topics.forum_id IN
                 (SELECT cmw_forums.forum_id FROM cmw_forums WHERE cmw_forums.forum_subforum_id = :forum_id)
-                OR cmw_forums.forum_id = :forum_id_2";
+                OR cmw_forums.forum_id = :forum_id_2 AND forum_response_is_trash = 0";
 
         $db = self::getInstance();
 
@@ -245,20 +245,6 @@ class ForumModel extends DatabaseManager
         return Utils::normalizeForSlug($name) . "-$id";
     }
 
-    /*   public function getLastMessageInForum(int $id): mixed
-       {
-           $sql = "SELECT `user_id`, `forum_response_created` FROM `cmw_forums_response` WHERE `forum_topic_id` = 1 ORDER BY `cmw_forums_response`.`forum_response_id` DESC limit 1 offset 0"
-
-           $db = self::getInstance();
-
-           $res = $db->prepare($sql);
-
-           if (!$res->execute(array("forum_id" => $id))) {
-               return 0;
-           }
-
-           return $res->fetch(0)['count'];
-       }*/
 
     /*=> CONSTRUCTORS */
 

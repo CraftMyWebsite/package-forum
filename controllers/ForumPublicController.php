@@ -280,7 +280,7 @@ class ForumPublicController extends CoreController
         Utils::refreshPage();
     }
 
-    #[Link("/t/:topicSlug/delete/:replyId", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
+    #[Link("/t/:topicSlug/trash/:replyId", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
     public function publicTopicReplyDelete(string $topicSlug, int $replyId): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
@@ -298,7 +298,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        if ($this->responseModel->deleteResponse($replyId)) {
+        if ($this->responseModel->trashResponse($replyId)) {
 
             Response::sendAlert("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));

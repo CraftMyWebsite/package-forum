@@ -32,7 +32,7 @@ class ResponseModel extends DatabaseManager
      */
     public function getResponseByTopic(int $id): array
     {
-        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
+        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
         $db = self::getInstance();
         $res = $db->prepare($sql);
 
@@ -74,6 +74,7 @@ class ResponseModel extends DatabaseManager
         return new ResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
+            $res["forum_response_is_trash"],
             $res["forum_response_created"],
             $res["forum_response_updated"],
             $topic,
@@ -83,7 +84,7 @@ class ResponseModel extends DatabaseManager
 
     public function countResponseInTopic(int $id): mixed
     {
-        $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
+        $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -131,10 +132,59 @@ class ResponseModel extends DatabaseManager
         return $req->rowCount() === 1;
     }
 
+    public function restoreResponse(int $id): ?ResponseEntity
+    {
+        $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '0' WHERE `forum_response_id` = :id";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute(array("id" => $id))) {
+            return $this->getResponseById($id);
+        }
+
+        return null;
+    }
+
+    public function trashResponse(int $id): ?ResponseEntity
+    {
+        $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '1' WHERE `forum_response_id` = :id";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute(array("id" => $id))) {
+            return $this->getResponseById($id);
+        }
+
+        return null;
+    }
+
+    public function getTrashResponse(): array
+    {
+        $sql = "SELECT * FROM `cmw_forums_response` WHERE `forum_response_is_trash` = 1 ORDER BY `cmw_forums_response`.`forum_response_updated` DESC";
+
+        $db = self::getInstance();
+        $res = $db->prepare($sql);
+
+        if (!$res->execute()) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($response = $res->fetch()) {
+            $toReturn[] = $this->getResponseById($response["forum_response_id"]);
+        }
+
+        return $toReturn;
+
+    }
+
     public function getLatestResponseInTopic(int $topicId): ?ResponseEntity
     {
         $sql = "SELECT * FROM `cmw_forums_response` 
-                                           WHERE `forum_topic_id` = :forum_topic_id 
+                                           WHERE `forum_topic_id` = :forum_topic_id AND forum_response_is_trash = 0
                                            ORDER BY `cmw_forums_response`.`forum_response_id` 
                                            DESC limit 1 offset 0";
 
@@ -161,6 +211,7 @@ class ResponseModel extends DatabaseManager
         return new ResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
+            $res["forum_response_is_trash"],
             $res["forum_response_created"],
             $res["forum_response_updated"],
             $topic,
@@ -180,7 +231,7 @@ class ResponseModel extends DatabaseManager
                 JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
                 WHERE cmw_forums_topics.forum_id IN
                 (SELECT cmw_forums.forum_id FROM cmw_forums WHERE cmw_forums.forum_subforum_id = :forum_id)
-                OR cmw_forums.forum_id = :forum_id_2
+                OR cmw_forums.forum_id = :forum_id_2 AND forum_response_is_trash = 0
                 ORDER BY cmw_forums_response.forum_response_id DESC LIMIT 1";
 
         $db = self::getInstance();
@@ -207,6 +258,7 @@ class ResponseModel extends DatabaseManager
         return new ResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
+            $res["forum_response_is_trash"],
             $res["forum_response_created"],
             $res["forum_response_updated"],
             $topic,
