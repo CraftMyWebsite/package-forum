@@ -4,7 +4,9 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Controller\Core\CoreController;
+use CMW\Model\Forum\ResponseModel;
 use CMW\Model\Forum\TopicModel;
+use CMW\Model\Users\UsersModel;
 
 class TopicEntity
 {
@@ -183,15 +185,11 @@ class TopicEntity
         return implode(", ", $this->tags);
     }
 
-    public function getLastMessageUserInTopic(): int
+    /**
+     * @return \CMW\Entity\Forum\ResponseEntity|null
+     */
+    public function getLastResponse(): ?ResponseEntity
     {
-        $topicModel = new TopicModel();
-        return $topicModel->getLastMessageInTopic($this->topicId)['user_id'];
-    }
-
-    public function getLastMessageDateInTopic(): string
-    {
-        $topicModel = new TopicModel();
-        return $topicModel->getLastMessageInTopic($this->topicId)['forum_response_created'];
+        return (new ResponseModel())->getLatestResponseInTopic($this->topicId);
     }
 }
