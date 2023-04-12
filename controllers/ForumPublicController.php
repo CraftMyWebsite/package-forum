@@ -233,6 +233,24 @@ class ForumPublicController extends CoreController
         }
     }
 
+    #[Link("/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsTrash(string $topicSlug): void
+    {
+        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        if (is_null($topic)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            return;
+        }
+
+        if ($this->topicModel->trashTopic($topic)) {
+
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
+
+            header("location: ../../f/{$topic->getForum()->getSlug()}");
+        }
+    }
+
     #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
     public function publicTopicResponsePost(string $topicSlug): void
     {

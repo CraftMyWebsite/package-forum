@@ -15,6 +15,7 @@ class TopicEntity
     private string $topicName;
     private string $topicSlug;
     private string $topicContent;
+    private int $topicIsTrash;
     private string $topicCreated;
     private string $topicUpdate;
     private bool $topicPinned;
@@ -30,6 +31,7 @@ class TopicEntity
      * @param string $topicName
      * @param string $topicSlug
      * @param string $topicContent
+     * @param int $topicIsTrash
      * @param string $topicCreated
      * @param string $topicUpdate
      * @param bool $topicPinned
@@ -39,7 +41,7 @@ class TopicEntity
      * @param \CMW\Entity\Forum\ForumEntity $topicForum
      * @param \CMW\Entity\Forum\TopicTagEntity[] $tags
      */
-    public function __construct(int         $topicId, string $topicName, string $topicSlug, string $topicContent, string $topicCreated, string $topicUpdate,
+    public function __construct(int $topicId, string $topicName, string $topicSlug, string $topicContent, int $topicIsTrash, string $topicCreated, string $topicUpdate,
                                 bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
                                 ForumEntity $topicForum, array $tags)
     {
@@ -47,6 +49,7 @@ class TopicEntity
         $this->topicName = $topicName;
         $this->topicSlug = $topicSlug;
         $this->topicContent = $topicContent;
+        $this->topicIsTrash = $topicIsTrash;
         $this->topicCreated = $topicCreated;
         $this->topicUpdate = $topicUpdate;
         $this->topicPinned = $topicPinned;
@@ -79,6 +82,14 @@ class TopicEntity
     public function getContent(): string
     {
         return $this->topicContent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsTrash(): int
+    {
+        return $this->topicIsTrash;
     }
 
     /**
@@ -166,6 +177,14 @@ class TopicEntity
     public function getIsImportantLink(): string
     {
         return "forum/t/$this->topicSlug/isimportant";
+    }
+
+    /**
+     * @return string
+     */
+    public function trashLink(): string
+    {
+        return "forum/t/$this->topicSlug/trash";
     }
 
     /**

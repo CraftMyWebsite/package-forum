@@ -44,7 +44,7 @@ class TrashController extends CoreController
     }
 
     #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicReplyDelete( int $replyId): void
+    public function publicReplyDelete(int $replyId): void
     {
 
         if ($this->responseModel->deleteResponse($replyId)) {
@@ -56,14 +56,39 @@ class TrashController extends CoreController
         }
     }
 
-    #[Link("/trash/restorereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicReplyRestore( int $replyId): void
+    #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
+    public function publicReplyRestore(int $replyId, int $topicId): void
+    {
+        if ($this->topicModel->isTrashedTopic($topicId) == 1) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"), "Le topic de cette réponse est actuellement en corbeille !");
+            header("location: ../..");
+        } else {
+            if ($this->responseModel->restoreResponse($replyId)) {
+                Response::sendAlert("success", LangManager::translate("core.toaster.success"), LangManager::translate("forum.reply.delete.success"));
+                header("location: ../..");
+            }
+        }  
+    }
+
+    #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
+    public function publicTopicDelete(int $topicId): void
     {
 
-        if ($this->responseModel->restoreResponse($replyId)) {
+        if ($this->topicModel->deleteTopic($topicId)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
-                LangManager::translate("forum.reply.delete.success"));
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"), "Tu as complétement virer le truc et toutes ces réponse");
+
+            header("location: ..");
+        }
+    }
+
+    #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
+    public function publicTopicRestore(int $topicId): void
+    {
+
+        if ($this->topicModel->restoreTopic($topicId)) {
+
+            Response::sendAlert("success", LangManager::translate("core.toaster.success"), "Tu as remis le truc");
 
             header("location: ..");
         }
