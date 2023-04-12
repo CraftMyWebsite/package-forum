@@ -96,6 +96,20 @@ class ResponseModel extends DatabaseManager
         return $res->fetch(0)['count'];
     }
 
+    public function countResponseByUser(int $id): mixed
+    {
+        $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE user_id = :user_id AND forum_response_is_trash = 0";
+        $db = self::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("user_id" => $id))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['count'];
+    }
+
 
     public function createResponse(string $content, int $userId, int $topicId): ?ResponseEntity
     {
