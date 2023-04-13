@@ -63,7 +63,7 @@ class ResponseEntity
             return "Topic en corbeille";
         }
         if ($this->responseTrashReason == 1) {
-            return "Autheur";
+            return "Auteur";
         }
         if ($this->responseTrashReason == 2) {
             return "Staff";
