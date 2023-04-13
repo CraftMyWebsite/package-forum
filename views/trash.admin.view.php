@@ -31,7 +31,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         <?php foreach ($responseModel->getTrashResponse() as $response) : ?>
                         <tr>
                             <td><?= $response->getUser()->getPseudo() ?></td>
-                            <td>NA</td>
+                            <td><?= $response->getTrashReason() ?></td>
                             <td><?= $response->getUpdate() ?></td>
                             <td>
                                 <a type="button" data-bs-toggle="modal" data-bs-target="#view-<?= $response->getId() ?>">
@@ -142,13 +142,13 @@ $description = LangManager::translate("forum.forum.list.description");
                             <td>NA</td>
                             <td><?= $topic->getUpdate() ?></td>
                             <td>
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#view-<?= $topic->getId() ?>">
+                                <a type="button" data-bs-toggle="modal" data-bs-target="#vieww-<?= $topic->getId() ?>">
                                     <i class="text-primary fa-solid fa-circle-info me-2"></i>
                                 </a>
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#delete-<?= $topic->getId() ?>">
+                                <a type="button" data-bs-toggle="modal" data-bs-target="#deletee-<?= $topic->getId() ?>">
                                     <i class="text-danger fas fa-trash-alt me-2"></i>
                                 </a>
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#restore-<?= $topic->getId() ?>">
+                                <a type="button" data-bs-toggle="modal" data-bs-target="#restoree-<?= $topic->getId() ?>">
                                     <i class="text-warning fa-solid fa-rotate-left"></i>
                                 </a>
                             </td>
@@ -156,11 +156,11 @@ $description = LangManager::translate("forum.forum.list.description");
                         <!--
                         ----MODAL VISUALISATION----
                         -->
-                        <div class="modal fade text-left" id="view-<?= $topic->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                        <div class="modal fade text-left" id="vieww-<?= $topic->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary">
-                                        <h5 class="modal-title white" id="myModalLabel160">Visualisation du message</h5>
+                                        <h5 class="modal-title white" id="myModalLabel160">Visualisation du topic</h5>
                                     </div>
                                     <div class="modal-body">
                                         <p><b>Était dans :</b> <a href="/forum/f/<?= $topic->getForum()->getSlug() ?>" target="_blank"><?= $topic->getForum()->getName() ?></a></p>
@@ -178,14 +178,14 @@ $description = LangManager::translate("forum.forum.list.description");
                         <!--
                         ----MODAL RESTAURATION----
                         -->
-                        <div class="modal fade text-left" id="restore-<?= $topic->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                        <div class="modal fade text-left" id="restoree-<?= $topic->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary">
-                                        <h5 class="modal-title white" id="myModalLabel160">Restauration du message</h5>
+                                        <h5 class="modal-title white" id="myModalLabel160">Restauration du topic</h5>
                                     </div>
                                     <div class="modal-body">
-                                        Etes vous sûr de vouloir ré activer ce message ?
+                                        Etes vous sûr de vouloir ré activer ce topic et toutes le réponse qui lui sont lié ?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
@@ -202,7 +202,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         <!--
                         ----MODAL SUPRESSION----
                         -->
-                        <div class="modal fade text-left" id="delete-<?= $topic->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                        <div class="modal fade text-left" id="deletee-<?= $topic->getId() ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-danger">

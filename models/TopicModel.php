@@ -274,7 +274,7 @@ class TopicModel extends DatabaseManager
             }
             return null;
         } else {
-            $sql = "UPDATE `cmw_forums_response`, `cmw_forums_topics` SET `cmw_forums_response`.`forum_response_is_trash`= 1, `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_response`.`forum_topic_id` = :topic_id AND `cmw_forums_topics`.`forum_topic_id` = :topic_id_2";
+            $sql = "UPDATE `cmw_forums_response`, `cmw_forums_topics` SET `cmw_forums_response`.`forum_response_is_trash`= 1, `cmw_forums_response`.`forum_response_trash_reason`= 0, `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_response`.`forum_topic_id` = :topic_id AND `cmw_forums_topics`.`forum_topic_id` = :topic_id_2";
             $db = self::getInstance();
             $req = $db->prepare($sql);
             if ($req->execute(array("topic_id" => $topicId, "topic_id_2" => $topicId))) {
@@ -288,7 +288,7 @@ class TopicModel extends DatabaseManager
     {
         //Revoir comment fair fonctionner ceci (j'ai pas le time tout de suite)
         $responseModel = new responseModel;
-        if ($responseModel->countResponseInTopic($topic) === 0 ) { 
+        if ($responseModel->countResponseInTopicWithoutTrashFunction($topic) === 0 ) { 
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
             $db = self::getInstance();
             return $db->prepare($sql)->execute(array("topic_id" => $topic));

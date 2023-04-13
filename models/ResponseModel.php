@@ -75,6 +75,7 @@ class ResponseModel extends DatabaseManager
             $res["forum_response_id"],
             $res["forum_response_content"],
             $res["forum_response_is_trash"],
+            $res["forum_response_trash_reason"],
             $res["forum_response_created"],
             $res["forum_response_updated"],
             $topic,
@@ -85,6 +86,20 @@ class ResponseModel extends DatabaseManager
     public function countResponseInTopic(int $id): mixed
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
+        $db = self::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("forum_topic_id" => $id))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['count'];
+    }
+
+    public function countResponseInTopicWithoutTrashFunction(int $id): mixed //never use this model without knowing what it really does!!
+    {
+        $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
         $db = self::getInstance();
 
         $res = $db->prepare($sql);
@@ -160,14 +175,14 @@ class ResponseModel extends DatabaseManager
         return null;
     }
 
-    public function trashResponse(int $id): ?ResponseEntity
+    public function trashResponse(int $id, int $reason): ?ResponseEntity
     {
-        $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '1' WHERE `forum_response_id` = :id";
+        $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '1', `forum_response_trash_reason` = :reason WHERE `forum_response_id` = :id";
 
         $db = self::getInstance();
         $req = $db->prepare($sql);
 
-        if ($req->execute(array("id" => $id))) {
+        if ($req->execute(array("id" => $id, "reason" => $reason))) {
             return $this->getResponseById($id);
         }
 
@@ -226,6 +241,7 @@ class ResponseModel extends DatabaseManager
             $res["forum_response_id"],
             $res["forum_response_content"],
             $res["forum_response_is_trash"],
+            $res["forum_response_trash_reason"],
             $res["forum_response_created"],
             $res["forum_response_updated"],
             $topic,
@@ -273,6 +289,7 @@ class ResponseModel extends DatabaseManager
             $res["forum_response_id"],
             $res["forum_response_content"],
             $res["forum_response_is_trash"],
+            $res["forum_response_trash_reason"],
             $res["forum_response_created"],
             $res["forum_response_updated"],
             $topic,

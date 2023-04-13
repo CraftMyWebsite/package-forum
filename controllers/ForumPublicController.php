@@ -298,8 +298,8 @@ class ForumPublicController extends CoreController
         Utils::refreshPage();
     }
 
-    #[Link("/t/:topicSlug/trash/:replyId", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
-    public function publicTopicReplyDelete(string $topicSlug, int $replyId): void
+    #[Link("/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
+    public function publicTopicReplyDelete(string $topicSlug, int $replyId, int $reason): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
@@ -310,18 +310,18 @@ class ForumPublicController extends CoreController
 
         $reply = $this->responseModel->getResponseById($replyId);
 
-        if (!$reply?->isSelfReply()) {
+        if (!$reply?->isSelfReply()) {//Rajouter ici si on as la permission de supprimer (staff)
             Response::sendAlert("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.reply.delete.errors.no_access"));
             return;
         }
 
-        if ($this->responseModel->trashResponse($replyId)) {
+        if ($this->responseModel->trashResponse($replyId, $reason)) {
 
             Response::sendAlert("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));
 
-            header("location: ../../{$topic->getSlug()}");
+            header("location: ../../../{$topic->getSlug()}");
         }
     }
 

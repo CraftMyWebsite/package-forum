@@ -12,16 +12,18 @@ class ResponseEntity
     private int $responseId;
     private string $responseContent;
     private string $responseIsTrash;
+    private string $responseTrashReason;
     private string $responseCreated;
     private string $responseUpdated;
     private TopicEntity $responseTopic;
     private userEntity $responseUser;
 
-    public function __construct(int $id, string $content, int $isTrash, string $created, string $updated, TopicEntity $topic, userEntity $user)
+    public function __construct(int $id, string $content, int $isTrash, int $trashReason, string $created, string $updated, TopicEntity $topic, userEntity $user)
     {
         $this->responseId = $id;
         $this->responseContent = $content;
         $this->responseIsTrash = $isTrash;
+        $this->responseTrashReason = $trashReason;
         $this->responseCreated = $created;
         $this->responseUpdated = $updated;
         $this->responseTopic = $topic;
@@ -50,6 +52,22 @@ class ResponseEntity
     public function getIsTrash(): string
     {
         return $this->responseIsTrash;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrashReason(): string
+    {
+        if ($this->responseTrashReason == 0) {
+            return "Topic en corbeille";
+        }
+        if ($this->responseTrashReason == 1) {
+            return "Autheur";
+        }
+        if ($this->responseTrashReason == 2) {
+            return "Staff";
+        }
     }
 
     /**
@@ -94,7 +112,12 @@ class ResponseEntity
      */
     public function trashLink(): string
     {
-        return "{$this->responseTopic->getSlug()}/trash/$this->responseId";
+        if ($this->getUser()->getId() === UsersModel::getLoggedUser()) {
+            return "{$this->responseTopic->getSlug()}/trash/$this->responseId/1";
+        } else {
+            return "{$this->responseTopic->getSlug()}/trash/$this->responseId/2";
+        }
+        
     }
 
     /**

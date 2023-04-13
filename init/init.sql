@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
     forum_category_icon        VARCHAR(50) NULL,
     forum_category_description TEXT        NULL,
     forum_category_is_trash    TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    forum_category_trash_reason    INT(1) NULL,
     forum_category_created TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_category_updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums
     forum_subforum_id INT          NULL,
     forum_category_id INT          NULL,
     forum_is_trash    TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    forum_trash_reason    INT(1) NULL,
     forum_created TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_forum_category_id
@@ -39,6 +41,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics
     forum_topic_disallow_replies TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
     forum_topic_important        TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
     forum_topic_is_trash         TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    forum_topic_trash_reason    INT(1) NULL,
     user_id                      INT                 NULL,
     forum_id                     INT                 NOT NULL,
     forum_topic_created TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -67,6 +70,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response
     forum_response_content TEXT NOT NULL,
     forum_topic_id         INT  NOT NULL,
     forum_response_is_trash    TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    forum_response_trash_reason    INT(1) NULL,
     forum_response_created TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_response_updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     user_id                INT  NOT NULL,
