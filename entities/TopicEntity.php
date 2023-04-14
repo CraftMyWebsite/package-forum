@@ -211,4 +211,14 @@ class TopicEntity
     {
         return (new ResponseModel())->getLatestResponseInTopic($this->topicId);
     }
+
+    public function isSelfTopic(): bool
+    {
+        return $this->getUser()->getId() === UsersModel::getLoggedUser();
+    }
+
+    public function editTopicLink(): string
+    {
+        return "$this->topicSlug/edit";
+    }
 }

@@ -175,6 +175,30 @@ class TopicModel extends DatabaseManager
         return null;
     }
 
+    public function authorEditTopic(int $topicId, string $name, string $content): ?TopicEntity
+    {
+
+        $var = array(
+            "topicId" => $topicId,
+            "name" => $name,
+            "content" => $content,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET 
+            forum_topic_name = :name,
+            forum_topic_content = :content
+            WHERE forum_topic_id = :topicId";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($var)) {
+            $this->setTopicSlug($topicId, $name);
+        }
+
+        return null;
+    }
+
 
     private function setTopicSlug(int $id, string $name): void
     {

@@ -326,4 +326,55 @@ class ForumPublicController extends CoreController
     }
 
 
+    #[Link("/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicEdit(string $topicSlug): void
+    {
+        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+
+        $view = new View("forum", "editTopic");
+        $view->addVariableList(["topic" => $topic]);
+        $view->addStyle("admin/resources/vendors/fontawesome-free/css/fa-all.min.css","admin/resources/vendors/summernote/summernote-lite.css","admin/resources/assets/css/pages/summernote.css");
+        $view->addScriptAfter("admin/resources/vendors/jquery/jquery.min.js","admin/resources/vendors/summernote/summernote-lite.min.js","admin/resources/assets/js/pages/summernote.js");
+        $view->view();
+    }
+
+    #[Link("/t/:topicSlug/edit", Link::POST, ['.*?'], "/forum")]
+    public function publicTopicEditPost(string $topicSlug): void
+    {
+        [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
+
+        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+
+        if (is_null($topic) || Utils::hasOneNullValue($name, $content)) {
+            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Utils::refreshPage();
+            return;
+        }
+
+        $res = $this->topicModel->authorEditTopic($topicId, $name, $content);
+
+        // Add tags
+
+        $tags = explode(",", $tags);
+        //Need to clear tag befor update
+        $this->topicModel->clearTag($topicId);
+        foreach ($tags as $tag) {
+            //Clean tag
+            $tag = mb_strtolower(trim($tag));
+
+            if (empty($tag)) {
+                continue;
+            }
+            
+            $this->topicModel->addTag($tag, $topicId);
+        }
+
+        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.topic.add.success"));
+
+        header("location: ../../f/{$topic->getForum()->getSlug()}");
+    }
+
+
 }
