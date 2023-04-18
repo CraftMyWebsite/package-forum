@@ -11,15 +11,19 @@ class ResponseEntity
 
     private int $responseId;
     private string $responseContent;
+    private string $responseIsTrash;
+    private string $responseTrashReason;
     private string $responseCreated;
     private string $responseUpdated;
     private TopicEntity $responseTopic;
     private userEntity $responseUser;
 
-    public function __construct(int $id, string $content, string $created, string $updated, TopicEntity $topic, userEntity $user)
+    public function __construct(int $id, string $content, int $isTrash, int $trashReason, string $created, string $updated, TopicEntity $topic, userEntity $user)
     {
         $this->responseId = $id;
         $this->responseContent = $content;
+        $this->responseIsTrash = $isTrash;
+        $this->responseTrashReason = $trashReason;
         $this->responseCreated = $created;
         $this->responseUpdated = $updated;
         $this->responseTopic = $topic;
@@ -40,6 +44,30 @@ class ResponseEntity
     public function getContent(): string
     {
         return $this->responseContent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsTrash(): string
+    {
+        return $this->responseIsTrash;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrashReason(): string
+    {
+        if ($this->responseTrashReason == 0) {
+            return "Topic en corbeille";
+        }
+        if ($this->responseTrashReason == 1) {
+            return "Auteur";
+        }
+        if ($this->responseTrashReason == 2) {
+            return "Staff";
+        }
     }
 
     /**
@@ -82,9 +110,14 @@ class ResponseEntity
     /**
      * @return string
      */
-    public function deleteLink(): string
+    public function trashLink(): string
     {
-        return "{$this->responseTopic->getSlug()}/delete/$this->responseId";
+        if ($this->getUser()->getId() === UsersModel::getLoggedUser()) {
+            return "{$this->responseTopic->getSlug()}/trash/$this->responseId/1";
+        } else {
+            return "{$this->responseTopic->getSlug()}/trash/$this->responseId/2";
+        }
+        
     }
 
     /**

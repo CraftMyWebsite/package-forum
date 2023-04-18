@@ -3,6 +3,7 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
+use CMW\Model\Forum\ResponseModel;
 
 class ForumEntity
 {
@@ -110,6 +111,14 @@ class ForumEntity
     public function getAdminDeleteLink(): string
     {
         return "./delete/$this->forumId";
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\ResponseEntity|null
+     */
+    public function getLastResponse(): ?ResponseEntity
+    {
+        return (new ResponseModel())->getLatestResponseInForum($this->forumId);
     }
 
 

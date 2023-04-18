@@ -16,16 +16,13 @@ use CMW\Model\Users\UsersModel;
  */
 class TopicModel extends DatabaseManager
 {
-
     private UsersModel $userModel;
     private ForumModel $forumModel;
-
+    
     public function __construct()
     {
-
         $this->userModel = new UsersModel();
         $this->forumModel = new ForumModel();
-
     }
 
     public function getTopicBySlug(string $slug): ?TopicEntity
@@ -79,6 +76,7 @@ class TopicModel extends DatabaseManager
             $res["forum_topic_name"],
             $res["forum_topic_slug"],
             $res["forum_topic_content"] ?? "",
+            $res["forum_topic_is_trash"],
             $res["forum_topic_created"],
             $res["forum_topic_updated"],
             $res["forum_topic_pinned"],
@@ -96,7 +94,7 @@ class TopicModel extends DatabaseManager
     public function getTopicByForum(int $id): array
     {
 
-        $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id 
+        $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id AND forum_topic_is_trash = 0
                                              ORDER BY forum_topic_pinned DESC, forum_topic_important DESC ";
         $db = self::getInstance();
 
@@ -165,6 +163,30 @@ class TopicModel extends DatabaseManager
             forum_topic_disallow_replies = :disallow_replies,
             forum_topic_important = :important,
             forum_topic_pinned = :pin
+            WHERE forum_topic_id = :topicId";
+
+        $db = self::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($var)) {
+            $this->setTopicSlug($topicId, $name);
+        }
+
+        return null;
+    }
+
+    public function authorEditTopic(int $topicId, string $name, string $content): ?TopicEntity
+    {
+
+        $var = array(
+            "topicId" => $topicId,
+            "name" => $name,
+            "content" => $content,
+        );
+
+        $sql = "UPDATE cmw_forums_topics SET 
+            forum_topic_name = :name,
+            forum_topic_content = :content
             WHERE forum_topic_id = :topicId";
 
         $db = self::getInstance();
@@ -261,6 +283,81 @@ class TopicModel extends DatabaseManager
         $db = self::getInstance();
 
         return $db->prepare($sql)->execute(array("topic_id" => $topicId));
+    }
+
+    public function trashTopic(TopicEntity $topic): ?TopicEntity
+    {
+        $topicId = $topic->getId();
+        $responseModel = new responseModel;
+        if ($responseModel->countResponseInTopic($topicId) === 0 ) {
+            $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
+            $db = self::getInstance();
+            $req = $db->prepare($sql);
+            if ($req->execute(array("topic_id" => $topicId))) {
+                return $this->getTopicById($topicId);
+            }
+            return null;
+        } else {
+            $sql = "UPDATE `cmw_forums_response`, `cmw_forums_topics` SET `cmw_forums_response`.`forum_response_is_trash`= 1, `cmw_forums_response`.`forum_response_trash_reason`= 0, `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_response`.`forum_topic_id` = :topic_id AND `cmw_forums_topics`.`forum_topic_id` = :topic_id_2";
+            $db = self::getInstance();
+            $req = $db->prepare($sql);
+            if ($req->execute(array("topic_id" => $topicId, "topic_id_2" => $topicId))) {
+                return $this->getTopicById($topicId);
+            }
+            return null;
+        }
+    }
+
+    public function restoreTopic(int $topic): int
+    {
+        //Revoir comment fair fonctionner ceci (j'ai pas le time tout de suite)
+        $responseModel = new responseModel;
+        if ($responseModel->countResponseInTopicWithoutTrashFunction($topic) === 0 ) { 
+            $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
+            $db = self::getInstance();
+            return $db->prepare($sql)->execute(array("topic_id" => $topic));
+        } else {
+            $sql = "UPDATE `cmw_forums_response`, `cmw_forums_topics` SET `cmw_forums_response`.`forum_response_is_trash`= 0, `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_response`.`forum_topic_id` = :topic_id AND `cmw_forums_topics`.`forum_topic_id` = :topic_id_2";
+            $db = self::getInstance();
+            return $db->prepare($sql)->execute(array("topic_id" => $topic, "topic_id_2" => $topic));
+        }
+
+
+
+    }
+
+    public function getTrashTopic(): array
+    {
+        $sql = "SELECT * FROM `cmw_forums_topics` WHERE `forum_topic_is_trash` = 1 ORDER BY `cmw_forums_topics`.`forum_topic_updated` DESC";
+
+        $db = self::getInstance();
+        $res = $db->prepare($sql);
+
+        if (!$res->execute()) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($topic = $res->fetch()) {
+            $toReturn[] = $this->getTopicById($topic["forum_topic_id"]);
+        }
+
+        return $toReturn;
+    }
+
+    public function isTrashedTopic($topicId): bool
+    {
+        $sql = "SELECT * FROM `cmw_forums_topics` WHERE `forum_topic_is_trash` = 1 AND `forum_topic_id` = :topic_id";
+
+        $db = self::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if ($req->execute(array("topic_id" => $topicId))) {
+            return $req->rowCount() === 1;
+        }
+        return false;
     }
 
     public function addTag(string $content, int $topicId): ?TopicTagEntity
