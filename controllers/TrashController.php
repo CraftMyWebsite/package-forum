@@ -6,6 +6,7 @@ namespace CMW\Controller\Forum;
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
@@ -44,7 +45,7 @@ class TrashController extends CoreController
     }
 
     #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicReplyDelete(int $replyId): void
+    public function publicReplyDelete(Request $request, int $replyId): void
     {
 
         if ($this->responseModel->deleteResponse($replyId)) {
@@ -57,7 +58,7 @@ class TrashController extends CoreController
     }
 
     #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicReplyRestore(int $replyId, int $topicId): void
+    public function publicReplyRestore(Request $request, int $replyId, int $topicId): void
     {
         if ($this->topicModel->isTrashedTopic($topicId) == 1) {
             Response::sendAlert("error", LangManager::translate("core.toaster.error"), "Le topic de cette réponse est actuellement en corbeille !");
@@ -71,7 +72,7 @@ class TrashController extends CoreController
     }
 
     #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicTopicDelete(int $topicId): void
+    public function publicTopicDelete(Request $request, int $topicId): void
     {
 
         if ($this->topicModel->deleteTopic($topicId)) {
@@ -83,7 +84,7 @@ class TrashController extends CoreController
     }
 
     #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicTopicRestore(int $topicId): void
+    public function publicTopicRestore(Request $request, int $topicId): void
     {
 
         if ($this->topicModel->restoreTopic($topicId)) {

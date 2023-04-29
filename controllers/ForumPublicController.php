@@ -6,6 +6,7 @@ namespace CMW\Controller\Forum;
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
@@ -54,7 +55,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
-    public function publicForumView(string $forumSlug): void
+    public function publicForumView(Request $request, string $forumSlug): void
     {
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
@@ -64,7 +65,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
-    public function publicForumAddTopicView(string $forumSlug): void
+    public function publicForumAddTopicView(Request $request, string $forumSlug): void
     {
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
@@ -76,7 +77,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAddTopicPost(string $forumSlug): void
+    public function publicForumAddTopicPost(Request $request, string $forumSlug): void
     {
         [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
 
@@ -121,7 +122,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAdminEditTopicPost(string $forumSlug): void
+    public function publicForumAdminEditTopicPost(Request $request, string $forumSlug): void
     {
         [$topicId, $name, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags');
 
@@ -159,7 +160,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicView(string $topicSlug): void
+    public function publicTopicView(Request $request, string $topicSlug): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
 
@@ -171,7 +172,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicPinned(string $topicSlug): void
+    public function publicTopicPinned(Request $request, string $topicSlug): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
@@ -192,7 +193,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicDisallowReplies(string $topicSlug): void
+    public function publicTopicDisallowReplies(Request $request, string $topicSlug): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
@@ -213,7 +214,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsImportant(string $topicSlug): void
+    public function publicTopicIsImportant(Request $request, string $topicSlug): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
@@ -234,7 +235,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsTrash(string $topicSlug): void
+    public function publicTopicIsTrash(Request $request, string $topicSlug): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
@@ -252,7 +253,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicResponsePost(string $topicSlug): void
+    public function publicTopicResponsePost(Request $request, string $topicSlug): void
     {
         usersController::isAdminLogged(); //TODO Need to "Is User Logged" && Permissions
 
@@ -299,7 +300,7 @@ class ForumPublicController extends CoreController
     }
 
     #[Link("/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
-    public function publicTopicReplyDelete(string $topicSlug, int $replyId, int $reason): void
+    public function publicTopicReplyDelete(Request $request, string $topicSlug, int $replyId, int $reason): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
@@ -327,19 +328,19 @@ class ForumPublicController extends CoreController
 
 
     #[Link("/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicEdit(string $topicSlug): void
+    public function publicTopicEdit(Request $request, string $topicSlug): void
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
 
         $view = new View("forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
-        $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
+        $view->addScriptAfter("Admin/Resources/Vendors/Jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
         $view->view();
     }
 
     #[Link("/t/:topicSlug/edit", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicEditPost(string $topicSlug): void
+    public function publicTopicEditPost(Request $request, string $topicSlug): void
     {
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 

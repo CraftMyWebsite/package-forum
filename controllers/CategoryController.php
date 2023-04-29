@@ -6,6 +6,7 @@ namespace CMW\Controller\Forum;
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
@@ -70,7 +71,7 @@ class CategoryController extends CoreController
     }
 
     #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/categories")]
-    public function adminEditCategory(int $id): void
+    public function adminEditCategory(Request $request, int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
@@ -91,7 +92,7 @@ class CategoryController extends CoreController
     }
 
     #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
-    public function adminDeleteCategory(int $id): void
+    public function adminDeleteCategory(Request $request, int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
