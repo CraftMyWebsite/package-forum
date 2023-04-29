@@ -48,7 +48,7 @@ class ForumPublicController extends CoreController
     #[Link("/", Link::GET, [], "/forum")]
     public function publicBaseView(): void
     {
-        $view = new View("forum", "main");
+        $view = new View("Forum", "main");
         $view->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
@@ -59,8 +59,8 @@ class ForumPublicController extends CoreController
     {
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
-        $view = new View("forum", "forum");
-        $view->addVariableList(["forum" => $forum, "topicModel" => $this->topicModel, "forumModel" => $this->forumModel, "responseModel" => $this->responseModel]);
+        $view = new View("Forum", "Forum");
+        $view->addVariableList(["Forum" => $forum, "topicModel" => $this->topicModel, "forumModel" => $this->forumModel, "responseModel" => $this->responseModel]);
         $view->view();
     }
 
@@ -69,8 +69,8 @@ class ForumPublicController extends CoreController
     {
         $forum = $this->forumModel->getForumBySlug($forumSlug);
 
-        $view = new View("forum", "addTopic");
-        $view->addVariableList(["forum" => $forum]);
+        $view = new View("Forum", "addTopic");
+        $view->addVariableList(["Forum" => $forum]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
         $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
         $view->view();
@@ -164,7 +164,7 @@ class ForumPublicController extends CoreController
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
 
-        $view = new View("forum", "topic");
+        $view = new View("Forum", "topic");
         $view->addVariableList(["topic" => $topic, "responseModel" => $this->responseModel]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
         $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
@@ -332,7 +332,7 @@ class ForumPublicController extends CoreController
     {
         $topic = $this->topicModel->getTopicBySlug($topicSlug);
 
-        $view = new View("forum", "editTopic");
+        $view = new View("Forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
         $view->addScriptAfter("Admin/Resources/Vendors/Jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");

@@ -37,7 +37,7 @@ class TrashController extends CoreController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
-        View::createAdminView("forum", "trash")
+        View::createAdminView("Forum", "trash")
             ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel, "responseModel" => $this->responseModel, "topicModel" => $this->topicModel])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
