@@ -49,7 +49,7 @@ class ForumPublicController extends CoreController
     {
         $view = new View("forum", "main");
         $view->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel]);
-        $view->addStyle("admin/resources/vendors/fontawesome-free/css/fa-all.min.css");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
@@ -70,8 +70,8 @@ class ForumPublicController extends CoreController
 
         $view = new View("forum", "addTopic");
         $view->addVariableList(["forum" => $forum]);
-        $view->addStyle("admin/resources/vendors/fontawesome-free/css/fa-all.min.css","admin/resources/vendors/summernote/summernote-lite.css","admin/resources/assets/css/pages/summernote.css");
-        $view->addScriptAfter("admin/resources/vendors/jquery/jquery.min.js","admin/resources/vendors/summernote/summernote-lite.min.js","admin/resources/assets/js/pages/summernote.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
+        $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
         $view->view();
     }
 
@@ -165,8 +165,8 @@ class ForumPublicController extends CoreController
 
         $view = new View("forum", "topic");
         $view->addVariableList(["topic" => $topic, "responseModel" => $this->responseModel]);
-        $view->addStyle("admin/resources/vendors/fontawesome-free/css/fa-all.min.css","admin/resources/vendors/summernote/summernote-lite.css","admin/resources/assets/css/pages/summernote.css");
-        $view->addScriptAfter("admin/resources/vendors/jquery/jquery.min.js","admin/resources/vendors/summernote/summernote-lite.min.js","admin/resources/assets/js/pages/summernote.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
+        $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
         $view->view();
     }
 
@@ -333,8 +333,8 @@ class ForumPublicController extends CoreController
 
         $view = new View("forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
-        $view->addStyle("admin/resources/vendors/fontawesome-free/css/fa-all.min.css","admin/resources/vendors/summernote/summernote-lite.css","admin/resources/assets/css/pages/summernote.css");
-        $view->addScriptAfter("admin/resources/vendors/jquery/jquery.min.js","admin/resources/vendors/summernote/summernote-lite.min.js","admin/resources/assets/js/pages/summernote.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
+        $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
         $view->view();
     }
 

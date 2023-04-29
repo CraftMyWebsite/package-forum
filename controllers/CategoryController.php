@@ -37,7 +37,7 @@ class CategoryController extends CoreController
     }
 
 
-    #[Link("/manage", Link::GET, [], "/cmw-admin/forum")]
+    #[Link("/manage", Link::GET, [], "/cmw-Admin/forum")]
     public function adminListCategoryView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
@@ -47,7 +47,7 @@ class CategoryController extends CoreController
             ->view();
     }
 
-    #[Link("/add", Link::POST, [], "/cmw-admin/forum/categories")]
+    #[Link("/add", Link::POST, [], "/cmw-Admin/forum/categories")]
     public function adminAddCategoryPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
@@ -69,7 +69,7 @@ class CategoryController extends CoreController
         header("location: ../manage");
     }
 
-    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-Admin/forum/categories")]
     public function adminEditCategory(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
@@ -90,7 +90,7 @@ class CategoryController extends CoreController
         header("location: ../../manage");
     }
 
-    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-Admin/forum/categories")]
     public function adminDeleteCategory(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");

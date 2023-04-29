@@ -31,19 +31,19 @@ class TrashController extends CoreController
         $this->topicModel = new TopicModel();
     }
 
-    #[Link("/trash", Link::GET, [], "/cmw-admin/forum")]
+    #[Link("/trash", Link::GET, [], "/cmw-Admin/forum")]
     public function adminListTrashView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         View::createAdminView("forum", "trash")
             ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel, "responseModel" => $this->responseModel, "topicModel" => $this->topicModel])
-            ->addStyle("admin/resources/vendors/simple-datatables/style.css","admin/resources/assets/css/pages/simple-datatables.css")
-            ->addScriptAfter("admin/resources/vendors/simple-datatables/umd/simple-datatables.js","admin/resources/assets/js/pages/simple-datatables.js")
+            ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();
     }
 
-    #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
+    #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-Admin/forum")]
     public function publicReplyDelete(int $replyId): void
     {
 
@@ -56,7 +56,7 @@ class TrashController extends CoreController
         }
     }
 
-    #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
+    #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-Admin/forum")]
     public function publicReplyRestore(int $replyId, int $topicId): void
     {
         if ($this->topicModel->isTrashedTopic($topicId) == 1) {
@@ -70,7 +70,7 @@ class TrashController extends CoreController
         }  
     }
 
-    #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
+    #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-Admin/forum")]
     public function publicTopicDelete(int $topicId): void
     {
 
@@ -82,7 +82,7 @@ class TrashController extends CoreController
         }
     }
 
-    #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
+    #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-Admin/forum")]
     public function publicTopicRestore(int $topicId): void
     {
 
