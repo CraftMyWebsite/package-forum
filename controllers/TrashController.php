@@ -31,7 +31,7 @@ class TrashController extends CoreController
         $this->topicModel = new TopicModel();
     }
 
-    #[Link("/trash", Link::GET, [], "/cmw-Admin/forum")]
+    #[Link("/trash", Link::GET, [], "/cmw-admin/forum")]
     public function adminListTrashView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
@@ -43,7 +43,7 @@ class TrashController extends CoreController
             ->view();
     }
 
-    #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-Admin/forum")]
+    #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
     public function publicReplyDelete(int $replyId): void
     {
 
@@ -56,7 +56,7 @@ class TrashController extends CoreController
         }
     }
 
-    #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-Admin/forum")]
+    #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicReplyRestore(int $replyId, int $topicId): void
     {
         if ($this->topicModel->isTrashedTopic($topicId) == 1) {
@@ -70,7 +70,7 @@ class TrashController extends CoreController
         }  
     }
 
-    #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-Admin/forum")]
+    #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicTopicDelete(int $topicId): void
     {
 
@@ -82,7 +82,7 @@ class TrashController extends CoreController
         }
     }
 
-    #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-Admin/forum")]
+    #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicTopicRestore(int $topicId): void
     {
 

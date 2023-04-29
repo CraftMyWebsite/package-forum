@@ -42,7 +42,7 @@ class ForumController extends CoreController
         $this->usersModel = new UsersModel();
     }
 
-    #[Link("/add", Link::POST, [], "/cmw-Admin/forum/forums")]
+    #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
     public function adminAddForumPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
@@ -57,7 +57,7 @@ class ForumController extends CoreController
         header("location: ../manage");
     }
 
-    #[Link("/add", Link::POST, [], "/cmw-Admin/forum/subforums")]
+    #[Link("/add", Link::POST, [], "/cmw-admin/forum/subforums")]
     public function adminAddSubForumPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
@@ -72,7 +72,7 @@ class ForumController extends CoreController
         header("location: ../manage");
     }
 
-    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-Admin/forum/forums")]
+    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/forums")]
     public function adminEditCategory(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
@@ -90,7 +90,7 @@ class ForumController extends CoreController
         header("location: ../../manage");
     }
 
-    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-Admin/forum/forums")]
+    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/forums")]
     public function adminDeleteForum(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.delete");
