@@ -5,6 +5,7 @@ namespace CMW\Model\Forum;
 use CMW\Entity\Forum\ForumEntity;
 use CMW\Entity\Forum\ResponseEntity;
 use CMW\Manager\Database\DatabaseManager;
+use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
 
 
@@ -14,7 +15,7 @@ use CMW\Model\Users\UsersModel;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class ResponseModel extends DatabaseManager
+class ResponseModel extends AbstractModel
 {
     private UsersModel $userModel;
     private TopicModel $topicModel;
@@ -33,7 +34,7 @@ class ResponseModel extends DatabaseManager
     public function getResponseByTopic(int $id): array
     {
         $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
         if (!$res->execute(array("forum_topic_id" => $id))) {
@@ -54,7 +55,7 @@ class ResponseModel extends DatabaseManager
 
         $sql = "SELECT * FROM cmw_forums_response WHERE forum_response_id = :response_id ";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -86,7 +87,7 @@ class ResponseModel extends DatabaseManager
     public function countResponseInTopic(int $id): mixed
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -100,7 +101,7 @@ class ResponseModel extends DatabaseManager
     public function countResponseInTopicWithoutTrashFunction(int $id): mixed //never use this model without knowing what it really does!!
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -114,7 +115,7 @@ class ResponseModel extends DatabaseManager
     public function countResponseByUser(int $id): mixed
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE user_id = :user_id AND forum_response_is_trash = 0";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -137,7 +138,7 @@ class ResponseModel extends DatabaseManager
 
         $sql = "INSERT INTO cmw_forums_response(forum_response_content, forum_topic_id, user_id) VALUES (:response_content, :topic_id, :user_id)";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($var)) {
@@ -151,7 +152,7 @@ class ResponseModel extends DatabaseManager
     {
         $sql = "DELETE FROM cmw_forums_response WHERE forum_response_id = :id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if (!$req->execute(array("id" => $id))) {
@@ -165,7 +166,7 @@ class ResponseModel extends DatabaseManager
     {
         $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '0' WHERE `forum_response_id` = :id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute(array("id" => $id))) {
@@ -179,7 +180,7 @@ class ResponseModel extends DatabaseManager
     {
         $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '1', `forum_response_trash_reason` = :reason WHERE `forum_response_id` = :id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute(array("id" => $id, "reason" => $reason))) {
@@ -193,7 +194,7 @@ class ResponseModel extends DatabaseManager
     {
         $sql = "SELECT * FROM `cmw_forums_response` WHERE `forum_response_is_trash` = 1 ORDER BY `cmw_forums_response`.`forum_response_updated` DESC";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
         if (!$res->execute()) {
@@ -217,7 +218,7 @@ class ResponseModel extends DatabaseManager
                                            ORDER BY `cmw_forums_response`.`forum_response_id` 
                                            DESC limit 1 offset 0";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
         if (!$res->execute(array("forum_topic_id" => $topicId))) {
@@ -264,7 +265,7 @@ class ResponseModel extends DatabaseManager
                 OR cmw_forums.forum_id = :forum_id_2 AND forum_response_is_trash = 0
                 ORDER BY cmw_forums_response.forum_response_id DESC LIMIT 1";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 

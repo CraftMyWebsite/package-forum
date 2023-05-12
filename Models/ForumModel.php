@@ -4,6 +4,7 @@ namespace CMW\Model\Forum;
 
 use CMW\Entity\Forum\ForumEntity;
 use CMW\Manager\Database\DatabaseManager;
+use CMW\Manager\Package\AbstractModel;
 use CMW\Utils\Utils;
 
 /**
@@ -12,7 +13,7 @@ use CMW\Utils\Utils;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class ForumModel extends DatabaseManager
+class ForumModel extends AbstractModel
 {
     private CategoryModel $categoryModel;
 
@@ -29,7 +30,7 @@ class ForumModel extends DatabaseManager
     public function getForums(): array
     {
         $sql = "SELECT forum_id FROM cmw_forums";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -52,7 +53,7 @@ class ForumModel extends DatabaseManager
     {
         $sql = "SELECT * FROM cmw_forums WHERE forum_id = :forum_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -86,7 +87,7 @@ class ForumModel extends DatabaseManager
     public function getForumByCat(int $id): array
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_category_id = :forum_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -106,7 +107,7 @@ class ForumModel extends DatabaseManager
     public function getSubforumByForum(int $id): array
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_subforum_id = :forum_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -127,7 +128,7 @@ class ForumModel extends DatabaseManager
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_slug = :forum_slug";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -151,7 +152,7 @@ class ForumModel extends DatabaseManager
                 WHERE cmw_forums_topics.forum_id IN 
                       (SELECT cmw_forums.forum_id FROM cmw_forums WHERE cmw_forums.forum_subforum_id = :forum_id)
                 OR cmw_forums.forum_id = :forum_id_2";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -172,7 +173,7 @@ class ForumModel extends DatabaseManager
                 (SELECT cmw_forums.forum_id FROM cmw_forums WHERE cmw_forums.forum_subforum_id = :forum_id)
                 OR cmw_forums.forum_id = :forum_id_2 AND forum_response_is_trash = 0";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -186,7 +187,7 @@ class ForumModel extends DatabaseManager
     public function hasSubForums(int $id): bool
     {
         $sql = "SELECT COUNT(forum_id) FROM cmw_forums WHERE forum_subforum_id = :forum_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -211,7 +212,7 @@ class ForumModel extends DatabaseManager
                 VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)";
 
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -234,7 +235,7 @@ class ForumModel extends DatabaseManager
 
         $sql = "UPDATE cmw_forums SET forum_slug = :forum_slug WHERE forum_id = :forum_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         $req->execute($data);
@@ -262,7 +263,7 @@ class ForumModel extends DatabaseManager
                 VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)";
 
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -288,7 +289,7 @@ class ForumModel extends DatabaseManager
         $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_category_id=:reattached_Id WHERE forum_id=:forum_id";
 
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -302,7 +303,7 @@ class ForumModel extends DatabaseManager
     {
         $sql = "DELETE FROM cmw_forums WHERE forum_id = :forum_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         return $db->prepare($sql)->execute(array("forum_id" => $id));
     }
