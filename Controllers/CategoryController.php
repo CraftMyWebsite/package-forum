@@ -3,19 +3,17 @@
 
 namespace CMW\Controller\Forum;
 
-use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
 use CMW\Model\Forum\ForumModel;
-use CMW\Model\Forum\ResponseModel;
-use CMW\Model\Forum\TopicModel;
-use CMW\Model\users\UsersModel;
-use CMW\Router\Link;
-use CMW\Utils\Response;
+use CMW\Manager\Router\Link;
+use CMW\Manager\Flash\Flash;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
+use CMW\Utils\Website;
 
 
 /**
@@ -24,27 +22,15 @@ use CMW\Manager\Views\View;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class CategoryController extends CoreController
+class CategoryController extends AbstractController
 {
-
-    private ForumModel $forumModel;
-    private CategoryModel $categoryModel;
-
-    public function __construct($theme_path = null)
-    {
-        parent::__construct($theme_path);
-        $this->forumModel = new ForumModel();
-        $this->categoryModel = new CategoryModel();
-    }
-
-
     #[Link("/manage", Link::GET, [], "/cmw-admin/forum")]
     public function adminListCategoryView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         View::createAdminView("Forum", "list")
-            ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel])
+            ->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => categoryModel::getInstance()])
             ->view();
     }
 
@@ -54,17 +40,17 @@ class CategoryController extends CoreController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.category.toaster.error.empty_input"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        $this->categoryModel->createCategory($name, $icon, $description);
+        categoryModel::getInstance()->createCategory($name, $icon, $description);
 
-        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+        Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.toaster.success"));
 
         header("location: ../manage");
@@ -75,18 +61,18 @@ class CategoryController extends CoreController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
-        $category = $this->categoryModel->getCategoryById($id);
+        $category = categoryModel::getInstance()->getCategoryById($id);
 
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.category.toaster.error.empty_input"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        $this->categoryModel->editCategory($id, $name, $icon, $description);
+        categoryModel::getInstance()->editCategory($id, $name, $icon, $description);
 
         header("location: ../../manage");
     }
@@ -96,19 +82,19 @@ class CategoryController extends CoreController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
-        $category = $this->categoryModel->getCategoryById($id);
+        $category = categoryModel::getInstance()->getCategoryById($id);
 
         if (is_null($category)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
 
             header("location: ../../manage");
             return;
         }
 
-        $this->categoryModel->deleteCategory($id);
+        categoryModel::getInstance()->deleteCategory($id);
 
-        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+        Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.delete.success"));
 
         header("location: ../../manage");

@@ -4,6 +4,7 @@ namespace CMW\Model\Forum;
 
 use CMW\Entity\Forum\CategoryEntity;
 use CMW\Manager\Database\DatabaseManager;
+use CMW\Manager\Package\AbstractModel;
 
 
 /**
@@ -12,7 +13,7 @@ use CMW\Manager\Database\DatabaseManager;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class CategoryModel extends DatabaseManager
+class CategoryModel extends AbstractModel
 {
 
     /**
@@ -22,7 +23,7 @@ class CategoryModel extends DatabaseManager
     {
 
         $sql = "SELECT forum_category_id FROM cmw_forums_categories";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -44,7 +45,7 @@ class CategoryModel extends DatabaseManager
     {
         $sql = "SELECT * FROM cmw_forums_categories WHERE forum_category_id = :category_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -75,7 +76,7 @@ class CategoryModel extends DatabaseManager
 
         $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_icon, forum_category_description) VALUES (:category_name, :category_icon, :category_description)";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -97,7 +98,7 @@ class CategoryModel extends DatabaseManager
         );
 
         $sql = "UPDATE cmw_forums_categories SET forum_category_name=:category_name, forum_category_icon=:category_icon, forum_category_description=:category_description WHERE forum_category_id=:category_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
@@ -111,7 +112,7 @@ class CategoryModel extends DatabaseManager
     {
         $sql = "DELETE FROM cmw_forums_categories WHERE forum_category_id = :category_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         return $db->prepare($sql)->execute(array("category_id" => $id));
     }
@@ -123,7 +124,7 @@ class CategoryModel extends DatabaseManager
                 JOIN cmw_forums_categories ON cmw_forums.forum_category_id = cmw_forums_categories.forum_category_id
                 WHERE cmw_forums_categories.forum_category_id = :id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -148,7 +149,7 @@ class CategoryModel extends DatabaseManager
                 JOIN cmw_forums_categories ON cmw_forums.forum_category_id = cmw_forums_categories.forum_category_id
                 WHERE cmw_forums_categories.forum_category_id = :id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 

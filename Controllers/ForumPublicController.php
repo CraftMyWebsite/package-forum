@@ -12,10 +12,11 @@ use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
 use CMW\Model\Forum\TopicModel;
 use CMW\Model\users\UsersModel;
-use CMW\Router\Link;
-use CMW\Utils\Response;
+use CMW\Manager\Router\Link;
+use CMW\Manager\Flash\Flash;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
+use CMW\Utils\Website;
 
 
 /**
@@ -26,30 +27,11 @@ use CMW\Manager\Views\View;
  */
 class ForumPublicController extends CoreController
 {
-
-    private ForumModel $forumModel;
-    private CategoryModel $categoryModel;
-    private ResponseModel $responseModel;
-    private TopicModel $topicModel;
-    private UsersModel $usersModel;
-
-    public function __construct($theme_path = null)
-    {
-        parent::__construct($theme_path);
-        $this->forumModel = new ForumModel();
-        $this->categoryModel = new CategoryModel();
-        $this->responseModel = new ResponseModel();
-        $this->topicModel = new TopicModel();
-
-        $this->usersModel = new UsersModel();
-    }
-
-
     #[Link("/", Link::GET, [], "/forum")]
     public function publicBaseView(): void
     {
         $view = new View("Forum", "main");
-        $view->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel]);
+        $view->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => categoryModel::getInstance()]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
@@ -57,22 +39,22 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
     public function publicForumView(Request $request, string $forumSlug): void
     {
-        $forum = $this->forumModel->getForumBySlug($forumSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
-        $view = new View("Forum", "Forum");
-        $view->addVariableList(["Forum" => $forum, "topicModel" => $this->topicModel, "forumModel" => $this->forumModel, "responseModel" => $this->responseModel]);
+        $view = new View("Forum", "forum");
+        $view->addVariableList(["forum" => $forum, "topicModel" => topicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => responseModel::getInstance()]);
         $view->view();
     }
 
     #[Link("/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
     public function publicForumAddTopicView(Request $request, string $forumSlug): void
     {
-        $forum = $this->forumModel->getForumBySlug($forumSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         $view = new View("Forum", "addTopic");
-        $view->addVariableList(["Forum" => $forum]);
-        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
-        $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
+        $view->addVariableList(["forum" => $forum]);
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
@@ -81,22 +63,22 @@ class ForumPublicController extends CoreController
     {
         [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
 
-        $forum = $this->forumModel->getForumBySlug($forumSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
-        if (is_null($forum) || Utils::hasOneNullValue($name, $content)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+        if (is_null($forum) || Utils::containsNullValue($name, $content)) {
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
-        $res = $this->topicModel->createTopic($name, $content, UsersModel::getLoggedUser(), $forum->getId(),
+        $res = topicModel::getInstance()->createTopic($name, $content, UsersModel::getLoggedUser(), $forum->getId(),
             (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         if (is_null($res)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
@@ -112,10 +94,10 @@ class ForumPublicController extends CoreController
                 continue;
             }
 
-            $this->topicModel->addTag($tag, $res->getId());
+            topicModel::getInstance()->addTag($tag, $res->getId());
         }
 
-        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+        Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
         header("location: ../$forumSlug");
@@ -126,23 +108,23 @@ class ForumPublicController extends CoreController
     {
         [$topicId, $name, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags');
 
-        $forum = $this->forumModel->getForumBySlug($forumSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         if (is_null($forum)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
-        $res = $this->topicModel->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
+        $res = topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         // Add tags
 
 
         $tags = explode(",", $tags);
         //Need to clear tag befor update
-        $this->topicModel->clearTag($topicId);
+        topicModel::getInstance()->clearTag($topicId);
         foreach ($tags as $tag) {
             //Clean tag
             $tag = mb_strtolower(trim($tag));
@@ -151,10 +133,10 @@ class ForumPublicController extends CoreController
                 continue;
             }
             
-            $this->topicModel->addTag($tag, $topicId);
+            topicModel::getInstance()->addTag($tag, $topicId);
         }
 
-        //Response::sendAlert("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
+        //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
 
         header("location: ../$forumSlug");
     }
@@ -162,28 +144,28 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(Request $request, string $topicSlug): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["topic" => $topic, "responseModel" => $this->responseModel]);
-        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
-        $view->addScriptAfter("Admin/Resources/Vendors/jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
+        $view->addVariableList(["topic" => $topic, "responseModel" => responseModel::getInstance()]);
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
     public function publicTopicPinned(Request $request, string $topicSlug): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if ($this->topicModel->pinTopic($topic)) {
+        if (topicModel::getInstance()->pinTopic($topic)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            Flash::send("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?
                     LangManager::translate("forum.topic.unpinned.success") :
                     LangManager::translate("forum.topic.pinned.success"));
@@ -195,16 +177,16 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
     public function publicTopicDisallowReplies(Request $request, string $topicSlug): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if ($this->topicModel->DisallowReplies($topic)) {
+        if (topicModel::getInstance()->DisallowReplies($topic)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            Flash::send("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?
                     LangManager::translate("forum.topic.unpinned.success") :
                     LangManager::translate("forum.topic.pinned.success"));
@@ -216,16 +198,16 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
     public function publicTopicIsImportant(Request $request, string $topicSlug): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if ($this->topicModel->ImportantTopic($topic)) {
+        if (topicModel::getInstance()->ImportantTopic($topic)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            Flash::send("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?
                     LangManager::translate("forum.topic.unpinned.success") :
                     LangManager::translate("forum.topic.pinned.success"));
@@ -237,16 +219,16 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
     public function publicTopicIsTrash(Request $request, string $topicSlug): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if ($this->topicModel->trashTopic($topic)) {
+        if (topicModel::getInstance()->trashTopic($topic)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
+            Flash::send("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
 
             header("location: ../../f/{$topic->getForum()->getSlug()}");
         }
@@ -257,69 +239,69 @@ class ForumPublicController extends CoreController
     {
         usersController::isAdminLogged(); //TODO Need to "Is User Logged" && Permissions
 
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
-        $responseModel = $this->responseModel;
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $responseModel = responseModel::getInstance();
 
         if (!$topic) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
         if ($topic->isDisallowReplies()) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.topic.replies.error.disallow_replies"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
-        $userEntity = $this->usersModel->getUserById(UsersModel::getLoggedUser());
+        $userEntity = usersModel::getInstance()->getUserById(UsersModel::getLoggedUser());
         $userId = $userEntity?->getId();
         [$topicId, $content] = Utils::filterInput('topicId', 'topicResponse');
 
-        if (Utils::hasOneNullValue($topicId, $content)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+        if (Utils::containsNullValue($topicId, $content)) {
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.category.toaster.error.empty_input"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
-        $responseEntity = $responseModel->createResponse($content, $userId, $topicId);
+        $responseEntity = $responseModel::getInstance()->createResponse($content, $userId, $topicId);
 
         if (is_null($responseEntity)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
-        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+        Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.replies.success"));
-        Utils::refreshPage();
+        Website::refresh();
     }
 
     #[Link("/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
     public function publicTopicReplyDelete(Request $request, string $topicSlug, int $replyId, int $reason): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        $reply = $this->responseModel->getResponseById($replyId);
+        $reply = responseModel::getInstance()->getResponseById($replyId);
 
         if (!$reply?->isSelfReply()) {//Rajouter ici si on as la permission de supprimer (staff)
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.reply.delete.errors.no_access"));
             return;
         }
 
-        if ($this->responseModel->trashResponse($replyId, $reason)) {
+        if (responseModel::getInstance()->trashResponse($replyId, $reason)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            Flash::send("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));
 
             header("location: ../../../{$topic->getSlug()}");
@@ -330,12 +312,12 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
     public function publicTopicEdit(Request $request, string $topicSlug): void
     {
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
 
         $view = new View("Forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
-        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css","Admin/Resources/Vendors/Summernote/summernote-lite.css","Admin/Resources/Assets/Css/Pages/summernote.css");
-        $view->addScriptAfter("Admin/Resources/Vendors/Jquery/jquery.min.js","Admin/Resources/Vendors/Summernote/summernote-lite.min.js","Admin/Resources/Assets/Js/Pages/summernote.js");
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
@@ -344,22 +326,22 @@ class ForumPublicController extends CoreController
     {
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 
-        $topic = $this->topicModel->getTopicBySlug($topicSlug);
+        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if (is_null($topic) || Utils::hasOneNullValue($name, $content)) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"),
+        if (is_null($topic) || Utils::containsNullValue($name, $content)) {
+            Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Utils::refreshPage();
+            Website::refresh();
             return;
         }
 
-        $res = $this->topicModel->authorEditTopic($topicId, $name, $content);
+        $res = topicModel::getInstance()->authorEditTopic($topicId, $name, $content);
 
         // Add tags
 
         $tags = explode(",", $tags);
         //Need to clear tag befor update
-        $this->topicModel->clearTag($topicId);
+        topicModel::getInstance()->clearTag($topicId);
         foreach ($tags as $tag) {
             //Clean tag
             $tag = mb_strtolower(trim($tag));
@@ -368,10 +350,10 @@ class ForumPublicController extends CoreController
                 continue;
             }
             
-            $this->topicModel->addTag($tag, $topicId);
+            topicModel::getInstance()->addTag($tag, $topicId);
         }
 
-        Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+        Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
         header("location: ../../f/{$topic->getForum()->getSlug()}");

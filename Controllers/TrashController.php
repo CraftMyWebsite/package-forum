@@ -3,42 +3,27 @@
 
 namespace CMW\Controller\Forum;
 
-use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
 use CMW\Model\Forum\TopicModel;
 use CMW\Manager\Views\View;
-use CMW\Router\Link;
-use CMW\Utils\Response;
-use CMW\Utils\Utils;
+use CMW\Manager\Router\Link;
+use CMW\Manager\Flash\Flash;
 
-class TrashController extends CoreController
+class TrashController extends AbstractController
 {
-	private ForumModel $forumModel;
-    private CategoryModel $categoryModel;
-    private ResponseModel $responseModel;
-    private TopicModel $topicModel;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->forumModel = new ForumModel();
-        $this->categoryModel = new CategoryModel();
-        $this->responseModel = new ResponseModel();
-        $this->topicModel = new TopicModel();
-    }
-
     #[Link("/trash", Link::GET, [], "/cmw-admin/forum")]
     public function adminListTrashView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         View::createAdminView("Forum", "trash")
-            ->addVariableList(["forumModel" => $this->forumModel, "categoryModel" => $this->categoryModel, "responseModel" => $this->responseModel, "topicModel" => $this->topicModel])
+            ->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => categoryModel::getInstance(), "responseModel" => responseModel::getInstance(), "topicModel" => topicModel::getInstance()])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();
@@ -48,9 +33,9 @@ class TrashController extends CoreController
     public function publicReplyDelete(Request $request, int $replyId): void
     {
 
-        if ($this->responseModel->deleteResponse($replyId)) {
+        if (responseModel::getInstance()->deleteResponse($replyId)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"),
+            Flash::send("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));
 
             header("location: ..");
@@ -60,12 +45,12 @@ class TrashController extends CoreController
     #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicReplyRestore(Request $request, int $replyId, int $topicId): void
     {
-        if ($this->topicModel->isTrashedTopic($topicId) == 1) {
-            Response::sendAlert("error", LangManager::translate("core.toaster.error"), "Le topic de cette réponse est actuellement en corbeille !");
+        if (topicModel::getInstance()->isTrashedTopic($topicId) == 1) {
+            Flash::send("error", LangManager::translate("core.toaster.error"), "Le topic de cette réponse est actuellement en corbeille !");
             header("location: ../..");
         } else {
-            if ($this->responseModel->restoreResponse($replyId)) {
-                Response::sendAlert("success", LangManager::translate("core.toaster.success"), LangManager::translate("forum.reply.delete.success"));
+            if (responseModel::getInstance()->restoreResponse($replyId)) {
+                Flash::send("success", LangManager::translate("core.toaster.success"), LangManager::translate("forum.reply.delete.success"));
                 header("location: ../..");
             }
         }  
@@ -75,9 +60,9 @@ class TrashController extends CoreController
     public function publicTopicDelete(Request $request, int $topicId): void
     {
 
-        if ($this->topicModel->deleteTopic($topicId)) {
+        if (topicModel::getInstance()->deleteTopic($topicId)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"), "Tu as complétement virer le truc et toutes ces réponse");
+            Flash::send("success", LangManager::translate("core.toaster.success"), "Tu as complétement virer le truc et toutes ces réponse");
 
             header("location: ..");
         }
@@ -87,9 +72,9 @@ class TrashController extends CoreController
     public function publicTopicRestore(Request $request, int $topicId): void
     {
 
-        if ($this->topicModel->restoreTopic($topicId)) {
+        if (topicModel::getInstance()->restoreTopic($topicId)) {
 
-            Response::sendAlert("success", LangManager::translate("core.toaster.success"), "Tu as remis le truc");
+            Flash::send("success", LangManager::translate("core.toaster.success"), "Tu as remis le truc");
 
             header("location: ..");
         }

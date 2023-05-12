@@ -5,6 +5,7 @@ namespace CMW\Model\Forum;
 use CMW\Entity\Forum\TopicEntity;
 use CMW\Entity\Forum\TopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
+use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
 
 
@@ -14,7 +15,7 @@ use CMW\Model\Users\UsersModel;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class TopicModel extends DatabaseManager
+class TopicModel extends AbstractModel
 {
     private UsersModel $userModel;
     private ForumModel $forumModel;
@@ -29,7 +30,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -50,7 +51,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "SELECT * FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -96,7 +97,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id AND forum_topic_is_trash = 0
                                              ORDER BY forum_topic_pinned DESC, forum_topic_important DESC ";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
@@ -134,7 +135,7 @@ class TopicModel extends DatabaseManager
                                forum_topic_disallow_replies, forum_topic_important, forum_topic_pinned, user_id, forum_id) 
                 VALUES (:topic_name, :topic_content, :topic_slug, :disallow_replies, :important, :pin, :user_id, :forum_id)";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($var)) {
@@ -165,7 +166,7 @@ class TopicModel extends DatabaseManager
             forum_topic_pinned = :pin
             WHERE forum_topic_id = :topicId";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($var)) {
@@ -189,7 +190,7 @@ class TopicModel extends DatabaseManager
             forum_topic_content = :content
             WHERE forum_topic_id = :topicId";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($var)) {
@@ -211,7 +212,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "UPDATE cmw_forums_topics SET forum_topic_slug = :topic_slug WHERE forum_topic_id = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -228,7 +229,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "UPDATE cmw_forums_topics SET forum_topic_pinned = :status WHERE forum_topic_id = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -247,7 +248,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "UPDATE cmw_forums_topics SET forum_topic_disallow_replies = :status WHERE forum_topic_id = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -266,7 +267,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "UPDATE cmw_forums_topics SET forum_topic_important = :status WHERE forum_topic_id = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -280,7 +281,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "DELETE FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         return $db->prepare($sql)->execute(array("topic_id" => $topicId));
     }
@@ -291,7 +292,7 @@ class TopicModel extends DatabaseManager
         $responseModel = new responseModel;
         if ($responseModel->countResponseInTopic($topicId) === 0 ) {
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
-            $db = self::getInstance();
+            $db = DatabaseManager::getInstance();
             $req = $db->prepare($sql);
             if ($req->execute(array("topic_id" => $topicId))) {
                 return $this->getTopicById($topicId);
@@ -299,7 +300,7 @@ class TopicModel extends DatabaseManager
             return null;
         } else {
             $sql = "UPDATE `cmw_forums_response`, `cmw_forums_topics` SET `cmw_forums_response`.`forum_response_is_trash`= 1, `cmw_forums_response`.`forum_response_trash_reason`= 0, `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_response`.`forum_topic_id` = :topic_id AND `cmw_forums_topics`.`forum_topic_id` = :topic_id_2";
-            $db = self::getInstance();
+            $db = DatabaseManager::getInstance();
             $req = $db->prepare($sql);
             if ($req->execute(array("topic_id" => $topicId, "topic_id_2" => $topicId))) {
                 return $this->getTopicById($topicId);
@@ -314,11 +315,11 @@ class TopicModel extends DatabaseManager
         $responseModel = new responseModel;
         if ($responseModel->countResponseInTopicWithoutTrashFunction($topic) === 0 ) { 
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
-            $db = self::getInstance();
+            $db = DatabaseManager::getInstance();
             return $db->prepare($sql)->execute(array("topic_id" => $topic));
         } else {
             $sql = "UPDATE `cmw_forums_response`, `cmw_forums_topics` SET `cmw_forums_response`.`forum_response_is_trash`= 0, `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_response`.`forum_topic_id` = :topic_id AND `cmw_forums_topics`.`forum_topic_id` = :topic_id_2";
-            $db = self::getInstance();
+            $db = DatabaseManager::getInstance();
             return $db->prepare($sql)->execute(array("topic_id" => $topic, "topic_id_2" => $topic));
         }
 
@@ -330,7 +331,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "SELECT * FROM `cmw_forums_topics` WHERE `forum_topic_is_trash` = 1 ORDER BY `cmw_forums_topics`.`forum_topic_updated` DESC";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
         if (!$res->execute()) {
@@ -350,7 +351,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "SELECT * FROM `cmw_forums_topics` WHERE `forum_topic_is_trash` = 1 AND `forum_topic_id` = :topic_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -365,7 +366,7 @@ class TopicModel extends DatabaseManager
         $sql = "INSERT INTO cmw_forums_topics_tags (forums_topics_tags_content, forums_topics_tags_topic_id) 
                 VALUES (:content, :topic_id)";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute(array("content" => $content, "topic_id" => $topicId))) {
@@ -380,7 +381,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
         
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
         if ($req->execute(array("topic_id" => $topicId))) {
             return null;
@@ -393,7 +394,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "SELECT * FROM cmw_forums_topics_tags WHERE forums_topics_tags_id = :tag_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if (!$req->execute(array('tag_id' => $tagId))) {
@@ -414,7 +415,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "SELECT forums_topics_tags_id FROM cmw_forums_topics_tags";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->query($sql);
 
@@ -436,7 +437,7 @@ class TopicModel extends DatabaseManager
         $toReturn = array();
 
         $sql = "SELECT forums_topics_tags_id  FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
@@ -461,7 +462,7 @@ class TopicModel extends DatabaseManager
 
         $sql = "UPDATE cmw_forums_topics_tags SET forums_topics_tags_content = :content, 
                                   forums_topics_tags_topic_id = :topic_id WHERE forums_topics_tags_id = :tag_id";
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if (!$req->execute($var)) {
@@ -478,7 +479,7 @@ class TopicModel extends DatabaseManager
     {
         $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_id = :tag_id";
 
-        $db = self::getInstance();
+        $db = DatabaseManager::getInstance();
 
         return $db->prepare($sql)->execute(array("tag_id" => $tagId));
     }
