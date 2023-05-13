@@ -23,7 +23,7 @@ $description = "Ajoutez un topic au forum {$forum->getName()}";
             <br>
 
             <label> Contenu
-                <textarea name="content" required></textarea>
+                <textarea name="content" class="tinymce"></textarea>
             </label>
 
             <br>
