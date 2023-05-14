@@ -163,6 +163,17 @@ class ForumModel extends AbstractModel
         return $res->fetch(0)['count'];
     }
 
+    public function countAllTopicsInAllForum(): int
+    {
+        $sql = "SELECT COUNT(cmw_forums_topics.forum_topic_id) AS `count` FROM cmw_forums_topics";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->query($sql);
+
+        return $res->fetch()['count'] ?? 0;
+    }
+
     public function countMessagesInForum(int $id): mixed
     {
         $sql = "SELECT COUNT('forum_response_id') AS `count`
@@ -182,6 +193,17 @@ class ForumModel extends AbstractModel
         }
 
         return $res->fetch(0)['count'];
+    }
+
+    public function countAllMessagesInAllForum(): int
+    {
+        $sql = "SELECT COUNT('forum_response_id') AS `count` FROM cmw_forums_response";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->query($sql);
+
+        return $res->fetch()['count'] ?? 0;
     }
 
     public function hasSubForums(int $id): bool
