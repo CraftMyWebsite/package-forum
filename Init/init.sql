@@ -9,6 +9,15 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS cmw_forums_settings
+(
+    forum_settings_id          INT AUTO_INCREMENT PRIMARY KEY,
+    forum_settings_name        VARCHAR(50) NOT NULL,
+    forum_settings_value        VARCHAR(200) NULL,
+    forum_settings_updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 CREATE TABLE IF NOT EXISTS cmw_forums
 (
     forum_id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -76,3 +85,9 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response
         FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
+
+INSERT INTO `cmw_forums_settings` (`forum_settings_name`, `forum_settings_value`)
+VALUES ('IconNotRead', 'fa-solid fa-eye'),
+       ('IconImportant', 'fa-solid fa-triangle-exclamation'),
+       ('IconPin', 'fa-solid fa-thumbtack'),
+       ('IconClosed', 'fa-solid fa-lock');
