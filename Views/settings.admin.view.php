@@ -6,10 +6,10 @@ use CMW\Manager\Security\SecurityManager;
 $title = "Paramètres";
 $description = "desc";
 
-/* @var CMW\Model\Forum\SettingsModel $iconNotRead */
-/* @var CMW\Model\Forum\SettingsModel $iconImportant */
-/* @var CMW\Model\Forum\SettingsModel $iconPin */
-/* @var CMW\Model\Forum\SettingsModel $iconClosed */
+/* @var CMW\Controller\Forum\SettingsController $iconNotRead */
+/* @var CMW\Controller\Forum\SettingsController $iconImportant */
+/* @var CMW\Controller\Forum\SettingsController $iconPin */
+/* @var CMW\Controller\Forum\SettingsController $iconClosed */
 ?>
 
 <div class="d-flex flex-wrap justify-content-between">

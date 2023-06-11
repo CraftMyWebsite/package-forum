@@ -24,7 +24,7 @@ class SettingsController extends AbstractController {
         $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
 
         View::createAdminView("Forum", "settings")
-            ->addVariableList(["iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed,])
+            ->addVariableList(["iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
             ->view();
     }
 
