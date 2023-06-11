@@ -117,7 +117,7 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
     public function publicForumAdminEditTopicPost(Request $request, string $forumSlug): void
     {
-        [$topicId, $name, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags');
+        [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix');
 
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
@@ -128,7 +128,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
+        topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix);
 
         // Add tags
 

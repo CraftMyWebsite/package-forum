@@ -13,6 +13,7 @@ class TopicEntity
 
     private int $topicId;
     private string $topicName;
+    private string $topicPrefix;
     private string $topicSlug;
     private string $topicContent;
     private int $topicIsTrash;
@@ -29,6 +30,7 @@ class TopicEntity
     /**
      * @param int $topicId
      * @param string $topicName
+     * @param string $topicPrefix
      * @param string $topicSlug
      * @param string $topicContent
      * @param int $topicIsTrash
@@ -41,12 +43,13 @@ class TopicEntity
      * @param \CMW\Entity\Forum\ForumEntity $topicForum
      * @param \CMW\Entity\Forum\TopicTagEntity[] $tags
      */
-    public function __construct(int $topicId, string $topicName, string $topicSlug, string $topicContent, int $topicIsTrash, string $topicCreated, string $topicUpdate,
+    public function __construct(int $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, string $topicCreated, string $topicUpdate,
                                 bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
                                 ForumEntity $topicForum, array $tags)
     {
         $this->topicId = $topicId;
         $this->topicName = $topicName;
+        $this->topicPrefix = $topicPrefix;
         $this->topicSlug = $topicSlug;
         $this->topicContent = $topicContent;
         $this->topicIsTrash = $topicIsTrash;
@@ -74,6 +77,47 @@ class TopicEntity
     public function getName(): string
     {
         return $this->topicName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrefixId(): string
+    {
+        return $this->topicPrefix;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefixName(): string
+    {
+        if ($this->topicPrefix === "") {
+            return false;
+        }
+        return TopicModel::getInstance()->getPrefixName($this->topicPrefix);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefixColor(): string
+    {
+        if ($this->topicPrefix === "") {
+            return false;
+        }
+        return TopicModel::getInstance()->getPrefixColor($this->topicPrefix);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefixTextColor(): string
+    {
+        if ($this->topicPrefix === "") {
+            return false;
+        }
+        return TopicModel::getInstance()->getPrefixTextColor($this->topicPrefix);
     }
 
     /**

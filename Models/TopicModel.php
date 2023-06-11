@@ -75,6 +75,7 @@ class TopicModel extends AbstractModel
         return new TopicEntity(
             $res["forum_topic_id"],
             $res["forum_topic_name"],
+            $res["forum_topic_prefix"] ?? "",
             $res["forum_topic_slug"],
             $res["forum_topic_content"] ?? "",
             $res["forum_topic_is_trash"],
@@ -87,6 +88,51 @@ class TopicModel extends AbstractModel
             $forum,
             $this->getTagsForTopicById($res["forum_topic_id"])
         );
+    }
+
+    /**
+     * @param int $prefixId
+     * @return string
+     * @desc get the Name of given PrefixId
+     */
+    public function getPrefixName(int $prefixId): string
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("SELECT forum_prefix_name FROM cmw_forums_prefixes WHERE forum_prefix_id = :prefix_id");
+        $req->execute(array("prefix_id" => $prefixId));
+        $prefixName = $req->fetch();
+
+        return $prefixName['forum_prefix_name'];
+    }
+
+    /**
+     * @param int $prefixId
+     * @return string
+     * @desc get the Color of given PrefixId
+     */
+    public function getPrefixColor(int $prefixId): string
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("SELECT forum_prefix_color FROM cmw_forums_prefixes WHERE forum_prefix_id = :prefix_id");
+        $req->execute(array("prefix_id" => $prefixId));
+        $prefixColor = $req->fetch();
+
+        return $prefixColor['forum_prefix_color'];
+    }
+
+    /**
+     * @param int $prefixId
+     * @return string
+     * @desc get the Text Color of given PrefixId
+     */
+    public function getPrefixTextColor(int $prefixId): string
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("SELECT forum_prefix_text_color FROM cmw_forums_prefixes WHERE forum_prefix_id = :prefix_id");
+        $req->execute(array("prefix_id" => $prefixId));
+        $prefixTextColor = $req->fetch();
+
+        return $prefixTextColor['forum_prefix_text_color'];
     }
 
     /**
@@ -148,8 +194,10 @@ class TopicModel extends AbstractModel
         return null;
     }
 
-    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin): ?TopicEntity
+    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix): ?TopicEntity
     {
+
+        if ($prefix === "") {$prefixReturn = null;} else {$prefixReturn = $prefix;}
 
         $var = array(
             "topicId" => $topicId,
@@ -157,13 +205,15 @@ class TopicModel extends AbstractModel
             "disallow_replies" => $disallowReplies,
             "important" => $important,
             "pin" => $pin,
+            "prefix" => $prefixReturn
         );
 
         $sql = "UPDATE cmw_forums_topics SET 
             forum_topic_name = :name,
             forum_topic_disallow_replies = :disallow_replies,
             forum_topic_important = :important,
-            forum_topic_pinned = :pin
+            forum_topic_pinned = :pin,
+            forum_topic_prefix = :prefix
             WHERE forum_topic_id = :topicId";
 
         $db = DatabaseManager::getInstance();
