@@ -499,7 +499,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                      alt="..."><?= $topic->getUser()->getPseudo() ?></td>
                             <td><?= $topic->getCreated() ?></td>
                             <td class="text-center"><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>
-                            <td class="text-center">6987</td>
+                            <td class="text-center"><?= $topic->countViews() ?></td>
                             <td>
                                 <a type="button" data-bs-toggle="modal"
                                    data-bs-target="#edit-prefix-<?= $topic->getId() ?>">

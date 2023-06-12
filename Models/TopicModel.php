@@ -7,6 +7,7 @@ use CMW\Entity\Forum\TopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Website;
 
 
 /**
@@ -19,7 +20,7 @@ class TopicModel extends AbstractModel
 {
     private UsersModel $userModel;
     private ForumModel $forumModel;
-    
+
     public function __construct()
     {
         $this->userModel = new UsersModel();
@@ -156,6 +157,58 @@ class TopicModel extends AbstractModel
     }
 
     /**
+     * @return bool
+     * @desc check if exist
+     */
+    public function checkViews(int $topicId, string $ip): bool
+    {
+        $sql = "SELECT forum_topics_views_ip FROM cmw_forums_topics_views WHERE forum_topics_views_topic_id = :topicId AND forum_topics_views_ip = :ip";
+
+        $db = DatabaseManager::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if ($req->execute(array("topicId" => $topicId,"ip" => $ip))) {
+            return $req->rowCount() === 1;
+        }
+        return false;
+
+    }
+
+    /**
+     * @return void
+     * @desc add a view
+     */
+    public function addViews(int $topicId): void
+    {
+        $ip = Website::getClientIp();
+        $sql = "INSERT INTO cmw_forums_topics_views (forum_topics_views_topic_id, forum_topics_views_ip) VALUES (:topicId, :ip);";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute(array("topicId" => $topicId, "ip" => $ip));
+    }
+
+    /**
+     * @param int $topicId
+     * @return string
+     * @desc count number of views by topic id
+     */
+    public function countViews(int $topicId): mixed
+    {
+        $sql = "SELECT COUNT(forum_topics_views_id) as count FROM cmw_forums_topics_views WHERE forum_topics_views_topic_id = :topic_id";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("topic_id" => $topicId))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['count'];
+    }
+
+
+    /**
      * @return \CMW\Entity\Forum\TopicEntity[]
      */
     public function getTopicByForum(int $id): array
@@ -217,7 +270,11 @@ class TopicModel extends AbstractModel
     public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix): ?TopicEntity
     {
 
-        if ($prefix === "") {$prefixReturn = null;} else {$prefixReturn = $prefix;}
+        if ($prefix === "") {
+            $prefixReturn = null;
+        } else {
+            $prefixReturn = $prefix;
+        }
 
         $var = array(
             "topicId" => $topicId,
@@ -360,7 +417,7 @@ class TopicModel extends AbstractModel
     {
         $topicId = $topic->getId();
         $responseModel = new responseModel;
-        if ($responseModel->countResponseInTopic($topicId) === 0 ) {
+        if ($responseModel->countResponseInTopic($topicId) === 0) {
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
             $db = DatabaseManager::getInstance();
             $req = $db->prepare($sql);
@@ -383,7 +440,7 @@ class TopicModel extends AbstractModel
     {
         //Revoir comment fair fonctionner ceci (j'ai pas le time tout de suite)
         $responseModel = new responseModel;
-        if ($responseModel->countResponseInTopicWithoutTrashFunction($topic) === 0 ) { 
+        if ($responseModel->countResponseInTopicWithoutTrashFunction($topic) === 0) {
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
             $db = DatabaseManager::getInstance();
             return $db->prepare($sql)->execute(array("topic_id" => $topic));
@@ -392,7 +449,6 @@ class TopicModel extends AbstractModel
             $db = DatabaseManager::getInstance();
             return $db->prepare($sql)->execute(array("topic_id" => $topic, "topic_id_2" => $topic));
         }
-
 
 
     }
@@ -450,7 +506,7 @@ class TopicModel extends AbstractModel
     {
 
         $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
-        
+
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
         if ($req->execute(array("topic_id" => $topicId))) {

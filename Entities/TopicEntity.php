@@ -123,6 +123,14 @@ class TopicEntity
     /**
      * @return string
      */
+    public function countViews(): string
+    {
+        return TopicModel::getInstance()->countViews($this->topicId);
+    }
+
+    /**
+     * @return string
+     */
     public function getContent(): string
     {
         return $this->topicContent;

@@ -21,6 +21,16 @@ CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS cmw_forums_topics_views
+(
+    forum_topics_views_id          INT AUTO_INCREMENT PRIMARY KEY,
+    forum_topics_views_topic_id        INT NOT NULL,
+    forum_topics_views_ip        VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_views_topic_id FOREIGN KEY (forum_topics_views_topic_id)
+        REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 CREATE TABLE IF NOT EXISTS cmw_forums_settings
 (
     forum_settings_id          INT AUTO_INCREMENT PRIMARY KEY,
