@@ -11,6 +11,7 @@ $description = "desc";
 /* @var CMW\Controller\Forum\SettingsController $iconPin */
 /* @var CMW\Controller\Forum\SettingsController $iconClosed */
 /* @var CMW\Model\Forum\PrefixModel $prefixesModel */
+/* @var CMW\Model\Forum\FeedbackModel $feedbackModel */
 ?>
 
 <div class="d-flex flex-wrap justify-content-between">
@@ -83,7 +84,9 @@ $description = "desc";
                 <h4>Réactions</h4>
             </div>
             <div class="card-body">
-
+                <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
+                    <?= $feedback->getName() ?>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
+use CMW\Model\Forum\FeedbackModel;
 use CMW\Model\Forum\PrefixModel;
 use CMW\Model\Forum\SettingsModel;
 use CMW\Utils\Redirect;
@@ -27,9 +28,10 @@ class SettingsController extends AbstractController {
         $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
         $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
         $prefixesModel = prefixModel::getInstance();
+        $feedbackModel = feedbackModel::getInstance();
 
         View::createAdminView("Forum", "settings")
-            ->addVariableList(["iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "prefixesModel" => $prefixesModel])
+            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();

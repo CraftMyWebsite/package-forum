@@ -8,6 +8,7 @@ use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
+use CMW\Model\Forum\FeedbackModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
 use CMW\Model\Forum\SettingsModel;
@@ -15,6 +16,7 @@ use CMW\Model\Forum\TopicModel;
 use CMW\Model\users\UsersModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
+use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
 use CMW\Utils\Website;
@@ -162,16 +164,26 @@ class ForumPublicController extends CoreController
         $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
         $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
         $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
+        $feedbackModel = feedbackModel::getInstance();
 
         if (!$isViewed) {
             topicModel::getInstance()->addViews($topic->getId());
         }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["topic" => $topic, "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
+    }
+
+    #[Link("/t/:topicSlug/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicAddFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->addFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
     }
 
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
