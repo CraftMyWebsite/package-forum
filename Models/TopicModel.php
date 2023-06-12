@@ -26,6 +26,26 @@ class TopicModel extends AbstractModel
         $this->forumModel = new ForumModel();
     }
 
+    public function getTopic(): array
+    {
+        $sql = "SELECT forum_topic_id FROM cmw_forums_topics";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute()) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($topic = $res->fetch()) {
+            $toReturn[] = $this->getTopicById($topic["forum_topic_id"]);
+        }
+
+        return $toReturn;
+    }
+
     public function getTopicBySlug(string $slug): ?TopicEntity
     {
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_topic_slug = :topic_slug";

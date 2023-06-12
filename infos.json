@@ -8,12 +8,12 @@
       "url_menu": "",
       "urls_submenu_fr": {
         "Paramètres": "forum/settings",
-        "Cat & Forum": "forum/manage",
+        "Gestion": "forum/manage",
         "Corbeille": "forum/trash"
       },
       "urls_submenu_en": {
         "Settings": "forum/settings",
-        "Cat & Forum": "forum/manage",
+        "Manage": "forum/manage",
         "Trash": "forum/trash"
       }
     }

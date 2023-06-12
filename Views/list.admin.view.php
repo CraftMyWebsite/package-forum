@@ -1,8 +1,21 @@
 <?php
 
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
+use CMW\Model\Forum\PrefixModel;
 use CMW\Utils\Utils;
 use CMW\Manager\Security\SecurityManager;
+use CMW\Utils\Website;
+
+/* @var CMW\Model\Forum\ForumModel $forumModel */
+/* @var CMW\Model\Forum\CategoryModel $categoryModel */
+/* @var CMW\Model\Forum\TopicModel $topicModel */
+/* @var CMW\Model\Forum\ResponseModel $responseModel */
+/* @var \CMW\Entity\Forum\TopicEntity $topic */
+/* @var CMW\Controller\Forum\SettingsController $iconNotRead */
+/* @var CMW\Controller\Forum\SettingsController $iconImportant */
+/* @var CMW\Controller\Forum\SettingsController $iconPin */
+/* @var CMW\Controller\Forum\SettingsController $iconClosed */
 
 $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
@@ -12,7 +25,7 @@ $description = LangManager::translate("forum.forum.list.description");
 </div>
 
 <section class="row">
-	<div class="col-12 col-lg-6">
+	<div class="col-12 col-lg-5">
         <div class="card">
             <div class="card-header">
                 <h4>Catégories et forums</h4>
@@ -24,7 +37,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         <table class="table-borderless table table-hover mt-1">
                             <thead>
                                 <tr>
-                                    <th id="categorie-<?= $category->getId() ?>"> <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?> -<i> <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i></th>
+                                    <th id="categorie-<?= $category->getId() ?>"><small><i class="text-secondary fa-solid fa-circle-dot"></i></small> <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?> -<i> <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i></th>
                                     <th class="text-end">
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#add-forum-<?= $category->getId() ?>">
                                             <i class="text-success me-3 fa-solid fa-circle-plus"></i>
@@ -169,10 +182,10 @@ $description = LangManager::translate("forum.forum.list.description");
                             <tbody>
                                 <?php foreach ($forumModel->getForumByCat($category->getId()) as $forumObj): ?>
                                 <tr id="forum-<?= $forumObj->getId() ?>">
-                                    <td class="ps-4 text-bold-500"><?= $forumObj->getFontAwesomeIcon() ?> <?= $forumObj->getName() ?> - <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
+                                    <td class="ps-4 text-bold-500"><small><i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small> <?= $forumObj->getFontAwesomeIcon() ?> <?= $forumObj->getName() ?> - <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
                                     </td>
                                     <td class="text-end">
-                                        <a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
+                                        <a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#add-subforum-<?= $forumObj->getId() ?>">
                                             <i class="text-success me-3 fas fa-circle-plus"></i>
                                         </a>
@@ -190,10 +203,10 @@ $description = LangManager::translate("forum.forum.list.description");
                                 -->
                                 <?php foreach ($forumModel->getSubforumByForum($forumObj->getId()) as $subForumObj): ?>
                                 <tr id="forum-<?= $subForumObj->getId() ?>">
-                                    <td class="ps-5 text-bold-500"><?= $subForumObj->getFontAwesomeIcon() ?> <?= $subForumObj->getName() ?> - <i><small><?= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?></small></i>
+                                    <td class="ps-5 text-bold-500"><small><i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small> <?= $subForumObj->getFontAwesomeIcon() ?> <?= $subForumObj->getName() ?> - <i><small><?= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?></small></i>
                                     </td>
                                     <td class="text-end">
-                                        <!--<a target="_blank" href="<?= Utils::getHttpProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $subForumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
+                                        <!--<a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $subForumObj->getLink()?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $subForumObj->getId() ?>">
                                             <i class="text-primary me-3 fas fa-edit"></i>
                                         </a>
@@ -269,7 +282,8 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <div class="form-group">
                                                         <select class="form-select" name="category_id" required>
                                                             <?php foreach ($categoryModel->getCategories() as $category): ?>
-                                                                <option value="<?= $category->getId() ?>">
+                                                                <option value="<?= $category->getId() ?>"
+                                                                    <?= ($forumObj->getParent()->getName() === $category->getName() ? "selected" : "") ?>>
                                                                     <?= $category->getName() ?>
                                                                 </option>
                                                             <?php endforeach; ?>
@@ -354,6 +368,188 @@ $description = LangManager::translate("forum.forum.list.description");
             </div>
         </div>
     </div>
+
+
+    <div class="col-12 col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <h4>Topics</h4>
+            </div>
+            <div class="card-body">
+                <table class="table" id="table1">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Nom</th>
+                        <th class="text-center">Forum</th>
+                        <th class="text-center">Auteur</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Messages</th>
+                        <th class="text-center"></th>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <?php foreach ($topicModel->getTopic() as $topic) : ?>
+                        <tr>
+                            <td>
+                                <?= $topic->isImportant() ? "
+                            <i class='<?= $iconImportant ?> fa-sm text-orange-500'></i>                           
+                            " : "" ?>
+                                <?= $topic->isPinned() ? "
+                            <i class='<?= $iconPin ?> fa-sm text-red-600 ml-2'></i>                         
+                             " : "" ?>
+                                <?= $topic->isDisallowReplies() ? "
+                            <i  class='<?= $iconClosed ?> fa-sm text-yellow-300 ml-2'></i>
+                             " : "" ?>
+                                <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2" style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
+                                <?= mb_strimwidth($topic->getName(), 0, 35, '...') ?>
+                            </td>
+                            <td><a target="_blank" href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/t/<?= $topic->getSlug() ?>"><?= $topic->getForum()->getName() ?></a></td>
+                            <td><img style="object-fit: fill; max-height: 32px; max-width: 32px" width="32px" height="32px" src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topic->getUser()->getUserPicture()->getImageName() ?>" alt="..."><?= $topic->getUser()->getPseudo() ?></td>
+                            <td><?= $topic->getCreated() ?></td>
+                            <td class="text-center"><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>
+                            <td>
+                                <a type="button" data-bs-toggle="modal"
+                                   data-bs-target="#edit-prefix-<?= $topic->getId() ?>">
+                                    <i class="text-success fa-solid fa-screwdriver-wrench me-2"></i>
+                                </a>
+                                <a type="button" data-bs-toggle="modal"
+                                   data-bs-target="#edit-prefix-">
+                                    <i class="text-primary fas fa-eye me-2"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <!--
+                        ----MODAL EDITION----
+                        -->
+                        <div class="modal fade text-left" id="edit-prefix-<?= $topic->getId() ?>" tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h5 class="modal-title white" id="myModalLabel160">Gestion
+                                            de <?= $topic->getName() ?></h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="modal-<?= $topic->getId() ?>" action="manage/edit" method="post">
+                                            <?php (new SecurityManager())->insertHiddenToken() ?>
+                                            <input type="text" name="topicId" hidden value="<?= $topic->getId() ?>">
+
+                                            <div class="flex space-x-4">
+                                                <div class="flex items-start">
+                                                    <div class="flex items-center h-5">
+                                                        <input name="important" value="1"
+                                                               id="important-<?= $topic->getId() ?>" type="checkbox"
+                                                               class="w-4 h-4 border border-gray-300 rounded bg-gray-50" <?= $topic->isImportant() ? 'checked' : '' ?>>
+                                                    </div>
+                                                    <label for="important-<?= $topic->getId() ?>"
+                                                           class="ml-2 text-sm font-medium text-gray-900"><i
+                                                            class="<?= $iconImportant ?> text-orange-500 fa-sm"></i>
+                                                        Important</label>
+                                                </div>
+                                                <div class="flex items-start">
+                                                    <div class="flex items-center h-5">
+                                                        <input name="pin" id="pin-<?= $topic->getId() ?>"
+                                                               type="checkbox" value=""
+                                                               class="w-4 h-4 border border-gray-300 rounded bg-gray-50" <?= $topic->isPinned() ? 'checked' : '' ?>>
+                                                    </div>
+                                                    <label for="pin-<?= $topic->getId() ?>"
+                                                           class="ml-2 text-sm font-medium text-gray-900"><i
+                                                            class="<?= $iconPin ?> text-red-600 fa-sm"></i>
+                                                        Épingler</label>
+                                                </div>
+                                                <div class="flex items-start">
+                                                    <div class="flex items-center h-5">
+                                                        <input name="disallow_replies" value="1"
+                                                               id="closed-<?= $topic->getId() ?>" type="checkbox"
+                                                               class="w-4 h-4 border border-gray-300 rounded bg-gray-50" <?= $topic->isDisallowReplies() ? 'checked' : '' ?>>
+                                                    </div>
+                                                    <label for="closed-<?= $topic->getId() ?>"
+                                                           class="ml-2 text-sm font-medium text-gray-900"><i
+                                                            class="<?= $iconClosed ?> text-yellow-300 fa-sm"></i>
+                                                        Fermer</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-12 col-lg-6 mt-2">
+                                                    <h6>Titre du topic :</h6>
+                                                    <input type="text" class="form-control" name="name"
+                                                           placeholder="Titre du topic" value="<?= $topic->getName() ?>"
+                                                           required>
+                                                </div>
+                                                <div class="col-12 col-lg-6 mt-2">
+                                                    <h6>Tags du topic :</h6>
+                                                    <input type="text" class="form-control" name="tags" value="<?php foreach ($topic->getTags() as $tag) {echo "" . $tag->getContent() . ",";} ?>" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-12 col-lg-6 mt-2">
+                                                    <h6>Prefix :</h6>
+                                                    <select name="prefix" class="form-select">
+                                                        <option value="">Aucun</option>
+                                                        <?php foreach ($prefixesModel = prefixModel::getInstance()->getPrefixes() as $prefix) : ?>
+                                                            <option value="<?= $prefix->getId() ?>"
+                                                                <?= ($topic->getPrefixName() === $prefix->getName() ? "selected" : "") ?>>
+                                                                <?= $prefix->getName() ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12 col-lg-6 mt-2">
+                                                    <h6>Déplacer vers :</h6>
+                                                    <select name="move" class="form-select">
+                                                        <option value="">Aucun</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.save") ?></span>
+                                        </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--
+                        ----MODAL SUPRESSION----
+                        -->
+                        <div class="modal fade text-left" id="delete-prefix-" tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title white" id="myModalLabel160">Supression
+                                            de </h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Supprimer ce préfixe l'enlèvera également de tout les topics auquel il est lié.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                        </button>
+                                        <a href="settings/deleteprefix/"
+                                           class="btn btn-danger ml-1">
+                                            <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 

@@ -27,7 +27,7 @@ $description = "desc";
             <div class="card-body row">
                 <div class="col-12 col-lg-3 mb-4">
                     <div class="card-in-card me-2 p-3">
-                        <h6>Non lue :</h6>
+                        <h6>Non lu :</h6>
                         <div class="text-center mb-2">
                             <i style="font-size : 3rem;" class="<?= $iconNotRead ?>"></i>
                         </div>
@@ -47,7 +47,7 @@ $description = "desc";
                 </div>
                 <div class="col-12 col-lg-3 mb-4">
                     <div class="card-in-card me-2 p-3">
-                        <h6>Épingler :</h6>
+                        <h6>Épinglé :</h6>
                         <div class="text-center mb-2">
                             <i style="font-size : 3rem;" class="<?= $iconPin ?>"></i>
                         </div>
