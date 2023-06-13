@@ -186,6 +186,55 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
+    #[Link("/t/:topicSlug/un_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicDeleteFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->removeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/change_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicChangeFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->changeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+
+
+
+
+    #[Link("/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseAddFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->addFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseDeleteFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->removeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseChangeFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->changeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
     public function publicTopicPinned(Request $request, string $topicSlug): void
     {

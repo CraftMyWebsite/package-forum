@@ -83,6 +83,40 @@ $description = "desc";
             <div class="card-header">
                 <h4>Réactions</h4>
             </div>
+            <div class="position-absolute end-0">
+                <a type="button" data-bs-toggle="modal"
+                   data-bs-target="#add-reaction"
+                   class="text-bg-primary rounded-2 py-1 px-2"><?= LangManager::translate("core.btn.add") ?></a>
+            </div>
+            <!--
+            ----MODAL AJOUT ----
+            -->
+            <div class="modal fade text-left" id="add-reaction" tabindex="-1"
+                 role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title white" id="myModalLabel160">Nouvelle réaction</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form action="settings/addreaction" method="post">
+                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <h6>Titre :</h6>
+                                <input type="text" class="form-control" name="title" placeholder="J'aime"
+                                       required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                            </button>
+                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                <span class=""><?= LangManager::translate("core.btn.add") ?></span>
+                            </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
                 <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
                     <?= $feedback->getName() ?>
@@ -201,18 +235,21 @@ $description = "desc";
                                                 </div>
                                                 <div class="col-12 col-lg-6 mt-2">
                                                     <h6>Description :</h6>
-                                                    <input type="text" class="form-control" name="prefixDescription" value="<?= $prefix->getDescription() ?>" required>
+                                                    <input type="text" class="form-control" name="prefixDescription"
+                                                           value="<?= $prefix->getDescription() ?>" required>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 col-lg-6 mt-2">
                                                     <h6>Couleur du texte :</h6>
-                                                    <input type="color" class="form-control" name="prefixTextColor" value="<?= $prefix->getTextColor() ?>" required>
+                                                    <input type="color" class="form-control" name="prefixTextColor"
+                                                           value="<?= $prefix->getTextColor() ?>" required>
                                                 </div>
 
                                                 <div class="col-12 col-lg-6 mt-2">
                                                     <h6>Couleur du fond :</h6>
-                                                    <input type="color" class="form-control" name="prefixColor" value="<?= $prefix->getColor() ?>" required>
+                                                    <input type="color" class="form-control" name="prefixColor"
+                                                           value="<?= $prefix->getColor() ?>" required>
                                                 </div>
                                             </div>
                                     </div>

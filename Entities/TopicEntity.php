@@ -281,4 +281,20 @@ class TopicEntity
     {
         return "$this->topicSlug/react/$this->topicId/$feedbackId";
     }
+
+    /**
+     * @return string
+     */
+    public function getFeedbackDeleteTopicLink(int $feedbackId): string
+    {
+        return "$this->topicSlug/un_react/$this->topicId/$feedbackId";
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeedbackChangeTopicLink(int $feedbackId): string
+    {
+        return "$this->topicSlug/change_react/$this->topicId/$feedbackId";
+    }
 }

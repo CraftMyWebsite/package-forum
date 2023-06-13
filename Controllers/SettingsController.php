@@ -88,4 +88,16 @@ class SettingsController extends AbstractController {
             Redirect::redirectPreviousRoute();
         }
     }
+
+    #[Link("/settings/addreaction", Link::POST, [], "/cmw-admin/forum")]
+    private function settingsAddReactionPost(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+
+        [$title] = Utils::filterInput("title");
+
+        FeedbackModel::getInstance()->createFeedback($title);
+
+        Redirect::redirectPreviousRoute();
+    }
 }

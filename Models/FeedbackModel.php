@@ -58,9 +58,57 @@ class FeedbackModel extends AbstractModel
         );
     }
 
+    public function createFeedback(string $title): ?FeedbackEntity
+    {
+
+        $data = array(
+            "title" => $title
+        );
+
+        $sql = "INSERT INTO cmw_forums_feedback(forum_feedback_name) VALUES (:title)";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            $id = $db->lastInsertId();
+            return $this->getFeedbackById($id);
+        }
+
+        return null;
+    }
+
     public function addFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?FeedbackEntity
     {
         $sql = "INSERT INTO cmw_forums_topics_feedback (forum_topics_id, forum_feedback_id, user_id) VALUES (:topicId, :feedbackId, :userId)";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if ($res->execute(array("feedbackId" => $feedbackId, "topicId" => $topicId, "userId" => $userId))) {
+            return null;
+        }
+
+    }
+
+    public function removeFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?FeedbackEntity
+    {
+        $sql = "DELETE FROM cmw_forums_topics_feedback WHERE `forum_topics_id` = :topicId AND `forum_feedback_id` = :feedbackId AND `user_id` = :userId";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if ($res->execute(array("feedbackId" => $feedbackId, "topicId" => $topicId, "userId" => $userId))) {
+            return null;
+        }
+
+    }
+
+    public function changeFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?FeedbackEntity
+    {
+        $sql = "UPDATE cmw_forums_topics_feedback SET forum_feedback_id = :feedbackId WHERE forum_topics_id = :topicId AND user_id = :userId";
 
         $db = DatabaseManager::getInstance();
 
@@ -117,7 +165,7 @@ class FeedbackModel extends AbstractModel
      * @return bool
      * @desc user can react to this
      */
-    public function userCanReact(int $topicId, ?int $userId): bool
+    public function userCanTopicReact(int $topicId, ?int $userId): bool
     {
         if ($userId === null){
             return  false;
@@ -139,7 +187,7 @@ class FeedbackModel extends AbstractModel
      * @return ?FeedbackEntity
      * @desc user can react to this
      */
-    public function getFeedbackReactedByUser(int $topicId, int $userId): int
+    public function getFeedbackTopicReactedByUser(int $topicId, int $userId): int
     {
         $sql = "SELECT forum_feedback_id FROM `cmw_forums_topics_feedback` WHERE forum_topics_id = :topic_id AND user_id = :user_id";
 
@@ -147,6 +195,110 @@ class FeedbackModel extends AbstractModel
         $res = $db->prepare($sql);
 
         $res->execute(array("topic_id" => $topicId, "user_id" => $userId));
+
+        $option = $res->fetch();
+
+        return $option['forum_feedback_id'];
+    }
+
+    public function addFeedbackResponseByFeedbackId(int $responseId, int $feedbackId, int $userId): ?FeedbackEntity
+    {
+        $sql = "INSERT INTO cmw_forums_response_feedback (forum_response_id, forum_feedback_id, user_id) VALUES (:ResponseId, :feedbackId, :userId)";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if ($res->execute(array("feedbackId" => $feedbackId, "ResponseId" => $responseId, "userId" => $userId))) {
+            return null;
+        }
+
+    }
+
+    public function removeFeedbackResponseByFeedbackId(int $responseId, int $feedbackId, int $userId): ?FeedbackEntity
+    {
+        $sql = "DELETE FROM cmw_forums_response_feedback WHERE `forum_response_id` = :ResponseId AND `forum_feedback_id` = :feedbackId AND `user_id` = :userId";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if ($res->execute(array("feedbackId" => $feedbackId, "ResponseId" => $responseId, "userId" => $userId))) {
+            return null;
+        }
+
+    }
+
+    public function changeFeedbackResponseByFeedbackId(int $responseId, int $feedbackId, int $userId): ?FeedbackEntity
+    {
+        $sql = "UPDATE cmw_forums_response_feedback SET forum_feedback_id = :feedbackId WHERE forum_response_id = :ResponseId AND user_id = :userId";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if ($res->execute(array("feedbackId" => $feedbackId, "ResponseId" => $responseId, "userId" => $userId))) {
+            return null;
+        }
+
+    }
+
+    /**
+     * @param int $responseId
+     * @param int $feedbackId
+     * @return string
+     * @desc count number of feedback by topic id and feedback id
+     */
+    public function countResponseFeedbackByTopic(int $responseId, int $feedbackId): string
+    {
+        $sql = "SELECT COUNT(forum_response_feedback_id) as count FROM cmw_forums_response_feedback WHERE forum_response_id = :response_id AND forum_feedback_id = :feedbackId";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("response_id" => $responseId, "feedbackId" => $feedbackId))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['count'];
+    }
+
+    /**
+     * @param int $responseId
+     * @param int $userId
+     * @return bool
+     * @desc user can react to this
+     */
+    public function userCanResponseReact(int $responseId, ?int $userId): bool
+    {
+        if ($userId === null){
+            return  false;
+        }
+
+        $sql = "SELECT forum_response_feedback_id FROM `cmw_forums_response_feedback` WHERE forum_response_id = :response_id AND user_id = :user_id";
+
+        $db = DatabaseManager::getInstance();
+        $res = $db->prepare($sql);
+
+        $res->execute(array("response_id" => $responseId, "user_id" => $userId));
+
+        return count($res->fetchAll()) === 0;
+    }
+
+    /**
+     * @param int $topicId
+     * @param int $userId
+     * @return ?FeedbackEntity
+     * @desc user can react to this
+     */
+    public function getFeedbackResponseReactedByUser(int $responseId, int $userId): int
+    {
+        $sql = "SELECT forum_feedback_id FROM `cmw_forums_response_feedback` WHERE forum_response_id = :response_id AND user_id = :user_id";
+
+        $db = DatabaseManager::getInstance();
+        $res = $db->prepare($sql);
+
+        $res->execute(array("response_id" => $responseId, "user_id" => $userId));
 
         $option = $res->fetch();
 

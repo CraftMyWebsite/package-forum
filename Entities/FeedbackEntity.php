@@ -43,6 +43,14 @@ class FeedbackEntity
     /**
      * @return string
      */
+    public function countResponseFeedbackReceived(int $responseId): string
+    {
+        return feedbackModel::getinstance()->countResponseFeedbackByTopic($responseId,$this->getId());
+    }
+
+    /**
+     * @return string
+     */
     public function countUserFeedbackReceived(int $topicId): string
     {
         return feedbackModel::getinstance()->countTopicFeedbackByUser($topicId,$this->getId());
@@ -51,17 +59,33 @@ class FeedbackEntity
     /**
      * @return bool
      */
-    public function userCanReact(int $topicId): bool
+    public function userCanTopicReact(int $topicId): bool
     {
-        return !(new feedbackModel())->userCanReact($topicId, (new UsersModel())::getCurrentUser()?->getId());
+        return !(new feedbackModel())->userCanTopicReact($topicId, (new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
      * @return int
      */
-    public function getFeedbackReacted(int $topicId): int
+    public function getFeedbackTopicReacted(int $topicId): int
     {
-        return feedbackModel::getInstance()->getFeedbackReactedByUser($topicId,(new UsersModel())::getCurrentUser()?->getId());
+        return feedbackModel::getInstance()->getFeedbackTopicReactedByUser($topicId,(new UsersModel())::getCurrentUser()?->getId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function userCanResponseReact(int $responseId): bool
+    {
+        return !(new feedbackModel())->userCanResponseReact($responseId, (new UsersModel())::getCurrentUser()?->getId());
+    }
+
+    /**
+     * @return int
+     */
+    public function getFeedbackResponseReacted(int $responseId): int
+    {
+        return feedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
     }
 
 }
