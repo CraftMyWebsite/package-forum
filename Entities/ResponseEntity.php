@@ -122,10 +122,33 @@ class ResponseEntity
 
     /**
      * @return bool
-     * @des Return true if the response was performe by the topic author
      */
     public function isTopicAuthor(): bool
     {
         return $this->getResponseTopic()->getUser()->getId() === $this->getUser()->getId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeedbackAddResponseLink(int $feedbackId): string
+    {
+        return "{$this->responseTopic->getSlug()}/response_react/$this->responseId/$feedbackId";
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeedbackDeleteResponseLink(int $feedbackId): string
+    {
+        return "{$this->responseTopic->getSlug()}/response_un_react/$this->responseId/$feedbackId";
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeedbackChangeResponseLink(int $feedbackId): string
+    {
+        return "{$this->responseTopic->getSlug()}/response_change_react/$this->responseId/$feedbackId";
     }
 }

@@ -43,6 +43,21 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics_feedback
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+  CREATE TABLE IF NOT EXISTS cmw_forums_response_feedback
+  (
+      forum_response_feedback_id          INT AUTO_INCREMENT PRIMARY KEY,
+      forum_response_id        INT NOT NULL,
+      forum_feedback_id       INT NOT NULL,
+      user_id       INT NOT NULL,
+      CONSTRAINT fk_feedback_response_id FOREIGN KEY (forum_response_id)
+          REFERENCES cmw_forums_response (forum_response_id) ON UPDATE CASCADE ON DELETE CASCADE,
+      CONSTRAINT fk_response_feedback_id FOREIGN KEY (forum_feedback_id)
+          REFERENCES cmw_forums_feedback (forum_feedback_id) ON UPDATE CASCADE ON DELETE CASCADE,
+      CONSTRAINT fk_response_feedback_user_id FOREIGN KEY (user_id)
+          REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
+  ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4;
+
 CREATE TABLE IF NOT EXISTS cmw_forums_topics_views
 (
     forum_topics_views_id          INT AUTO_INCREMENT PRIMARY KEY,
