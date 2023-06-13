@@ -99,27 +99,28 @@ $description = "desc";
                             <h5 class="modal-title white" id="myModalLabel160">Nouvelle réaction</h5>
                         </div>
                         <div class="modal-body">
-                            <form action="settings/addreaction" method="post">
+                            <form id="sendImage" action="settings/addreaction" method="post" enctype="multipart/form-data">
                                 <?php (new SecurityManager())->insertHiddenToken() ?>
-                                <h6>Titre :</h6>
-                                <input type="text" class="form-control" name="title" placeholder="J'aime"
-                                       required>
+                                <h6>Image :</h6>
+                                <input required class="mt-2 form-control form-control-sm" type="file" id="image" name="image"
+                                       accept=".png,.jpg,.jpeg,.webp,.svg,.gif">
+                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                                 <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                             </button>
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                            <button form="sendImage" type="submit" class="btn btn-primary" data-bs-dismiss="modal">
                                 <span class=""><?= LangManager::translate("core.btn.add") ?></span>
                             </button>
-                            </form>
+
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card-body">
                 <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
-                    <?= $feedback->getName() ?>
+                    <img width="32px" src="<?= $feedback->getImage() ?>"></img>
                 <?php endforeach; ?>
             </div>
         </div>

@@ -8,12 +8,12 @@ use CMW\Model\Users\UsersModel;
 class FeedbackEntity
 {
     private int $feedbackId;
-    private string $feedbackName;
+    private string $feedbackImage;
 
-    public function __construct(int $id, string $name)
+    public function __construct(int $id, string $image)
     {
         $this->feedbackId = $id;
-        $this->feedbackName = $name;
+        $this->feedbackImage = $image;
     }
 
     /**
@@ -25,11 +25,11 @@ class FeedbackEntity
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getName(): string
+    public function getImage(): string
     {
-        return $this->feedbackName;
+        return getenv("PATH_SUBFOLDER") . "Public/Uploads/Forum/" . $this->feedbackImage;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace CMW\Model\Forum;
 use CMW\Entity\Forum\FeedbackEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
+use CMW\Manager\Uploads\ImagesManager;
 
 /**
  * Class: @TopicModel
@@ -54,7 +55,7 @@ class FeedbackModel extends AbstractModel
 
         return new FeedbackEntity(
             $res["forum_feedback_id"],
-            $res["forum_feedback_name"]
+            $res["forum_feedback_image"]
         );
     }
 
@@ -110,14 +111,14 @@ class FeedbackModel extends AbstractModel
         return $toReturn;
     }
 
-    public function createFeedback(string $title): ?FeedbackEntity
+    public function createFeedback(array $image): ?FeedbackEntity
     {
-
+        $imageName = ImagesManager::upload($image, "Forum");
         $data = array(
-            "title" => $title
+            "image" => $imageName
         );
 
-        $sql = "INSERT INTO cmw_forums_feedback(forum_feedback_name) VALUES (:title)";
+        $sql = "INSERT INTO cmw_forums_feedback(forum_feedback_image) VALUES (:image)";
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);

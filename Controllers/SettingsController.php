@@ -94,9 +94,9 @@ class SettingsController extends AbstractController {
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
-        [$title] = Utils::filterInput("title");
+        $image = $_FILES['image'];
 
-        FeedbackModel::getInstance()->createFeedback($title);
+        FeedbackModel::getInstance()->createFeedback($image);
 
         Redirect::redirectPreviousRoute();
     }
