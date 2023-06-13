@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
 CREATE TABLE IF NOT EXISTS cmw_forums_feedback
 (
     forum_feedback_id   INT AUTO_INCREMENT PRIMARY KEY,
-    forum_feedback_image VARCHAR(50) NOT NULL
+    forum_feedback_image VARCHAR(50) NOT NULL,
+    forum_feedback_name VARCHAR(50) NOT NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

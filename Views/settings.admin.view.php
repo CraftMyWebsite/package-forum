@@ -99,10 +99,12 @@ $description = "desc";
                             <h5 class="modal-title white" id="myModalLabel160">Nouvelle réaction</h5>
                         </div>
                         <div class="modal-body">
-                            <form id="sendImage" action="settings/addreaction" method="post" enctype="multipart/form-data">
+                            <form id="sendImage" action="settings/addreaction" method="post"
+                                  enctype="multipart/form-data">
                                 <?php (new SecurityManager())->insertHiddenToken() ?>
                                 <h6>Image :</h6>
-                                <input required class="mt-2 form-control form-control-sm" type="file" id="image" name="image"
+                                <input required class="mt-2 form-control form-control-sm" type="file" id="image"
+                                       name="image"
                                        accept=".png,.jpg,.jpeg,.webp,.svg,.gif">
                             </form>
                         </div>
@@ -119,9 +121,103 @@ $description = "desc";
                 </div>
             </div>
             <div class="card-body">
-                <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
-                    <img width="32px" src="<?= $feedback->getImage() ?>"></img>
-                <?php endforeach; ?>
+                <table class="table" id="table1">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Image</th>
+                        <th class="text-center">Nom</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-center">
+                    <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
+                        <tr>
+                            <td><img alt="..." width="32px" src="<?= $feedback->getImage() ?>"></td>
+                            <td><?= $feedback->getName() ?></td>
+                            <td>
+                                <a type="button" data-bs-toggle="modal"
+                                   data-bs-target="#edit-prefix-<?= $feedback->getId() ?>">
+                                    <i class="text-primary fas fa-edit me-2"></i>
+                                </a>
+                                <a type="button" data-bs-toggle="modal"
+                                   data-bs-target="#delete-prefix-<?= $feedback->getId() ?>">
+                                    <i class="text-danger fas fa-trash-alt me-2"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <!--
+                        ----MODAL EDITION----
+                        -->
+                        <div class="modal fade text-left" id="edit-prefix-<?= $feedback->getId() ?>" tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h5 class="modal-title white" id="myModalLabel160">Édition
+                                            de <?= $feedback->getName() ?></h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="settings/editprefix" method="post">
+                                            <?php (new SecurityManager())->insertHiddenToken() ?>
+                                            <div class="row">
+                                                <div class="col-12 col-lg-6 mt-2">
+                                                    <input name="" hidden value="<?= $feedback->getId() ?>">
+                                                    <h6>Image :</h6>
+                                                    <div class="text-center p-2">
+                                                        <img alt="..." width="50px" src="<?= $feedback->getImage() ?>">
+                                                    </div>
+
+                                                    <input type="file" class="form-control" name="prefixName" required>
+                                                </div>
+                                                <div class="col-12 col-lg-6 mt-2">
+                                                    <h6>Nom :</h6>
+                                                    <input type="text" class="form-control" name="" value="<?= $feedback->getName() ?>">
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.save") ?></span>
+                                        </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--
+                        ----MODAL SUPRESSION----
+                        -->
+                        <div class="modal fade text-left" id="delete-prefix-<?= $feedback->getId() ?>" tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger">
+                                        <h5 class="modal-title white" id="myModalLabel160">Supression
+                                            de <?= $feedback->getName() ?></h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        Supprimer cette réaction supprimera aussi tout les like donner avec cette réaction !
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                        </button>
+                                        <a href="settings/deleteprefix/<?= $feedback->getId() ?>"
+                                           class="btn btn-danger ml-1">
+                                            <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+
             </div>
         </div>
     </div>

@@ -9,11 +9,13 @@ class FeedbackEntity
 {
     private int $feedbackId;
     private string $feedbackImage;
+    private string $feedbackName;
 
-    public function __construct(int $id, string $image)
+    public function __construct(int $id, string $image, string $name)
     {
         $this->feedbackId = $id;
         $this->feedbackImage = $image;
+        $this->feedbackName = $name;
     }
 
     /**
@@ -30,6 +32,14 @@ class FeedbackEntity
     public function getImage(): string
     {
         return getenv("PATH_SUBFOLDER") . "Public/Uploads/Forum/" . $this->feedbackImage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->feedbackName;
     }
 
     /**

@@ -55,7 +55,8 @@ class FeedbackModel extends AbstractModel
 
         return new FeedbackEntity(
             $res["forum_feedback_id"],
-            $res["forum_feedback_image"]
+            $res["forum_feedback_image"],
+            $res["forum_feedback_name"]
         );
     }
 
