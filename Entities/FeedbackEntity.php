@@ -88,4 +88,12 @@ class FeedbackEntity
         return feedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
     }
 
+    /**
+     * @return int
+     */
+    public function getUserFeedbackList(int $responseId): int
+    {
+        return feedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
+    }
+
 }

@@ -58,6 +58,58 @@ class FeedbackModel extends AbstractModel
         );
     }
 
+    /**
+     * @return array
+     */
+    public function getTopicUsersFeedbackByFeedbackId(int $topicId, int $feedbackId): array
+    {
+        $sql = "SELECT user_id FROM cmw_forums_topics_feedback WHERE forum_topics_id = :topicId AND forum_feedback_id = :feedbackId";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req){
+            return [];
+        }
+
+        if (!$req->execute(array("topicId" => $topicId, "feedbackId" => $feedbackId))) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($user = $req->fetch()) {
+            $toReturn[] = $user["user_id"];
+        }
+
+        return $toReturn;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponseUsersFeedbackByFeedbackId(int $responseId, int $feedbackId): array
+    {
+        $sql = "SELECT user_id FROM cmw_forums_response_feedback WHERE forum_response_id = :responseId AND forum_feedback_id = :feedbackId";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req){
+            return [];
+        }
+
+        if (!$req->execute(array("responseId" => $responseId, "feedbackId" => $feedbackId))) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($user = $req->fetch()) {
+            $toReturn[] = $user["user_id"];
+        }
+
+        return $toReturn;
+    }
+
     public function createFeedback(string $title): ?FeedbackEntity
     {
 
