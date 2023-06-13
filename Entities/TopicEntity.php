@@ -277,7 +277,7 @@ class TopicEntity
     /**
      * @return string
      */
-    public function getFeedbackLink(int $feedbackId): string
+    public function getFeedbackAddTopicLink(int $feedbackId): string
     {
         return "$this->topicSlug/react/$this->topicId/$feedbackId";
     }

@@ -3,6 +3,7 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Model\Forum\FeedbackModel;
+use CMW\Model\Users\UsersModel;
 
 class FeedbackEntity
 {
@@ -34,8 +35,33 @@ class FeedbackEntity
     /**
      * @return string
      */
-    public function countFeedbackReaction(int $topicId): string
+    public function countTopicFeedbackReceived(int $topicId): string
     {
-        return feedbackModel::getinstance()->countFeedbackByFeedbackId($topicId,$this->getId());
+        return feedbackModel::getinstance()->countTopicFeedbackByTopic($topicId,$this->getId());
     }
+
+    /**
+     * @return string
+     */
+    public function countUserFeedbackReceived(int $topicId): string
+    {
+        return feedbackModel::getinstance()->countTopicFeedbackByUser($topicId,$this->getId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function userCanReact(int $topicId): bool
+    {
+        return !(new feedbackModel())->userCanReact($topicId, (new UsersModel())::getCurrentUser()?->getId());
+    }
+
+    /**
+     * @return int
+     */
+    public function getFeedbackReacted(int $topicId): int
+    {
+        return feedbackModel::getInstance()->getFeedbackReactedByUser($topicId,(new UsersModel())::getCurrentUser()?->getId());
+    }
+
 }
