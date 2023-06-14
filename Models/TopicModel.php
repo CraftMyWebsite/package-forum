@@ -265,6 +265,7 @@ class TopicModel extends AbstractModel
         }
 
         return null;
+
     }
 
     public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix, int $move): ?TopicEntity

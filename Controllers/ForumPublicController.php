@@ -8,6 +8,7 @@ use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
+use CMW\Model\Forum\DiscordModel;
 use CMW\Model\Forum\FeedbackModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
@@ -113,6 +114,10 @@ class ForumPublicController extends CoreController
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
+
+        if (!DiscordModel::getInstance()->DiscordActionIsActive(0)) {
+            DiscordModel::getInstance()->sendDiscordMsgNewTopic($name,$forum->getName(),"test",UsersModel::getCurrentUser()->getUserPicture()->getImageName(),UsersModel::getCurrentUser()->getPseudo());
+        }
 
         header("location: ../$forumSlug");
     }

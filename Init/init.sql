@@ -9,6 +9,16 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS cmw_forums_discord
+(
+    forum_discord_id   INT AUTO_INCREMENT PRIMARY KEY,
+    forum_discord_webhook VARCHAR(255) NOT NULL,
+    forum_discord_description VARCHAR(50) NOT NULL,
+    forum_discord_embed_color VARCHAR(50) NOT NULL,
+    forum_discord_action INT NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
 (
     forum_prefix_id          INT AUTO_INCREMENT PRIMARY KEY,
