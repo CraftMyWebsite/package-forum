@@ -118,10 +118,10 @@ class CategoryController extends AbstractController
     #[Link("/manage/edit", Link::POST, ['.*?'], "/cmw-admin/forum")]
     public function adminEditTopicPost(): void
     {
-        [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix');
+        [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
 
-        topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix);
+        topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
 
         // Add tags
 

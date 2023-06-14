@@ -267,7 +267,7 @@ class TopicModel extends AbstractModel
         return null;
     }
 
-    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix): ?TopicEntity
+    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix, int $move): ?TopicEntity
     {
 
         if ($prefix === "") {
@@ -282,7 +282,8 @@ class TopicModel extends AbstractModel
             "disallow_replies" => $disallowReplies,
             "important" => $important,
             "pin" => $pin,
-            "prefix" => $prefixReturn
+            "prefix" => $prefixReturn,
+            "move" => $move
         );
 
         $sql = "UPDATE cmw_forums_topics SET 
@@ -290,7 +291,8 @@ class TopicModel extends AbstractModel
             forum_topic_disallow_replies = :disallow_replies,
             forum_topic_important = :important,
             forum_topic_pinned = :pin,
-            forum_topic_prefix = :prefix
+            forum_topic_prefix = :prefix,
+            forum_id = :move
             WHERE forum_topic_id = :topicId";
 
         $db = DatabaseManager::getInstance();

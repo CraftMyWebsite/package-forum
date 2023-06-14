@@ -490,14 +490,14 @@ $description = LangManager::translate("forum.forum.list.description");
                                                                           style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
                                 <?= mb_strimwidth($topic->getName(), 0, 65, '...') ?>
                             </td>
-                            <td><a target="_blank"
+                            <td class="text-center"><a target="_blank"
                                    href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/t/<?= $topic->getSlug() ?>"><?= $topic->getForum()->getName() ?></a>
                             </td>
-                            <td><img style="object-fit: fill; max-height: 32px; max-width: 32px" width="32px"
+                            <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px" width="32px"
                                      height="32px"
                                      src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topic->getUser()->getUserPicture()->getImageName() ?>"
                                      alt="..."><?= $topic->getUser()->getPseudo() ?></td>
-                            <td><?= $topic->getCreated() ?></td>
+                            <td class="text-center"><?= $topic->getCreated() ?></td>
                             <td class="text-center"><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>
                             <td class="text-center"><?= $topic->countViews() ?></td>
                             <td>
@@ -516,7 +516,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         -->
                         <div class="modal fade text-left" id="edit-prefix-<?= $topic->getId() ?>" tabindex="-1"
                              role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary">
                                         <h5 class="modal-title white" id="myModalLabel160">Gestion
@@ -596,8 +596,15 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <div class="col-12 col-lg-6 mt-2">
                                                     <h6>Déplacer vers :</h6>
                                                     <select name="move" class="form-select">
-                                                        <option value="">Aucun</option>
-
+                                                        <?php foreach ($categoryModel->getCategories() as $cat): ?>
+                                                            <option disabled>──── <?= $cat->getName() ?> ────</option>
+                                                            <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObject): ?>
+                                                            <option value="<?= $forumObject->getId() ?>" <?= ($forumObject->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObject->getName() ?></option>
+                                                                <?php foreach ($forumModel->getSubforumByForum($forumObject->getId()) as $subForumObject): ?>
+                                                                    <option value="<?= $subForumObject->getId() ?>">↪ <?= $subForumObject->getName() ?></option>
+                                                                <?php endforeach; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endforeach; ?>
                                                     </select>
                                                 </div>
                                             </div>
