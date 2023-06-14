@@ -93,11 +93,36 @@ class SettingsController extends AbstractController {
     private function settingsAddReactionPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
-
+        [$name] = Utils::filterInput("name");
         $image = $_FILES['image'];
 
-        FeedbackModel::getInstance()->createFeedback($image);
+        FeedbackModel::getInstance()->createFeedback($image, $name);
 
         Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/settings/editreaction", Link::POST, [], "/cmw-admin/forum")]
+    private function settingsEditReactionPost(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        [$name, $id] = Utils::filterInput("name", "id");
+        $image = $_FILES['image'];
+
+        FeedbackModel::getInstance()->editFeedback($image, $name, $id);
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/settings/deletereaction/:reactionId", Link::GET, [], "/cmw-admin/forum")]
+    private function settingsDeleteReaction(Request $request, int $reactionId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        if (FeedbackModel::getInstance()->removeFeedback($reactionId)) {
+
+            Flash::send("success", LangManager::translate("core.toaster.success"),
+                "C'est chao");
+
+            Redirect::redirectPreviousRoute();
+        }
     }
 }

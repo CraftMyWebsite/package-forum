@@ -112,14 +112,15 @@ class FeedbackModel extends AbstractModel
         return $toReturn;
     }
 
-    public function createFeedback(array $image): ?FeedbackEntity
+    public function createFeedback(array $image, string $name): ?FeedbackEntity
     {
         $imageName = ImagesManager::upload($image, "Forum");
         $data = array(
-            "image" => $imageName
+            "image" => $imageName,
+            "name" => $name
         );
 
-        $sql = "INSERT INTO cmw_forums_feedback(forum_feedback_image) VALUES (:image)";
+        $sql = "INSERT INTO cmw_forums_feedback(forum_feedback_image, forum_feedback_name) VALUES (:image, :name)";
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
@@ -130,6 +131,40 @@ class FeedbackModel extends AbstractModel
         }
 
         return null;
+    }
+
+    public function editFeedback(array $image, string $name, int $id): ?FeedbackEntity
+    {
+        $imageName = ImagesManager::upload($image, "Forum");
+        $data = array(
+            "image" => $imageName,
+            "name" => $name,
+            "id" => $id
+        );
+
+        $sql = "UPDATE cmw_forums_feedback SET forum_feedback_name = :name, forum_feedback_image = :image WHERE forum_feedback_id = :id";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            return $this->getFeedbackById($id);
+        }
+
+        return null;
+    }
+
+    public function removeFeedback(int $id): bool
+    {
+        $sql = "DELETE FROM cmw_forums_feedback WHERE `forum_feedback_id` = :id";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        if (!$req->execute(array("id" => $id))) {
+            return false;
+        }
+        return $req->rowCount() === 1;
+
     }
 
     public function addFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?FeedbackEntity

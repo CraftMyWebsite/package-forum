@@ -102,6 +102,10 @@ $description = "desc";
                             <form id="sendImage" action="settings/addreaction" method="post"
                                   enctype="multipart/form-data">
                                 <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <div class="mb-2">
+                                    <h6>Nom :</h6>
+                                    <input type="text" class="form-control" name="name">
+                                </div>
                                 <h6>Image :</h6>
                                 <input required class="mt-2 form-control form-control-sm" type="file" id="image"
                                        name="image"
@@ -157,23 +161,18 @@ $description = "desc";
                                             de <?= $feedback->getName() ?></h5>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="settings/editprefix" method="post">
+                                        <form action="settings/editreaction" method="post"
+                                              enctype="multipart/form-data">
                                             <?php (new SecurityManager())->insertHiddenToken() ?>
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <input name="" hidden value="<?= $feedback->getId() ?>">
-                                                    <h6>Image :</h6>
-                                                    <div class="text-center p-2">
-                                                        <img alt="..." width="50px" src="<?= $feedback->getImage() ?>">
-                                                    </div>
-
-                                                    <input type="file" class="form-control" name="prefixName" required>
-                                                </div>
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Nom :</h6>
-                                                    <input type="text" class="form-control" name="" value="<?= $feedback->getName() ?>">
-                                                </div>
+                                            <div class="mb-2">
+                                                <h6>Nom :</h6>
+                                                <input type="text" class="form-control" name="name"
+                                                       value="<?= $feedback->getName() ?>">
                                             </div>
+                                            <input name="id" hidden value="<?= $feedback->getId() ?>">
+                                            <h6>Image :</h6>
+                                            <input type="file" class="form-control" name="image" required>
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
@@ -199,13 +198,14 @@ $description = "desc";
                                             de <?= $feedback->getName() ?></h5>
                                     </div>
                                     <div class="modal-body">
-                                        Supprimer cette réaction supprimera aussi tout les like donner avec cette réaction !
+                                        Supprimer cette réaction supprimera aussi tout les like donner avec cette
+                                        réaction !
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                                             <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                                         </button>
-                                        <a href="settings/deleteprefix/<?= $feedback->getId() ?>"
+                                        <a href="settings/deletereaction/<?= $feedback->getId() ?>"
                                            class="btn btn-danger ml-1">
                                             <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
                                         </a>
