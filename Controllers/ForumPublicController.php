@@ -43,14 +43,15 @@ class ForumPublicController extends CoreController
     public function publicForumView(Request $request, string $forumSlug): void
     {
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
-
+        $forumModel = forumModel::getInstance();
+        $categoryModel = categoryModel::getInstance();
         $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
         $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
         $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
         $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forum" => $forum, "topicModel" => topicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => topicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->view();
     }
 
