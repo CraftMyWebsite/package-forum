@@ -22,6 +22,7 @@ use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
 use CMW\Utils\Website;
 
+$discordModel = DiscordModel::getInstance();
 
 /**
  * Class: @ForumPublicController
@@ -115,7 +116,7 @@ class ForumPublicController extends CoreController
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
-        if (!DiscordModel::getInstance()->DiscordActionIsActive(0)) {
+        if (!DiscordModel::getInstance()->DiscordActionIsActiveAndBinded(0, $forum->getId())) {
             DiscordModel::getInstance()->sendDiscordMsgNewTopic($name,$forum->getName(),"test",UsersModel::getCurrentUser()->getUserPicture()->getImageName(),UsersModel::getCurrentUser()->getPseudo());
         }
 

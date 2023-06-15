@@ -38,9 +38,21 @@ class DiscordModel extends AbstractModel
         );
     }
 
-    public function DiscordActionIsActive($action): bool
+    public function DiscordActionIsActiveAndBinded($action, $bind): bool
     {
+        $this->DiscordActionIsBind($bind);
         $sql = "SELECT forum_discord_action FROM cmw_forums_discord WHERE forum_discord_action = :discord_action";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+        $res->execute(array("discord_action" => $action));
+
+        return count($res->fetchAll()) === 0;
+    }
+
+    public function DiscordActionIsBind($bind): bool
+    {
+        $sql = "SELECT forum_discord_binding_id FROM cmw_forums_discord_binding WHERE forum_discord_action = :discord_action";
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
