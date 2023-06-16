@@ -397,3 +397,61 @@ $description = "desc";
         </div>
     </div>
 </section>
+
+
+<div class="position-absolute end-0">
+    <a type="button" data-bs-toggle="modal"
+       data-bs-target="#add-discord"
+       class="text-bg-primary rounded-2 py-1 px-2"><?= LangManager::translate("core.btn.add") ?></a>
+</div>
+<!--
+----MODAL AJOUT ----
+-->
+<div class="modal fade text-left" id="add-discord" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title white" id="myModalLabel160">Nouveau prefix</h5>
+            </div>
+            <div class="modal-body">
+                <form action="settings/addprefix" method="post">
+                    <?php (new SecurityManager())->insertHiddenToken() ?>
+                    <div class="row">
+                        <div class="col-12 col-lg-4 mt-2">
+                            <h6>Description :</h6>
+                            <input type="text" class="form-control" name="prefixName" placeholder="Annonce"
+                                   required>
+                        </div>
+                        <div class="col-12 col-lg-4 mt-2">
+                            <h6>URL du Webhook :</h6>
+                            <input type="text" class="form-control" name="prefixDescription" required>
+                        </div>
+                        <div class="col-12 col-lg-4 mt-2">
+                            <h6>Couleur du message :</h6>
+                            <input type="color" class="form-control" name="prefixTextColor" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-lg-6 mt-2">
+                            <h6>Action :</h6>
+                            <select class="form-select">
+                                <option>Un nouveau Forum dans une catégorie</option>
+                                <option>Un topic est poster dans un Forum</option>
+                                <option>Une réponse est poster dans un Topic</option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                    <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                </button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                    <span class=""><?= LangManager::translate("core.btn.add") ?></span>
+                </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

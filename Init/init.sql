@@ -9,16 +9,6 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE IF NOT EXISTS cmw_forums_discord
-(
-    forum_discord_id   INT AUTO_INCREMENT PRIMARY KEY,
-    forum_discord_webhook VARCHAR(255) NOT NULL,
-    forum_discord_description VARCHAR(50) NOT NULL,
-    forum_discord_embed_color VARCHAR(50) NOT NULL,
-    forum_discord_action INT NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
 CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
 (
     forum_prefix_id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -165,10 +155,13 @@ VALUES ('IconNotRead', 'fa-solid fa-eye'),
        ('IconPin', 'fa-solid fa-thumbtack'),
        ('IconClosed', 'fa-solid fa-lock');
 
-CREATE TABLE IF NOT EXISTS cmw_forums_discord_binding
+
+CREATE TABLE IF NOT EXISTS cmw_forums_discord
 (
-    `forum_discord_binding_id`       INT(11) NOT NULL AUTO_INCREMENT,
-    `forum_discord_action` INT(11) NOT NULL,
+    `forum_discord_id`   INT AUTO_INCREMENT PRIMARY KEY,
+    `forum_discord_webhook` VARCHAR(255) NOT NULL,
+    `forum_discord_description` VARCHAR(50) NOT NULL,
+    `forum_discord_embed_color` VARCHAR(50) NOT NULL,
     `forum_category_id`  INT(11) NULL,
     `forum_prefix_id`  INT(11) NULL,
     `forum_feedback_id`  INT(11) NULL,
@@ -180,9 +173,6 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord_binding
     `forum_topic_id`  INT(11) NULL,
     `forums_topics_tags_id`  INT(11) NULL,
     `forum_response_id`  INT(11) NULL,
-    PRIMARY KEY (`forum_discord_binding_id`),
-    CONSTRAINT `discord_biding_forum_discord_action` FOREIGN KEY (`forum_discord_action`)
-        REFERENCES `cmw_forums_discord` (`forum_discord_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `discord_biding_forum_category_id` FOREIGN KEY (`forum_category_id`)
         REFERENCES `cmw_forums_categories` (`forum_category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `discord_biding_forum_prefix_id` FOREIGN KEY (`forum_prefix_id`)

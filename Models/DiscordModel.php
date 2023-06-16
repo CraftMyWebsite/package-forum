@@ -16,15 +16,15 @@ use CMW\Utils\Website;
  */
 class DiscordModel extends AbstractModel
 {
-    public function getDiscordByAction(int $id): ?DiscordEntity
+    public function getDiscordById(int $id): ?DiscordEntity
     {
-        $sql = "SELECT * FROM cmw_forums_discord WHERE forum_discord_action = :discord_action";
+        $sql = "SELECT * FROM cmw_forums_discord WHERE forum_discord_id = :id";
 
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("discord_action" => $id))) {
+        if (!$res->execute(array("id" => $id))) {
             return null;
         }
 
@@ -38,65 +38,71 @@ class DiscordModel extends AbstractModel
         );
     }
 
-    public function DiscordActionIsActiveAndBinded($action, $bind): bool
+    public function getAllActionPossibleByType($action, $type) : bool
     {
-        $this->DiscordActionIsBind($bind);
-        $sql = "SELECT forum_discord_action FROM cmw_forums_discord WHERE forum_discord_action = :discord_action";
-        $db = DatabaseManager::getInstance();
 
-        $res = $db->prepare($sql);
-        $res->execute(array("discord_action" => $action));
-
-        return count($res->fetchAll()) === 0;
     }
 
-    public function DiscordActionIsBind($bind): bool
+    public function thisForumCanDoAction($forumId): int
     {
-        $sql = "SELECT forum_discord_binding_id FROM cmw_forums_discord_binding WHERE forum_discord_action = :discord_action";
+        $sql = "SELECT forum_discord_id FROM cmw_forums_discord WHERE forum_id = :forumId";
         $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
 
-        $res = $db->prepare($sql);
-        $res->execute(array("discord_action" => $action));
+        if (!$req->execute(array("forumId" => $forumId))) {
+            return 0;
+        }
 
-        return count($res->fetchAll()) === 0;
+        $res = $req->fetch();
+
+        if(!$res){
+            return 0;
+        }
+
+        return $res['forum_discord_id'] ?? 0;
     }
 
-    public function sendDiscordMsgNewTopic($topicName, $topicForumName, $topicLink, $topicUserPicture, $topicUserName): void
+    public function sendDiscordMsgNewTopic($forumId, $topicName, $topicForumName, $topicLink, $topicUserPicture, $topicUserName): void
     {
-        $webhook = $this->getDiscordByAction(0)->getWebhook();
-        $embedColor = $this->getDiscordByAction(0)->getDiscordEmbedColor();
+        $discordId = $this->thisForumCanDoAction($forumId);
+        if ($discordId) {
+            $webhook = $this->getDiscordById($discordId)->getWebhook();
+            $embedColor = $this->getDiscordById($discordId)->getDiscordEmbedColor();
 
-        $timestamp = date("c", strtotime("now"));
-        $json = [
-            "tts" => false,
-            "embeds" => [
-                [
-                    "title" => "Nouveau Topics " . $topicName . " dans " . $topicForumName ,
-                    "type" => "article",
-                    "description" => "Allez le voir dès maintenant !",
-                    "url" => Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $topicLink,
-                    "timestamp" => $timestamp,
-                    "color" => hexdec( "3366ff" ),
-                    "footer" => ["text" => $_SERVER['SERVER_NAME'] . " - CMW",],
-                    "thumbnail" => ["url" => Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . "Public/Uploads/Users/" . $topicUserPicture],
-                    "author" => ["name" => $topicUserName,]
+            $timestamp = date("c", strtotime("now"));
+            $json = [
+                "tts" => false,
+                "embeds" => [
+                    [
+                        "title" => "[FORUM] '" . $topicName . "' viens d'être poster dans " . $topicForumName,
+                        "type" => "article",
+                        "url" => Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $topicLink,
+                        "timestamp" => $timestamp,
+                        "color" => hexdec( $embedColor ),
+                        "footer" => ["text" => $_SERVER['SERVER_NAME'] . " - CMW",],
+                        "thumbnail" => ["url" => Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . "Public/Uploads/Users/" . $topicUserPicture],
+                        "fields" => [
+                            [
+                                "name" => "Allez le voir dès maintenant !",
+                                "value" => "Écrit par " . $topicUserName,
+                                "inline" => false
+                            ]
+                        ]
+                    ]
                 ]
-            ]
-        ];
-        $msg = json_encode($json, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
-        if($webhook !== "") {
-            $ch = curl_init( $webhook );
-            curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-            curl_setopt( $ch, CURLOPT_POST, 1);
-            curl_setopt( $ch, CURLOPT_POSTFIELDS, $msg);
-            curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
-            curl_setopt( $ch, CURLOPT_HEADER, 0);
-            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
-
-            $response = curl_exec( $ch );
-            echo $response;
-            curl_close( $ch );
+            ];
+            $msg = json_encode($json, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            if($webhook !== "") {
+                $ch = curl_init( $webhook );
+                curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+                curl_setopt( $ch, CURLOPT_POST, 1);
+                curl_setopt( $ch, CURLOPT_POSTFIELDS, $msg);
+                curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+                curl_setopt( $ch, CURLOPT_HEADER, 0);
+                curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_exec( $ch );
+                curl_close( $ch );
+            }
         }
     }
 }
