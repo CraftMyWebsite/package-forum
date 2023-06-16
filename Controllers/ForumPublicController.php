@@ -8,16 +8,21 @@ use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\CategoryModel;
+use CMW\Model\Forum\DiscordModel;
+use CMW\Model\Forum\FeedbackModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ResponseModel;
+use CMW\Model\Forum\SettingsModel;
 use CMW\Model\Forum\TopicModel;
 use CMW\Model\users\UsersModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
+use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
 use CMW\Utils\Website;
 
+$discordModel = DiscordModel::getInstance();
 
 /**
  * Class: @ForumPublicController
@@ -40,9 +45,15 @@ class ForumPublicController extends CoreController
     public function publicForumView(Request $request, string $forumSlug): void
     {
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+        $forumModel = forumModel::getInstance();
+        $categoryModel = categoryModel::getInstance();
+        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forum" => $forum, "topicModel" => topicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => responseModel::getInstance()]);
+        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => topicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->view();
     }
 
@@ -51,8 +62,13 @@ class ForumPublicController extends CoreController
     {
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
+        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
+
         $view = new View("Forum", "addTopic");
-        $view->addVariableList(["forum" => $forum]);
+        $view->addVariableList(["forum" => $forum,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
@@ -100,13 +116,15 @@ class ForumPublicController extends CoreController
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
+        DiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(),$name,$forum->getName(),"test",UsersModel::getCurrentUser()->getUserPicture()->getImageName(),UsersModel::getCurrentUser()->getPseudo());
+
         header("location: ../$forumSlug");
     }
 
     #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
     public function publicForumAdminEditTopicPost(Request $request, string $forumSlug): void
     {
-        [$topicId, $name, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags');
+        [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
@@ -117,7 +135,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
+        topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
 
         // Add tags
 
@@ -145,12 +163,81 @@ class ForumPublicController extends CoreController
     public function publicTopicView(Request $request, string $topicSlug): void
     {
         $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $isViewed = topicModel::getInstance()->checkViews($topic->getId(),Website::getClientIp());
+
+        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
+        $feedbackModel = feedbackModel::getInstance();
+
+        if (!$isViewed) {
+            topicModel::getInstance()->addViews($topic->getId());
+        }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["topic" => $topic, "responseModel" => responseModel::getInstance()]);
+        $view->addVariableList(["topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
+    }
+
+    #[Link("/t/:topicSlug/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicAddFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->addFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/un_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicDeleteFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->removeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/change_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicChangeFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->changeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+
+
+
+
+    #[Link("/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseAddFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->addFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseDeleteFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->removeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/t/:topicSlug/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseChangeFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    {
+        $user = usersModel::getInstance()::getCurrentUser();
+        feedbackModel::getInstance()->changeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+
+        Redirect::redirectPreviousRoute();
     }
 
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
