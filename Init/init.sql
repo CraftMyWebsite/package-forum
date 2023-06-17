@@ -197,3 +197,92 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
         REFERENCES `cmw_forums_response` (`forum_response_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
+
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS `cmw_forums_roles`
+(
+    `forums_role_id`          INT(11)  NOT NULL AUTO_INCREMENT,
+    `forums_role_name`        TINYTEXT NOT NULL,
+    `forums_role_description` TEXT,
+    `forums_role_weight`      INT     DEFAULT 0,
+    `forums_role_is_default`  TINYINT(1) DEFAULT 0,
+    PRIMARY KEY (`forums_role_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `cmw_forums_users_roles`
+(
+    `id`      INT(11) NOT NULL AUTO_INCREMENT,
+    `user_id` INT(11) NOT NULL,
+    `forums_role_id` INT(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `user_id` (`user_id`),
+    KEY `forums_role_id` (`forums_role_id`),
+    CONSTRAINT `cmw_forums_users_roles_ibfk_1` FOREIGN KEY (`user_id`)
+        REFERENCES `cmw_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `cmw_forums_users_roles_ibfk_2` FOREIGN KEY (`forums_role_id`)
+        REFERENCES `cmw_forums_roles` (`forums_role_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS cmw_forums_permissions
+(
+    forum_permission_id          INT AUTO_INCREMENT PRIMARY KEY,
+    forum_permission_parent_id        INT(11) NULL,
+    forum_permission_code       VARCHAR(50) NULL,
+    CONSTRAINT fk_forum_permission_parent_id FOREIGN KEY (forum_permission_parent_id)
+        REFERENCES cmw_forums_permissions (forum_permission_id)ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS cmw_forums_roles_permissions
+(
+    forum_permission_id INT NOT NULL,
+    forum_role_id       INT NOT NULL,
+    PRIMARY KEY (forum_permission_id, forum_role_id),
+    INDEX (forum_role_id),
+    CONSTRAINT fk_forum_roles_permission_id FOREIGN KEY (forum_permission_id)
+        REFERENCES cmw_forums_permissions (forum_permission_id)ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_forum_roles_permissions_role_id FOREIGN KEY (forum_role_id)
+        REFERENCES cmw_forums_roles (forums_role_id)ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
+VALUES ('Membre', 'Rôle pour les membres', 0, 1),
+       ('Modérateur', 'Rôle pour les modérateurs', 10, 0),
+       ('Administrateur', 'Rôle pour les administrateurs', 100, 0);
+
+INSERT INTO `cmw_forums_permissions` (`forum_permission_id`, `forum_permission_parent_id`, `forum_permission_code`)
+VALUES (1, NULL, 'operator');
+
+INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`)
+VALUES ('1', '3');
+/*
+a faire plus tard par ce que galere de fou :
+
+Permeta d'ajouter une permission role special sur un topic ou une cat (par exemple permettre des créer des catégorie privé etc etc)
+CREATE TABLE IF NOT EXISTS `cmw_forums_special_roles_permissions`
+(
+    `forums_role_id`          INT(11)  NOT NULL AUTO_INCREMENT,
+    `forum_permission_id`        INT(11)  NOT NULL,
+
+    PRIMARY KEY (`forums_role_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+Permeta d'ajouter un utilisateur avec des droit special sur un topic ou une cat (par exemple permettre des créer des catégorie privé etc etc)
+CREATE TABLE IF NOT EXISTS `cmw_forums_special_users_permissions`
+(
+    `user_id`          INT(11)  NOT NULL AUTO_INCREMENT,
+    `forum_permission_id`        INT(11)  NOT NULL,
+
+    PRIMARY KEY (`forums_role_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+*/
