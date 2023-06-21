@@ -164,6 +164,7 @@ class ForumPublicController extends CoreController
     {
         $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
         $isViewed = topicModel::getInstance()->checkViews($topic->getId(),Website::getClientIp());
+        $currentUser = usersModel::getInstance()::getCurrentUser();
 
         $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
         $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
@@ -176,7 +177,7 @@ class ForumPublicController extends CoreController
         }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();

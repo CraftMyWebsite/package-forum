@@ -4,6 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Model\Forum\FeedbackModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Website;
 
 class FeedbackEntity
 {
@@ -31,7 +32,7 @@ class FeedbackEntity
      */
     public function getImage(): string
     {
-        return getenv("PATH_SUBFOLDER") . "Public/Uploads/Forum/" . $this->feedbackImage;
+        return Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . "Public/Uploads/Forum/" . $this->feedbackImage;
     }
 
     /**
