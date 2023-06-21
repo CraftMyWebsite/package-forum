@@ -9,56 +9,6 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
-(
-    forum_prefix_id          INT AUTO_INCREMENT PRIMARY KEY,
-    forum_prefix_name        VARCHAR(50) NOT NULL,
-    forum_prefix_color       VARCHAR(50) NULL,
-    forum_prefix_text_color  VARCHAR(50) NULL,
-    forum_prefix_description TEXT        NULL,
-    forum_prefix_created     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    forum_prefix_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE IF NOT EXISTS cmw_forums_feedback
-(
-    forum_feedback_id   INT AUTO_INCREMENT PRIMARY KEY,
-    forum_feedback_image VARCHAR(50) NOT NULL,
-    forum_feedback_name VARCHAR(50) NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE IF NOT EXISTS cmw_forums_topics_feedback
-(
-    forum_topics_feedback_id INT AUTO_INCREMENT PRIMARY KEY,
-    forum_topics_id          INT NOT NULL,
-    forum_feedback_id        INT NOT NULL,
-    user_id                  INT NOT NULL,
-    CONSTRAINT fk_feedback_topics_id FOREIGN KEY (forum_topics_id)
-        REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_feedback_id FOREIGN KEY (forum_feedback_id)
-        REFERENCES cmw_forums_feedback (forum_feedback_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_feedback_user_id FOREIGN KEY (user_id)
-        REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE IF NOT EXISTS cmw_forums_response_feedback
-(
-    forum_response_feedback_id INT AUTO_INCREMENT PRIMARY KEY,
-    forum_response_id          INT NOT NULL,
-    forum_feedback_id          INT NOT NULL,
-    user_id                    INT NOT NULL,
-    CONSTRAINT fk_feedback_response_id FOREIGN KEY (forum_response_id)
-        REFERENCES cmw_forums_response (forum_response_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_response_feedback_id FOREIGN KEY (forum_feedback_id)
-        REFERENCES cmw_forums_feedback (forum_feedback_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_response_feedback_user_id FOREIGN KEY (user_id)
-        REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
 CREATE TABLE IF NOT EXISTS cmw_forums_topics_views
 (
     forum_topics_views_id       INT AUTO_INCREMENT PRIMARY KEY,
@@ -198,11 +148,55 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
+(
+    forum_prefix_id          INT AUTO_INCREMENT PRIMARY KEY,
+    forum_prefix_name        VARCHAR(50) NOT NULL,
+    forum_prefix_color       VARCHAR(50) NULL,
+    forum_prefix_text_color  VARCHAR(50) NULL,
+    forum_prefix_description TEXT        NULL,
+    forum_prefix_created     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    forum_prefix_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS cmw_forums_feedback
+(
+    forum_feedback_id   INT AUTO_INCREMENT PRIMARY KEY,
+    forum_feedback_image VARCHAR(50) NOT NULL,
+    forum_feedback_name VARCHAR(50) NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS cmw_forums_topics_feedback
+(
+    forum_topics_feedback_id INT AUTO_INCREMENT PRIMARY KEY,
+    forum_topics_id          INT NOT NULL,
+    forum_feedback_id        INT NOT NULL,
+    user_id                  INT NOT NULL,
+    CONSTRAINT fk_feedback_topics_id FOREIGN KEY (forum_topics_id)
+        REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_feedback_id FOREIGN KEY (forum_feedback_id)
+        REFERENCES cmw_forums_feedback (forum_feedback_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_feedback_user_id FOREIGN KEY (user_id)
+        REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
-
-
+CREATE TABLE IF NOT EXISTS cmw_forums_response_feedback
+(
+    forum_response_feedback_id INT AUTO_INCREMENT PRIMARY KEY,
+    forum_response_id          INT NOT NULL,
+    forum_feedback_id          INT NOT NULL,
+    user_id                    INT NOT NULL,
+    CONSTRAINT fk_feedback_response_id FOREIGN KEY (forum_response_id)
+        REFERENCES cmw_forums_response (forum_response_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_response_feedback_id FOREIGN KEY (forum_feedback_id)
+        REFERENCES cmw_forums_feedback (forum_feedback_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_response_feedback_user_id FOREIGN KEY (user_id)
+        REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `cmw_forums_roles`
 (
