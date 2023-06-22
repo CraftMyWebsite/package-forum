@@ -3,7 +3,6 @@
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Model\Forum\PrefixModel;
-use CMW\Utils\Utils;
 use CMW\Manager\Security\SecurityManager;
 use CMW\Utils\Website;
 
@@ -227,7 +226,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                         </td>
                                         <td class="text-end">
                                             <a target="_blank"
-                                               href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $forumObj->getLink() ?>"><i
+                                               href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $forumObj->getLink() ?>"><i
                                                     class="me-3 fa-solid fa-up-right-from-square"></i></a>
                                             <a type="button" data-bs-toggle="modal"
                                                data-bs-target="#add-subforum-<?= $forumObj->getId() ?>">
@@ -255,7 +254,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <i><small><?= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?></small></i>
                                             </td>
                                             <td class="text-end">
-                                                <!--<a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . getenv("PATH_SUBFOLDER") . $subForumObj->getLink() ?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
+                                                <!--<a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $subForumObj->getLink() ?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $subForumObj->getId() ?>">
                                             <i class="text-primary me-3 fas fa-edit"></i>
                                         </a>
