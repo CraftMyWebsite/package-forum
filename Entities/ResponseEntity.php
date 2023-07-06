@@ -104,7 +104,7 @@ class ResponseEntity
 
     public function isSelfReply(): bool
     {
-        return $this->getUser()->getId() === UsersModel::getLoggedUser();
+        return $this->getUser()->getId() === UsersModel::getCurrentUser()?->getId();
     }
 
     /**
@@ -112,7 +112,7 @@ class ResponseEntity
      */
     public function trashLink(): string
     {
-        if ($this->getUser()->getId() === UsersModel::getLoggedUser()) {
+        if ($this->getUser()->getId() === UsersModel::getCurrentUser()?->getId()) {
             return "{$this->responseTopic->getSlug()}/trash/$this->responseId/1";
         } else {
             return "{$this->responseTopic->getSlug()}/trash/$this->responseId/2";

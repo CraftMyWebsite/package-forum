@@ -266,7 +266,7 @@ class TopicEntity
 
     public function isSelfTopic(): bool
     {
-        return $this->getUser()->getId() === UsersModel::getLoggedUser();
+        return $this->getUser()->getId() === UsersModel::getCurrentUser()?->getId();
     }
 
     public function editTopicLink(): string
