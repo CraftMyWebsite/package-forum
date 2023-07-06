@@ -5,6 +5,7 @@ namespace CMW\Controller\Forum;
 
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Flash\Alert;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -124,39 +125,48 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
     public function publicForumAdminEditTopicPost(Request $request, string $forumSlug): void
     {
-        [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
-        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+        if (UsersController::isAdminLogged()) {
 
-        if (is_null($forum)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
-            Website::refresh();
-            return;
-        }
+            [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
-        ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
+            $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
-        // Add tags
-
-
-        $tags = explode(",", $tags);
-        //Need to clear tag befor update
-        ForumTopicModel::getInstance()->clearTag($topicId);
-        foreach ($tags as $tag) {
-            //Clean tag
-            $tag = mb_strtolower(trim($tag));
-
-            if (empty($tag)) {
-                continue;
+            if (is_null($forum)) {
+                Flash::send("error", LangManager::translate("core.toaster.error"),
+                    LangManager::translate("core.toaster.internalError"));
+                Website::refresh();
+                return;
             }
-            
-            ForumTopicModel::getInstance()->addTag($tag, $topicId);
+
+            ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
+
+            // Add tags
+
+
+            $tags = explode(",", $tags);
+            //Need to clear tag befor update
+            ForumTopicModel::getInstance()->clearTag($topicId);
+            foreach ($tags as $tag) {
+                //Clean tag
+                $tag = mb_strtolower(trim($tag));
+
+                if (empty($tag)) {
+                    continue;
+                }
+
+                ForumTopicModel::getInstance()->addTag($tag, $topicId);
+            }
+
+            //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
+
+            header("location: ../$forumSlug");
+        } else {
+            Flash::send(Alert::ERROR,"Erreur","Vous n'êtes pas autoriser à faire ceci !");
+            Redirect::redirect("forum");
         }
 
-        //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
 
-        header("location: ../$forumSlug");
     }
 
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
@@ -210,10 +220,6 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-
-
-
-
     #[Link("/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicResponseAddFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
@@ -244,81 +250,102 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
     public function publicTopicPinned(Request $request, string $topicSlug): void
     {
-        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
-        if (is_null($topic)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
-            return;
+        if (UsersController::isAdminLogged()) {
+            $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+            if (is_null($topic)) {
+                Flash::send("error", LangManager::translate("core.toaster.error"),
+                    LangManager::translate("core.toaster.internalError"));
+                return;
+            }
+
+            if (ForumTopicModel::getInstance()->pinTopic($topic)) {
+
+                Flash::send("success", LangManager::translate("core.toaster.success"),
+                    $topic->isPinned() ?
+                        LangManager::translate("forum.topic.unpinned.success") :
+                        LangManager::translate("forum.topic.pinned.success"));
+
+                header("location: ../../f/{$topic->getForum()->getSlug()}");
+            }
+        } else {
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
         }
 
-        if (ForumTopicModel::getInstance()->pinTopic($topic)) {
-
-            Flash::send("success", LangManager::translate("core.toaster.success"),
-                $topic->isPinned() ?
-                    LangManager::translate("forum.topic.unpinned.success") :
-                    LangManager::translate("forum.topic.pinned.success"));
-
-            header("location: ../../f/{$topic->getForum()->getSlug()}");
-        }
     }
 
     #[Link("/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
     public function publicTopicDisallowReplies(Request $request, string $topicSlug): void
     {
-        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
-        if (is_null($topic)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
-            return;
-        }
+        if (UsersController::isAdminLogged()) {
+            $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+            if (is_null($topic)) {
+                Flash::send("error", LangManager::translate("core.toaster.error"),
+                    LangManager::translate("core.toaster.internalError"));
+                return;
+            }
 
-        if (ForumTopicModel::getInstance()->DisallowReplies($topic)) {
+            if (ForumTopicModel::getInstance()->DisallowReplies($topic)) {
 
-            Flash::send("success", LangManager::translate("core.toaster.success"),
-                $topic->isPinned() ?
-                    LangManager::translate("forum.topic.unpinned.success") :
-                    LangManager::translate("forum.topic.pinned.success"));
+                Flash::send("success", LangManager::translate("core.toaster.success"),
+                    $topic->isPinned() ?
+                        LangManager::translate("forum.topic.unpinned.success") :
+                        LangManager::translate("forum.topic.pinned.success"));
 
-            header("location: ../../f/{$topic->getForum()->getSlug()}");
+                header("location: ../../f/{$topic->getForum()->getSlug()}");
+            }
+        } else {
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
         }
     }
 
     #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
     public function publicTopicIsImportant(Request $request, string $topicSlug): void
     {
-        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
-        if (is_null($topic)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
-            return;
-        }
+        if (UsersController::isAdminLogged()) {
+            $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+            if (is_null($topic)) {
+                Flash::send("error", LangManager::translate("core.toaster.error"),
+                    LangManager::translate("core.toaster.internalError"));
+                return;
+            }
 
-        if (ForumTopicModel::getInstance()->ImportantTopic($topic)) {
+            if (ForumTopicModel::getInstance()->ImportantTopic($topic)) {
 
-            Flash::send("success", LangManager::translate("core.toaster.success"),
-                $topic->isPinned() ?
-                    LangManager::translate("forum.topic.unpinned.success") :
-                    LangManager::translate("forum.topic.pinned.success"));
+                Flash::send("success", LangManager::translate("core.toaster.success"),
+                    $topic->isPinned() ?
+                        LangManager::translate("forum.topic.unpinned.success") :
+                        LangManager::translate("forum.topic.pinned.success"));
 
-            header("location: ../../f/{$topic->getForum()->getSlug()}");
+                header("location: ../../f/{$topic->getForum()->getSlug()}");
+            }
+        } else {
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
         }
     }
 
     #[Link("/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
     public function publicTopicIsTrash(Request $request, string $topicSlug): void
     {
-        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
-        if (is_null($topic)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
-            return;
-        }
+        if (UsersController::isAdminLogged()) {
+            $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+            if (is_null($topic)) {
+                Flash::send("error", LangManager::translate("core.toaster.error"),
+                    LangManager::translate("core.toaster.internalError"));
+                return;
+            }
 
-        if (ForumTopicModel::getInstance()->trashTopic($topic)) {
+            if (ForumTopicModel::getInstance()->trashTopic($topic)) {
 
-            Flash::send("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
+                Flash::send("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
 
-            header("location: ../../f/{$topic->getForum()->getSlug()}");
+                header("location: ../../f/{$topic->getForum()->getSlug()}");
+            }
+        } else {
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
         }
     }
 
@@ -373,6 +400,12 @@ class ForumPublicController extends CoreController
     public function publicTopicReplyDelete(Request $request, string $topicSlug, int $replyId, int $reason): void
     {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+
+        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()){
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
+        }
+
         if (is_null($topic)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
@@ -402,6 +435,11 @@ class ForumPublicController extends CoreController
     {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
+        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()){
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
+        }
+
         $view = new View("Forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
@@ -415,6 +453,11 @@ class ForumPublicController extends CoreController
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+
+        if ( UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()){
+            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Redirect::redirect("forum");
+        }
 
         if (is_null($topic) || Utils::containsNullValue($name, $content)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
