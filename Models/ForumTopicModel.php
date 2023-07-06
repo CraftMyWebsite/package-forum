@@ -2,8 +2,8 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\TopicEntity;
-use CMW\Entity\Forum\TopicTagEntity;
+use CMW\Entity\Forum\ForumTopicEntity;
+use CMW\Entity\Forum\ForumTopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
@@ -11,12 +11,12 @@ use CMW\Utils\Website;
 
 
 /**
- * Class: @TopicModel
+ * Class: @ForumTopicModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class TopicModel extends AbstractModel
+class ForumTopicModel extends AbstractModel
 {
     private UsersModel $userModel;
     private ForumModel $forumModel;
@@ -47,7 +47,7 @@ class TopicModel extends AbstractModel
         return $toReturn;
     }
 
-    public function getTopicBySlug(string $slug): ?TopicEntity
+    public function getTopicBySlug(string $slug): ?ForumTopicEntity
     {
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
 
@@ -68,7 +68,7 @@ class TopicModel extends AbstractModel
         return $this->getTopicById($res["forum_topic_id"]);
     }
 
-    public function getTopicById(int $id): ?TopicEntity
+    public function getTopicById(int $id): ?ForumTopicEntity
     {
         $sql = "SELECT * FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
 
@@ -93,7 +93,7 @@ class TopicModel extends AbstractModel
             return null;
         }
 
-        return new TopicEntity(
+        return new ForumTopicEntity(
             $res["forum_topic_id"],
             $res["forum_topic_name"],
             $res["forum_topic_prefix"] ?? "",
@@ -209,7 +209,7 @@ class TopicModel extends AbstractModel
 
 
     /**
-     * @return \CMW\Entity\Forum\TopicEntity[]
+     * @return \CMW\Entity\Forum\ForumTopicEntity[]
      */
     public function getTopicByForum(int $id): array
     {
@@ -236,7 +236,7 @@ class TopicModel extends AbstractModel
         return $toReturn;
     }
 
-    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important, int $pin): ?TopicEntity
+    public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important, int $pin): ?ForumTopicEntity
     {
 
         $var = array(
@@ -268,7 +268,7 @@ class TopicModel extends AbstractModel
 
     }
 
-    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix, int $move): ?TopicEntity
+    public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix, int $move): ?ForumTopicEntity
     {
 
         if ($prefix === "") {
@@ -306,7 +306,7 @@ class TopicModel extends AbstractModel
         return null;
     }
 
-    public function authorEditTopic(int $topicId, string $name, string $content): ?TopicEntity
+    public function authorEditTopic(int $topicId, string $name, string $content): ?ForumTopicEntity
     {
 
         $var = array(
@@ -350,7 +350,7 @@ class TopicModel extends AbstractModel
     }
 
 
-    public function pinTopic(TopicEntity $topic): bool
+    public function pinTopic(ForumTopicEntity $topic): bool
     {
         $data = array(
             "topic_id" => $topic->getId(),
@@ -369,7 +369,7 @@ class TopicModel extends AbstractModel
         return false;
     }
 
-    public function DisallowReplies(TopicEntity $topic): bool
+    public function DisallowReplies(ForumTopicEntity $topic): bool
     {
         $data = array(
             "topic_id" => $topic->getId(),
@@ -388,7 +388,7 @@ class TopicModel extends AbstractModel
         return false;
     }
 
-    public function ImportantTopic(TopicEntity $topic): bool
+    public function ImportantTopic(ForumTopicEntity $topic): bool
     {
         $data = array(
             "topic_id" => $topic->getId(),
@@ -416,10 +416,10 @@ class TopicModel extends AbstractModel
         return $db->prepare($sql)->execute(array("topic_id" => $topicId));
     }
 
-    public function trashTopic(TopicEntity $topic): ?TopicEntity
+    public function trashTopic(ForumTopicEntity $topic): ?ForumTopicEntity
     {
         $topicId = $topic->getId();
-        $responseModel = new responseModel;
+        $responseModel = new ForumResponseModel;
         if ($responseModel->countResponseInTopic($topicId) === 0) {
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 1 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
             $db = DatabaseManager::getInstance();
@@ -442,7 +442,7 @@ class TopicModel extends AbstractModel
     public function restoreTopic(int $topic): int
     {
         //Revoir comment fair fonctionner ceci (j'ai pas le time tout de suite)
-        $responseModel = new responseModel;
+        $responseModel = new ForumResponseModel;
         if ($responseModel->countResponseInTopicWithoutTrashFunction($topic) === 0) {
             $sql = "UPDATE `cmw_forums_topics` SET `cmw_forums_topics`.`forum_topic_is_trash`= 0 WHERE `cmw_forums_topics`.`forum_topic_id` = :topic_id";
             $db = DatabaseManager::getInstance();
@@ -490,7 +490,7 @@ class TopicModel extends AbstractModel
         return false;
     }
 
-    public function addTag(string $content, int $topicId): ?TopicTagEntity
+    public function addTag(string $content, int $topicId): ?ForumTopicTagEntity
     {
         $sql = "INSERT INTO cmw_forums_topics_tags (forums_topics_tags_content, forums_topics_tags_topic_id) 
                 VALUES (:content, :topic_id)";
@@ -505,7 +505,7 @@ class TopicModel extends AbstractModel
         return null;
     }
 
-    public function clearTag(int $topicId): ?TopicTagEntity
+    public function clearTag(int $topicId): ?ForumTopicTagEntity
     {
 
         $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_topic_id = :topic_id";
@@ -518,7 +518,7 @@ class TopicModel extends AbstractModel
         return null;
     }
 
-    public function getTagById(int $tagId): ?TopicTagEntity
+    public function getTagById(int $tagId): ?ForumTopicTagEntity
     {
 
         $sql = "SELECT * FROM cmw_forums_topics_tags WHERE forums_topics_tags_id = :tag_id";
@@ -531,14 +531,14 @@ class TopicModel extends AbstractModel
         }
 
         $res = $req->fetch();
-        return new TopicTagEntity(
+        return new ForumTopicTagEntity(
             $res['forums_topics_tags_id'],
             $res['forums_topics_tags_content']
         );
     }
 
     /**
-     * @return \CMW\Entity\Forum\TopicTagEntity[]
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity[]
      */
     public function getTags(): array
     {
@@ -559,7 +559,7 @@ class TopicModel extends AbstractModel
 
     /**
      * @param int $topicId
-     * @return \CMW\Entity\Forum\TopicTagEntity[]
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity[]
      */
     public function getTagsForTopicById(int $topicId): array
     {
@@ -581,7 +581,7 @@ class TopicModel extends AbstractModel
         return $toReturn;
     }
 
-    public function editTag(int $tagId, string $content, int $topicId): ?TopicTagEntity
+    public function editTag(int $tagId, string $content, int $topicId): ?ForumTopicTagEntity
     {
         $var = array(
             "tag_id" => $tagId,
@@ -598,7 +598,7 @@ class TopicModel extends AbstractModel
             return null;
         }
 
-        return new TopicTagEntity(
+        return new ForumTopicTagEntity(
             $tagId,
             $content,
         );

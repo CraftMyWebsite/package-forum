@@ -2,21 +2,21 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\PrefixesEntity;
+use CMW\Entity\Forum\ForumPrefixesEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 
 /**
- * Class: @PrefixModel
+ * Class: @ForumPrefixModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
 
-class PrefixModel extends AbstractModel
+class ForumPrefixModel extends AbstractModel
 {
     /**
-     * @return \CMW\Entity\Forum\PrefixesEntity[]
+     * @return \CMW\Entity\Forum\ForumPrefixesEntity[]
      */
     public function getPrefixes(): array
     {
@@ -39,7 +39,7 @@ class PrefixModel extends AbstractModel
         return $toReturn;
     }
 
-    public function getPrefixesById(int $id): ?PrefixesEntity
+    public function getPrefixesById(int $id): ?ForumPrefixesEntity
     {
         $sql = "SELECT * FROM cmw_forums_prefixes WHERE forum_prefix_id = :prefix_id";
         $db = DatabaseManager::getInstance();
@@ -52,7 +52,7 @@ class PrefixModel extends AbstractModel
 
         $res = $res->fetch();
 
-        return new PrefixesEntity(
+        return new ForumPrefixesEntity(
             $res["forum_prefix_id"],
             $res["forum_prefix_name"],
             $res["forum_prefix_color"],
@@ -63,7 +63,7 @@ class PrefixModel extends AbstractModel
         );
     }
 
-    public function createPrefix(string $name, string $color, string $textColor, string $description): ?PrefixesEntity
+    public function createPrefix(string $name, string $color, string $textColor, string $description): ?ForumPrefixesEntity
     {
 
         $data = array(
@@ -86,7 +86,7 @@ class PrefixModel extends AbstractModel
         return null;
     }
 
-    public function editPrefix(int $id, string $name, string $color, string $textColor, string $description): ?PrefixesEntity
+    public function editPrefix(int $id, string $name, string $color, string $textColor, string $description): ?ForumPrefixesEntity
     {
 
         $data = array(

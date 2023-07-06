@@ -1,6 +1,6 @@
 <?php
 /** @var \CMW\Model\Forum\ForumModel $forumModel */
-/** @var \CMW\Model\Forum\CategoryModel $categoryModel */
+/** @var \CMW\Model\Forum\ForumCategoryModel $categoryModel */
 $title = "Titre de la page";
 $description = "Description de votre page";
 ?>

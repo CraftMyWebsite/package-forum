@@ -2,19 +2,19 @@
 
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
-use CMW\Model\Forum\PrefixModel;
+use CMW\Model\Forum\ForumPrefixModel;
 use CMW\Manager\Security\SecurityManager;
 use CMW\Utils\Website;
 
 /* @var CMW\Model\Forum\ForumModel $forumModel */
-/* @var CMW\Model\Forum\CategoryModel $categoryModel */
-/* @var CMW\Model\Forum\TopicModel $topicModel */
-/* @var CMW\Model\Forum\ResponseModel $responseModel */
-/* @var \CMW\Entity\Forum\TopicEntity $topic */
-/* @var CMW\Controller\Forum\SettingsController $iconNotRead */
-/* @var CMW\Controller\Forum\SettingsController $iconImportant */
-/* @var CMW\Controller\Forum\SettingsController $iconPin */
-/* @var CMW\Controller\Forum\SettingsController $iconClosed */
+/* @var CMW\Model\Forum\ForumCategoryModel $categoryModel */
+/* @var CMW\Model\Forum\ForumTopicModel $topicModel */
+/* @var CMW\Model\Forum\ForumResponseModel $responseModel */
+/* @var \CMW\Entity\Forum\ForumTopicEntity $topic */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconNotRead */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
 
 $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
@@ -584,7 +584,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <h6>Prefix :</h6>
                                                     <select name="prefix" class="form-select">
                                                         <option value="">Aucun</option>
-                                                        <?php foreach ($prefixesModel = prefixModel::getInstance()->getPrefixes() as $prefix) : ?>
+                                                        <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix) : ?>
                                                             <option value="<?= $prefix->getId() ?>"
                                                                 <?= ($topic->getPrefixName() === $prefix->getName() ? "selected" : "") ?>>
                                                                 <?= $prefix->getName() ?>

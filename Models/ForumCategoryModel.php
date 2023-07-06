@@ -2,22 +2,22 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\CategoryEntity;
+use CMW\Entity\Forum\ForumCategoryEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 
 
 /**
- * Class: @CategoryModel
+ * Class: @ForumCategoryModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class CategoryModel extends AbstractModel
+class ForumCategoryModel extends AbstractModel
 {
 
     /**
-     * @return \CMW\Entity\Forum\CategoryEntity[]
+     * @return \CMW\Entity\Forum\ForumCategoryEntity[]
      */
     public function getCategories(): array
     {
@@ -41,7 +41,7 @@ class CategoryModel extends AbstractModel
 
     }
 
-    public function getCategoryById(int $id): ?CategoryEntity
+    public function getCategoryById(int $id): ?ForumCategoryEntity
     {
         $sql = "SELECT * FROM cmw_forums_categories WHERE forum_category_id = :category_id";
 
@@ -55,7 +55,7 @@ class CategoryModel extends AbstractModel
 
         $res = $res->fetch();
 
-        return new CategoryEntity(
+        return new ForumCategoryEntity(
             $res["forum_category_id"],
             $res["forum_category_name"],
             $res["forum_category_icon"],
@@ -65,7 +65,7 @@ class CategoryModel extends AbstractModel
         );
     }
 
-    public function createCategory(string $name, string $icon, string $description): ?CategoryEntity
+    public function createCategory(string $name, string $icon, string $description): ?ForumCategoryEntity
     {
 
         $data = array(
@@ -87,7 +87,7 @@ class CategoryModel extends AbstractModel
         return null;
     }
 
-    public function editCategory(int $id, string $name, string $icon, string $description): ?CategoryEntity
+    public function editCategory(int $id, string $name, string $icon, string $description): ?ForumCategoryEntity
     {
 
         $data = array(

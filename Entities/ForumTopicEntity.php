@@ -4,11 +4,11 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Controller\Core\CoreController;
-use CMW\Model\Forum\ResponseModel;
-use CMW\Model\Forum\TopicModel;
+use CMW\Model\Forum\ForumResponseModel;
+use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Users\UsersModel;
 
-class TopicEntity
+class ForumTopicEntity
 {
 
     private int $topicId;
@@ -24,7 +24,7 @@ class TopicEntity
     private bool $important;
     private userEntity $topicUser;
     private ForumEntity $topicForum;
-    /* @var \CMW\Entity\Forum\TopicTagEntity[] $tags */
+    /* @var \CMW\Entity\Forum\ForumTopicTagEntity[] $tags */
     private array $tags;
 
     /**
@@ -41,7 +41,7 @@ class TopicEntity
      * @param bool $important
      * @param \CMW\Entity\Users\userEntity $topicUser
      * @param \CMW\Entity\Forum\ForumEntity $topicForum
-     * @param \CMW\Entity\Forum\TopicTagEntity[] $tags
+     * @param \CMW\Entity\Forum\ForumTopicTagEntity[] $tags
      */
     public function __construct(int $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, string $topicCreated, string $topicUpdate,
                                 bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
@@ -95,7 +95,7 @@ class TopicEntity
         if ($this->topicPrefix === "") {
             return false;
         }
-        return TopicModel::getInstance()->getPrefixName($this->topicPrefix);
+        return ForumTopicModel::getInstance()->getPrefixName($this->topicPrefix);
     }
 
     /**
@@ -106,7 +106,7 @@ class TopicEntity
         if ($this->topicPrefix === "") {
             return false;
         }
-        return TopicModel::getInstance()->getPrefixColor($this->topicPrefix);
+        return ForumTopicModel::getInstance()->getPrefixColor($this->topicPrefix);
     }
 
     /**
@@ -117,7 +117,7 @@ class TopicEntity
         if ($this->topicPrefix === "") {
             return false;
         }
-        return TopicModel::getInstance()->getPrefixTextColor($this->topicPrefix);
+        return ForumTopicModel::getInstance()->getPrefixTextColor($this->topicPrefix);
     }
 
     /**
@@ -125,7 +125,7 @@ class TopicEntity
      */
     public function countViews(): string
     {
-        return TopicModel::getInstance()->countViews($this->topicId);
+        return ForumTopicModel::getInstance()->countViews($this->topicId);
     }
 
     /**
@@ -240,7 +240,7 @@ class TopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\TopicTagEntity[]
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity[]
      */
     public function getTags(): array
     {
@@ -257,11 +257,11 @@ class TopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ResponseEntity|null
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
      */
-    public function getLastResponse(): ?ResponseEntity
+    public function getLastResponse(): ?ForumResponseEntity
     {
-        return (new ResponseModel())->getLatestResponseInTopic($this->topicId);
+        return (new ForumResponseModel())->getLatestResponseInTopic($this->topicId);
     }
 
     public function isSelfTopic(): bool

@@ -3,16 +3,16 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
-use CMW\Model\Forum\SettingsModel;
+use CMW\Model\Forum\ForumSettingsModel;
 
 /**
- * Class: @CategoryModel
+ * Class: @ForumCategoryModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
 
-class SettingsEntity
+class ForumSettingsEntity
 {
     private int $settingsId;
     private string $settingsName;

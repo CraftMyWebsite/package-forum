@@ -1,7 +1,7 @@
 <?php
-/** @var \CMW\Model\Forum\ResponseModel $responseModel */
+/** @var \CMW\Model\Forum\ForumResponseModel $responseModel */
 
-/** @var \CMW\Entity\Forum\TopicEntity $topic
+/** @var \CMW\Entity\Forum\ForumTopicEntity $topic
  */
 
 use CMW\Manager\Security\SecurityManager;

@@ -7,13 +7,13 @@ use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
-use CMW\Model\Forum\CategoryModel;
+use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
-use CMW\Model\Forum\ResponseModel;
-use CMW\Model\Forum\SettingsModel;
-use CMW\Model\Forum\TopicModel;
+use CMW\Model\Forum\ForumResponseModel;
+use CMW\Model\Forum\ForumSettingsModel;
+use CMW\Model\Forum\ForumTopicModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
@@ -21,12 +21,12 @@ use CMW\Utils\Website;
 
 
 /**
- * Class: @CategoryController
+ * Class: @ForumCategoryController
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class CategoryController extends AbstractController
+class ForumCategoryController extends AbstractController
 {
     #[Link("/manage", Link::GET, [], "/cmw-admin/forum")]
     public function adminListCategoryView(): void
@@ -34,13 +34,13 @@ class CategoryController extends AbstractController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         $forumModel = forumModel::getInstance();
-        $categoryModel = categoryModel::getInstance();
-        $topicModel = topicModel::getInstance();
-        $responseModel = responseModel::getInstance();
-        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
-        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
-        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
-        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
+        $categoryModel = ForumCategoryModel::getInstance();
+        $topicModel = ForumTopicModel::getInstance();
+        $responseModel = ForumResponseModel::getInstance();
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         View::createAdminView("Forum", "list")
             ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
@@ -63,7 +63,7 @@ class CategoryController extends AbstractController
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        categoryModel::getInstance()->createCategory($name, $icon, $description);
+        ForumCategoryModel::getInstance()->createCategory($name, $icon, $description);
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.toaster.success"));
@@ -76,7 +76,7 @@ class CategoryController extends AbstractController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
-        $category = categoryModel::getInstance()->getCategoryById($id);
+        $category = ForumCategoryModel::getInstance()->getCategoryById($id);
 
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
@@ -87,7 +87,7 @@ class CategoryController extends AbstractController
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        categoryModel::getInstance()->editCategory($id, $name, $icon, $description);
+        ForumCategoryModel::getInstance()->editCategory($id, $name, $icon, $description);
 
         header("location: ../../manage");
     }
@@ -97,7 +97,7 @@ class CategoryController extends AbstractController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
-        $category = categoryModel::getInstance()->getCategoryById($id);
+        $category = ForumCategoryModel::getInstance()->getCategoryById($id);
 
         if (is_null($category)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
@@ -107,7 +107,7 @@ class CategoryController extends AbstractController
             return;
         }
 
-        categoryModel::getInstance()->deleteCategory($id);
+        ForumCategoryModel::getInstance()->deleteCategory($id);
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.delete.success"));
@@ -121,14 +121,14 @@ class CategoryController extends AbstractController
         [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
 
-        topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
+        ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
 
         // Add tags
 
 
         $tags = explode(",", $tags);
         //Need to clear tag befor update
-        topicModel::getInstance()->clearTag($topicId);
+        ForumTopicModel::getInstance()->clearTag($topicId);
         foreach ($tags as $tag) {
             //Clean tag
             $tag = mb_strtolower(trim($tag));
@@ -137,7 +137,7 @@ class CategoryController extends AbstractController
                 continue;
             }
 
-            topicModel::getInstance()->addTag($tag, $topicId);
+            ForumTopicModel::getInstance()->addTag($tag, $topicId);
         }
 
         //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));

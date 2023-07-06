@@ -10,25 +10,25 @@ use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
-use CMW\Model\Forum\FeedbackModel;
-use CMW\Model\Forum\PrefixModel;
-use CMW\Model\Forum\SettingsModel;
+use CMW\Model\Forum\ForumFeedbackModel;
+use CMW\Model\Forum\ForumPrefixModel;
+use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 
-class SettingsController extends AbstractController {
+class ForumSettingsController extends AbstractController {
     #[Link("/settings", Link::GET, [], "/cmw-admin/forum")]
     public function adminSettingsView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
 
-        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
-        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
-        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
-        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
-        $prefixesModel = prefixModel::getInstance();
-        $feedbackModel = feedbackModel::getInstance();
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $prefixesModel = ForumPrefixModel::getInstance();
+        $feedbackModel = ForumFeedbackModel::getInstance();
 
         View::createAdminView("Forum", "settings")
             ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
@@ -47,7 +47,7 @@ class SettingsController extends AbstractController {
             $iconPin = filter_input(INPUT_POST, "icon_pin");
             $iconClosed = filter_input(INPUT_POST, "icon_closed");
 
-            SettingsModel::getInstance()->updateIcons($iconNotRead,$iconImportant,$iconPin,$iconClosed);
+            ForumSettingsModel::getInstance()->updateIcons($iconNotRead,$iconImportant,$iconPin,$iconClosed);
 
             Redirect::redirectPreviousRoute();
         }
@@ -59,7 +59,7 @@ class SettingsController extends AbstractController {
 
         [$name, $color, $textColor, $description] = Utils::filterInput("prefixName", "prefixColor", "prefixTextColor", "prefixDescription");
 
-        PrefixModel::getInstance()->createPrefix($name, $color, $textColor, $description);
+        ForumPrefixModel::getInstance()->createPrefix($name, $color, $textColor, $description);
 
         Redirect::redirectPreviousRoute();
     }
@@ -71,7 +71,7 @@ class SettingsController extends AbstractController {
 
         [$id, $name, $color, $textColor, $description] = Utils::filterInput("prefixId", "prefixName", "prefixColor", "prefixTextColor", "prefixDescription");
 
-        PrefixModel::getInstance()->editPrefix($id, $name, $color, $textColor, $description);
+        ForumPrefixModel::getInstance()->editPrefix($id, $name, $color, $textColor, $description);
 
         Redirect::redirectPreviousRoute();
     }
@@ -80,7 +80,7 @@ class SettingsController extends AbstractController {
     public function settingsDeletePrefix(Request $request, string $prefixId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
-        if (PrefixModel::getInstance()->deletePrefix($prefixId)) {
+        if (ForumPrefixModel::getInstance()->deletePrefix($prefixId)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 "C'est chao");
@@ -96,7 +96,7 @@ class SettingsController extends AbstractController {
         [$name] = Utils::filterInput("name");
         $image = $_FILES['image'];
 
-        FeedbackModel::getInstance()->createFeedback($image, $name);
+        ForumFeedbackModel::getInstance()->createFeedback($image, $name);
 
         Redirect::redirectPreviousRoute();
     }
@@ -108,7 +108,7 @@ class SettingsController extends AbstractController {
         [$name, $id] = Utils::filterInput("name", "id");
         $image = $_FILES['image'];
 
-        FeedbackModel::getInstance()->editFeedback($image, $name, $id);
+        ForumFeedbackModel::getInstance()->editFeedback($image, $name, $id);
 
         Redirect::redirectPreviousRoute();
     }
@@ -117,7 +117,7 @@ class SettingsController extends AbstractController {
     private function settingsDeleteReaction(Request $request, int $reactionId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
-        if (FeedbackModel::getInstance()->removeFeedback($reactionId)) {
+        if (ForumFeedbackModel::getInstance()->removeFeedback($reactionId)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 "C'est chao");

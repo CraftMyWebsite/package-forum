@@ -6,7 +6,7 @@ use CMW\Entity\Users\userEntity;
 use CMW\Model\Users\UsersModel;
 use CMW\Controller\Core\CoreController;
 
-class ResponseEntity
+class ForumResponseEntity
 {
 
     private int $responseId;
@@ -15,10 +15,10 @@ class ResponseEntity
     private string $responseTrashReason;
     private string $responseCreated;
     private string $responseUpdated;
-    private TopicEntity $responseTopic;
+    private ForumTopicEntity $responseTopic;
     private userEntity $responseUser;
 
-    public function __construct(int $id, string $content, int $isTrash, int $trashReason, string $created, string $updated, TopicEntity $topic, userEntity $user)
+    public function __construct(int $id, string $content, int $isTrash, int $trashReason, string $created, string $updated, ForumTopicEntity $topic, userEntity $user)
     {
         $this->responseId = $id;
         $this->responseContent = $content;
@@ -87,9 +87,9 @@ class ResponseEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\TopicEntity
+     * @return \CMW\Entity\Forum\ForumTopicEntity
      */
-    public function getResponseTopic(): TopicEntity
+    public function getResponseTopic(): ForumTopicEntity
     {
         return $this->responseTopic;
     }

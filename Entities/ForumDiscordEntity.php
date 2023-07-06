@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-class DiscordEntity
+class ForumDiscordEntity
 {
     private int $DiscordId;
     private string $DiscordWebhook;

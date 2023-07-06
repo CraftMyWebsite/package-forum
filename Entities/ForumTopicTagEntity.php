@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-class TopicTagEntity
+class ForumTopicTagEntity
 {
     private int $id;
     private string $content;

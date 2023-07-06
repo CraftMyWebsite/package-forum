@@ -2,9 +2,9 @@
 
 namespace CMW\Entity\Forum;
 use CMW\Controller\Core\CoreController;
-use CMW\Model\Forum\CategoryModel;
+use CMW\Model\Forum\ForumCategoryModel;
 
-class CategoryEntity
+class ForumCategoryEntity
 {
 
     private int $categoryId;
@@ -91,7 +91,7 @@ class CategoryEntity
      */
     public function getNumberOfTopics(): int
     {
-        return (new CategoryModel())->getNumberOfTopics($this->categoryId);
+        return (new ForumCategoryModel())->getNumberOfTopics($this->categoryId);
     }
 
     /**
@@ -100,7 +100,7 @@ class CategoryEntity
      */
     public function getNumberOfMessages(): int
     {
-        return (new CategoryModel())->getNumberOfMessages($this->categoryId);
+        return (new ForumCategoryModel())->getNumberOfMessages($this->categoryId);
     }
 
 }

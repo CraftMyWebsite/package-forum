@@ -3,10 +3,10 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Manager\Env\EnvManager;
-use CMW\Model\Forum\FeedbackModel;
+use CMW\Model\Forum\ForumFeedbackModel;
 use CMW\Model\Users\UsersModel;
 
-class FeedbackEntity
+class ForumFeedbackEntity
 {
     private int $feedbackId;
     private string $feedbackImage;
@@ -48,7 +48,7 @@ class FeedbackEntity
      */
     public function countTopicFeedbackReceived(int $topicId): string
     {
-        return feedbackModel::getinstance()->countTopicFeedbackByTopic($topicId,$this->getId());
+        return ForumFeedbackModel::getinstance()->countTopicFeedbackByTopic($topicId,$this->getId());
     }
 
     /**
@@ -56,7 +56,7 @@ class FeedbackEntity
      */
     public function countResponseFeedbackReceived(int $responseId): string
     {
-        return feedbackModel::getinstance()->countResponseFeedbackByTopic($responseId,$this->getId());
+        return ForumFeedbackModel::getinstance()->countResponseFeedbackByTopic($responseId,$this->getId());
     }
 
     /**
@@ -64,7 +64,7 @@ class FeedbackEntity
      */
     public function countUserFeedbackReceived(int $topicId): string
     {
-        return feedbackModel::getinstance()->countTopicFeedbackByUser($topicId,$this->getId());
+        return ForumFeedbackModel::getinstance()->countTopicFeedbackByUser($topicId,$this->getId());
     }
 
     /**
@@ -72,7 +72,7 @@ class FeedbackEntity
      */
     public function userCanTopicReact(int $topicId): bool
     {
-        return !(new feedbackModel())->userCanTopicReact($topicId, (new UsersModel())::getCurrentUser()?->getId());
+        return !(new ForumFeedbackModel())->userCanTopicReact($topicId, (new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
@@ -80,7 +80,7 @@ class FeedbackEntity
      */
     public function getFeedbackTopicReacted(int $topicId): int
     {
-        return feedbackModel::getInstance()->getFeedbackTopicReactedByUser($topicId,(new UsersModel())::getCurrentUser()?->getId());
+        return ForumFeedbackModel::getInstance()->getFeedbackTopicReactedByUser($topicId,(new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
@@ -88,7 +88,7 @@ class FeedbackEntity
      */
     public function userCanResponseReact(int $responseId): bool
     {
-        return !(new feedbackModel())->userCanResponseReact($responseId, (new UsersModel())::getCurrentUser()?->getId());
+        return !(new ForumFeedbackModel())->userCanResponseReact($responseId, (new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
@@ -96,7 +96,7 @@ class FeedbackEntity
      */
     public function getFeedbackResponseReacted(int $responseId): int
     {
-        return feedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
+        return ForumFeedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
@@ -104,7 +104,7 @@ class FeedbackEntity
      */
     public function getUserFeedbackList(int $responseId): int
     {
-        return feedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
+        return ForumFeedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
     }
 
 }

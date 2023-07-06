@@ -3,7 +3,7 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
-use CMW\Model\Forum\ResponseModel;
+use CMW\Model\Forum\ForumResponseModel;
 
 class ForumEntity
 {
@@ -15,9 +15,9 @@ class ForumEntity
     private string $forumSlug;
     private string $forumCreated;
     private string $forumUpdated;
-    private ForumEntity|CategoryEntity $forumParent;
+    private ForumEntity|ForumCategoryEntity $forumParent;
 
-    public function __construct(int $id, string $name, string $icon, string $desc, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|CategoryEntity $parent)
+    public function __construct(int $id, string $name, string $icon, string $desc, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|ForumCategoryEntity $parent)
     {
         $this->forumId = $id;
         $this->forumName = $name;
@@ -98,7 +98,7 @@ class ForumEntity
         return "forum/f/$this->forumSlug";
     }
 
-    public function getParent(): ForumEntity|CategoryEntity
+    public function getParent(): ForumEntity|ForumCategoryEntity
     {
         return $this->forumParent;
     }
@@ -114,11 +114,11 @@ class ForumEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ResponseEntity|null
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
      */
-    public function getLastResponse(): ?ResponseEntity
+    public function getLastResponse(): ?ForumResponseEntity
     {
-        return (new ResponseModel())->getLatestResponseInForum($this->forumId);
+        return (new ForumResponseModel())->getLatestResponseInForum($this->forumId);
     }
 
 

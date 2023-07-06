@@ -2,21 +2,21 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\DiscordEntity;
+use CMW\Entity\Forum\ForumDiscordEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Utils\Website;
 
 /**
- * Class: @DiscordModel
+ * Class: @ForumDiscordModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class DiscordModel extends AbstractModel
+class ForumDiscordModel extends AbstractModel
 {
-    public function getDiscordById(int $id): ?DiscordEntity
+    public function getDiscordById(int $id): ?ForumDiscordEntity
     {
         $sql = "SELECT * FROM cmw_forums_discord WHERE forum_discord_id = :id";
 
@@ -30,7 +30,7 @@ class DiscordModel extends AbstractModel
 
         $res = $res->fetch();
 
-        return new DiscordEntity(
+        return new ForumDiscordEntity(
             $res["forum_discord_id"],
             $res["forum_discord_webhook"],
             $res["forum_discord_description"],

@@ -2,17 +2,17 @@
 
 namespace CMW\Model\Forum;
 
-use CMW\Entity\Forum\SettingsEntity;
+use CMW\Entity\Forum\ForumSettingsEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 
 /**
- * Class: @CategoryModel
+ * Class: @ForumCategoryModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class SettingsModel extends AbstractModel
+class ForumSettingsModel extends AbstractModel
 {
     public function getSettings(): array
     {

@@ -1,7 +1,7 @@
 <?php
 /** @var \CMW\Entity\Forum\ForumEntity $forum */
 
-/** @var \CMW\Model\Forum\TopicModel $topicModel */
+/** @var \CMW\Model\Forum\ForumTopicModel $topicModel */
 
 /** @var \CMW\Model\Forum\ForumModel $forumModel */
 

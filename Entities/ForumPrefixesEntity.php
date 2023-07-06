@@ -4,7 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
 
-class PrefixesEntity
+class ForumPrefixesEntity
 {
 
     private int $prefixId;

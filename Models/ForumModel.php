@@ -15,11 +15,11 @@ use CMW\Utils\Utils;
  */
 class ForumModel extends AbstractModel
 {
-    private CategoryModel $categoryModel;
+    private ForumCategoryModel $categoryModel;
 
     public function __construct()
     {
-        $this->categoryModel = new CategoryModel();
+        $this->categoryModel = new ForumCategoryModel();
     }
 
     /*==> UTILS */

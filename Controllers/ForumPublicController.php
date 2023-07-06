@@ -7,13 +7,13 @@ use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Requests\Request;
-use CMW\Model\Forum\CategoryModel;
-use CMW\Model\Forum\DiscordModel;
-use CMW\Model\Forum\FeedbackModel;
+use CMW\Model\Forum\ForumCategoryModel;
+use CMW\Model\Forum\ForumDiscordModel;
+use CMW\Model\Forum\ForumFeedbackModel;
 use CMW\Model\Forum\ForumModel;
-use CMW\Model\Forum\ResponseModel;
-use CMW\Model\Forum\SettingsModel;
-use CMW\Model\Forum\TopicModel;
+use CMW\Model\Forum\ForumResponseModel;
+use CMW\Model\Forum\ForumSettingsModel;
+use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\users\UsersModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
@@ -22,7 +22,7 @@ use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
 use CMW\Utils\Website;
 
-$discordModel = DiscordModel::getInstance();
+$discordModel = ForumDiscordModel::getInstance();
 
 /**
  * Class: @ForumPublicController
@@ -36,7 +36,7 @@ class ForumPublicController extends CoreController
     public function publicBaseView(): void
     {
         $view = new View("Forum", "main");
-        $view->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => categoryModel::getInstance()]);
+        $view->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => ForumCategoryModel::getInstance()]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
@@ -46,14 +46,14 @@ class ForumPublicController extends CoreController
     {
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         $forumModel = forumModel::getInstance();
-        $categoryModel = categoryModel::getInstance();
-        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
-        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
-        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
-        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
+        $categoryModel = ForumCategoryModel::getInstance();
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => topicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->view();
     }
 
@@ -62,10 +62,10 @@ class ForumPublicController extends CoreController
     {
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
-        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
-        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
-        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
-        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "addTopic");
         $view->addVariableList(["forum" => $forum,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
@@ -88,7 +88,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = topicModel::getInstance()->createTopic($name, $content, UsersModel::getCurrentUser()?->getId(), $forum->getId(),
+        $res = ForumTopicModel::getInstance()->createTopic($name, $content, UsersModel::getCurrentUser()?->getId(), $forum->getId(),
             (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         if (is_null($res)) {
@@ -110,13 +110,13 @@ class ForumPublicController extends CoreController
                 continue;
             }
 
-            topicModel::getInstance()->addTag($tag, $res->getId());
+            ForumTopicModel::getInstance()->addTag($tag, $res->getId());
         }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
-        DiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(),$name,$forum->getName(),"test",UsersModel::getCurrentUser()->getUserPicture()->getImageName(),UsersModel::getCurrentUser()->getPseudo());
+        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(),$name,$forum->getName(),"test",UsersModel::getCurrentUser()->getUserPicture()->getImageName(),UsersModel::getCurrentUser()->getPseudo());
 
         header("location: ../$forumSlug");
     }
@@ -135,14 +135,14 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        topicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
+        ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
 
         // Add tags
 
 
         $tags = explode(",", $tags);
         //Need to clear tag befor update
-        topicModel::getInstance()->clearTag($topicId);
+        ForumTopicModel::getInstance()->clearTag($topicId);
         foreach ($tags as $tag) {
             //Clean tag
             $tag = mb_strtolower(trim($tag));
@@ -151,7 +151,7 @@ class ForumPublicController extends CoreController
                 continue;
             }
             
-            topicModel::getInstance()->addTag($tag, $topicId);
+            ForumTopicModel::getInstance()->addTag($tag, $topicId);
         }
 
         //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
@@ -162,22 +162,22 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(Request $request, string $topicSlug): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
-        $isViewed = topicModel::getInstance()->checkViews($topic->getId(),Website::getClientIp());
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+        $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(),Website::getClientIp());
         $currentUser = usersModel::getInstance()::getCurrentUser();
 
-        $iconNotRead = SettingsModel::getInstance()->getOptionValue("IconNotRead");
-        $iconImportant = SettingsModel::getInstance()->getOptionValue("IconImportant");
-        $iconPin = SettingsModel::getInstance()->getOptionValue("IconPin");
-        $iconClosed = SettingsModel::getInstance()->getOptionValue("IconClosed");
-        $feedbackModel = feedbackModel::getInstance();
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $feedbackModel = ForumFeedbackModel::getInstance();
 
         if (!$isViewed) {
-            topicModel::getInstance()->addViews($topic->getId());
+            ForumTopicModel::getInstance()->addViews($topic->getId());
         }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => responseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
@@ -187,7 +187,7 @@ class ForumPublicController extends CoreController
     public function publicTopicAddFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
     {
         $user = usersModel::getInstance()::getCurrentUser();
-        feedbackModel::getInstance()->addFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+        ForumFeedbackModel::getInstance()->addFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
     }
@@ -196,7 +196,7 @@ class ForumPublicController extends CoreController
     public function publicTopicDeleteFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
     {
         $user = usersModel::getInstance()::getCurrentUser();
-        feedbackModel::getInstance()->removeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+        ForumFeedbackModel::getInstance()->removeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
     }
@@ -205,7 +205,7 @@ class ForumPublicController extends CoreController
     public function publicTopicChangeFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
     {
         $user = usersModel::getInstance()::getCurrentUser();
-        feedbackModel::getInstance()->changeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
+        ForumFeedbackModel::getInstance()->changeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
     }
@@ -218,7 +218,7 @@ class ForumPublicController extends CoreController
     public function publicResponseAddFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
         $user = usersModel::getInstance()::getCurrentUser();
-        feedbackModel::getInstance()->addFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+        ForumFeedbackModel::getInstance()->addFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
     }
@@ -227,7 +227,7 @@ class ForumPublicController extends CoreController
     public function publicResponseDeleteFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
         $user = usersModel::getInstance()::getCurrentUser();
-        feedbackModel::getInstance()->removeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+        ForumFeedbackModel::getInstance()->removeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
     }
@@ -236,7 +236,7 @@ class ForumPublicController extends CoreController
     public function publicResponseChangeFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
         $user = usersModel::getInstance()::getCurrentUser();
-        feedbackModel::getInstance()->changeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
+        ForumFeedbackModel::getInstance()->changeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
     }
@@ -244,14 +244,14 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
     public function publicTopicPinned(Request $request, string $topicSlug): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if (topicModel::getInstance()->pinTopic($topic)) {
+        if (ForumTopicModel::getInstance()->pinTopic($topic)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?
@@ -265,14 +265,14 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
     public function publicTopicDisallowReplies(Request $request, string $topicSlug): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if (topicModel::getInstance()->DisallowReplies($topic)) {
+        if (ForumTopicModel::getInstance()->DisallowReplies($topic)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?
@@ -286,14 +286,14 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
     public function publicTopicIsImportant(Request $request, string $topicSlug): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if (topicModel::getInstance()->ImportantTopic($topic)) {
+        if (ForumTopicModel::getInstance()->ImportantTopic($topic)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 $topic->isPinned() ?
@@ -307,14 +307,14 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
     public function publicTopicIsTrash(Request $request, string $topicSlug): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        if (topicModel::getInstance()->trashTopic($topic)) {
+        if (ForumTopicModel::getInstance()->trashTopic($topic)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
 
@@ -327,8 +327,8 @@ class ForumPublicController extends CoreController
     {
         usersController::isAdminLogged(); //TODO Need to "Is User Logged" && Permissions
 
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
-        $responseModel = responseModel::getInstance();
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+        $responseModel = ForumResponseModel::getInstance();
 
         if (!$topic) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
@@ -372,14 +372,14 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
     public function publicTopicReplyDelete(Request $request, string $topicSlug, int $replyId, int $reason): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         if (is_null($topic)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             return;
         }
 
-        $reply = responseModel::getInstance()->getResponseById($replyId);
+        $reply = ForumResponseModel::getInstance()->getResponseById($replyId);
 
         if (!$reply?->isSelfReply()) {//Rajouter ici si on as la permission de supprimer (staff)
             Flash::send("error", LangManager::translate("core.toaster.error"),
@@ -387,7 +387,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        if (responseModel::getInstance()->trashResponse($replyId, $reason)) {
+        if (ForumResponseModel::getInstance()->trashResponse($replyId, $reason)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));
@@ -400,7 +400,7 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
     public function publicTopicEdit(Request $request, string $topicSlug): void
     {
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
         $view = new View("Forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
@@ -414,7 +414,7 @@ class ForumPublicController extends CoreController
     {
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 
-        $topic = topicModel::getInstance()->getTopicBySlug($topicSlug);
+        $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
         if (is_null($topic) || Utils::containsNullValue($name, $content)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
@@ -423,13 +423,13 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = topicModel::getInstance()->authorEditTopic($topicId, $name, $content);
+        $res = ForumTopicModel::getInstance()->authorEditTopic($topicId, $name, $content);
 
         // Add tags
 
         $tags = explode(",", $tags);
         //Need to clear tag befor update
-        topicModel::getInstance()->clearTag($topicId);
+        ForumTopicModel::getInstance()->clearTag($topicId);
         foreach ($tags as $tag) {
             //Clean tag
             $tag = mb_strtolower(trim($tag));
@@ -438,7 +438,7 @@ class ForumPublicController extends CoreController
                 continue;
             }
             
-            topicModel::getInstance()->addTag($tag, $topicId);
+            ForumTopicModel::getInstance()->addTag($tag, $topicId);
         }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),

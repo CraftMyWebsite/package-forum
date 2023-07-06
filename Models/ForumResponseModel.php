@@ -3,33 +3,33 @@
 namespace CMW\Model\Forum;
 
 use CMW\Entity\Forum\ForumEntity;
-use CMW\Entity\Forum\ResponseEntity;
+use CMW\Entity\Forum\ForumResponseEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
 
 
 /**
- * Class: @ResponseModel
+ * Class: @ForumResponseModel
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class ResponseModel extends AbstractModel
+class ForumResponseModel extends AbstractModel
 {
     private UsersModel $userModel;
-    private TopicModel $topicModel;
+    private ForumTopicModel $topicModel;
 
     public function __construct()
     {
 
         $this->userModel = new UsersModel();
-        $this->topicModel = new TopicModel();
+        $this->topicModel = new ForumTopicModel();
 
     }
 
     /**
-     * @return \CMW\Entity\Forum\ResponseEntity[]
+     * @return \CMW\Entity\Forum\ForumResponseEntity[]
      */
     public function getResponseByTopic(int $id): array
     {
@@ -50,7 +50,7 @@ class ResponseModel extends AbstractModel
         return $toReturn;
     }
 
-    public function getResponseById(int $id): ?ResponseEntity
+    public function getResponseById(int $id): ?ForumResponseEntity
     {
 
         $sql = "SELECT * FROM cmw_forums_response WHERE forum_response_id = :response_id ";
@@ -72,7 +72,7 @@ class ResponseModel extends AbstractModel
             return null;
         }
 
-        return new ResponseEntity(
+        return new ForumResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
             $res["forum_response_is_trash"],
@@ -127,7 +127,7 @@ class ResponseModel extends AbstractModel
     }
 
 
-    public function createResponse(string $content, int $userId, int $topicId): ?ResponseEntity
+    public function createResponse(string $content, int $userId, int $topicId): ?ForumResponseEntity
     {
 
         $var = array(
@@ -162,7 +162,7 @@ class ResponseModel extends AbstractModel
         return $req->rowCount() === 1;
     }
 
-    public function restoreResponse(int $id): ?ResponseEntity
+    public function restoreResponse(int $id): ?ForumResponseEntity
     {
         $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '0' WHERE `forum_response_id` = :id";
 
@@ -176,7 +176,7 @@ class ResponseModel extends AbstractModel
         return null;
     }
 
-    public function trashResponse(int $id, int $reason): ?ResponseEntity
+    public function trashResponse(int $id, int $reason): ?ForumResponseEntity
     {
         $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '1', `forum_response_trash_reason` = :reason WHERE `forum_response_id` = :id";
 
@@ -211,7 +211,7 @@ class ResponseModel extends AbstractModel
 
     }
 
-    public function getLatestResponseInTopic(int $topicId): ?ResponseEntity
+    public function getLatestResponseInTopic(int $topicId): ?ForumResponseEntity
     {
         $sql = "SELECT * FROM `cmw_forums_response` 
                                            WHERE `forum_topic_id` = :forum_topic_id AND forum_response_is_trash = 0
@@ -238,7 +238,7 @@ class ResponseModel extends AbstractModel
             return null;
         }
 
-        return new ResponseEntity(
+        return new ForumResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
             $res["forum_response_is_trash"],
@@ -252,9 +252,9 @@ class ResponseModel extends AbstractModel
 
     /**
      * @param int $forumId
-     * @return \CMW\Entity\Forum\ResponseEntity|null
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
      */
-    public function getLatestResponseInForum(int $forumId): ?ResponseEntity
+    public function getLatestResponseInForum(int $forumId): ?ForumResponseEntity
     {
         $sql = "SELECT cmw_forums_response.forum_topic_id, cmw_forums_response.*
                 FROM cmw_forums_response
@@ -286,7 +286,7 @@ class ResponseModel extends AbstractModel
             return null;
         }
 
-        return new ResponseEntity(
+        return new ForumResponseEntity(
             $res["forum_response_id"],
             $res["forum_response_content"],
             $res["forum_response_is_trash"],
