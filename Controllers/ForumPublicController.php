@@ -88,7 +88,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = topicModel::getInstance()->createTopic($name, $content, UsersModel::getLoggedUser(), $forum->getId(),
+        $res = topicModel::getInstance()->createTopic($name, $content, UsersModel::getCurrentUser()?->getId(), $forum->getId(),
             (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         if (is_null($res)) {
@@ -344,7 +344,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $userEntity = usersModel::getInstance()->getUserById(UsersModel::getLoggedUser());
+        $userEntity = usersModel::getInstance()->getUserById(UsersModel::getCurrentUser()?->getId());
         $userId = $userEntity?->getId();
         [$topicId, $content] = Utils::filterInput('topicId', 'topicResponse');
 
