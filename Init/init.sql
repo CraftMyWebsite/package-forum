@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
     forum_category_created     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_category_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_settings
 (
@@ -16,7 +17,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_settings
     forum_settings_value   VARCHAR(200) NULL,
     forum_settings_updated TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
 (
@@ -28,7 +30,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_prefixes
     forum_prefix_created     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_prefix_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums
 (
@@ -46,7 +49,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums
     CONSTRAINT fk_forum_forum_id
         FOREIGN KEY (forum_subforum_id) REFERENCES cmw_forums (forum_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_topics
 (
@@ -71,7 +75,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics
     CONSTRAINT fk_topics_user_id
         FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `cmw_forums_topics_tags`
 (
@@ -82,7 +87,8 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_topics_tags`
     CONSTRAINT fk_topic_id FOREIGN KEY (forums_topics_tags_topic_id)
         REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_response
 (
@@ -99,7 +105,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response
     CONSTRAINT fk_response_user_id
         FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO `cmw_forums_settings` (`forum_settings_name`, `forum_settings_value`)
 VALUES ('IconNotRead', 'fa-solid fa-eye'),
@@ -116,7 +123,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics_views
     CONSTRAINT fk_views_topic_id FOREIGN KEY (forum_topics_views_topic_id)
         REFERENCES cmw_forums_topics (forum_topic_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_feedback
 (
@@ -124,7 +132,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_feedback
     forum_feedback_image VARCHAR(50) NOT NULL,
     forum_feedback_name VARCHAR(50) NOT NULL
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_topics_feedback
 (
@@ -139,7 +148,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics_feedback
     CONSTRAINT fk_feedback_user_id FOREIGN KEY (user_id)
         REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_response_feedback
 (
@@ -154,7 +164,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response_feedback
     CONSTRAINT fk_response_feedback_user_id FOREIGN KEY (user_id)
         REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `cmw_forums_roles`
 (
@@ -165,7 +176,8 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_roles`
     `forums_role_is_default`  TINYINT(1) DEFAULT 0,
     PRIMARY KEY (`forums_role_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `cmw_forums_users_roles`
 (
@@ -180,7 +192,8 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_users_roles`
     CONSTRAINT `cmw_forums_users_roles_ibfk_2` FOREIGN KEY (`forums_role_id`)
         REFERENCES `cmw_forums_roles` (`forums_role_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_permissions
 (
@@ -190,7 +203,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_permissions
     CONSTRAINT fk_forum_permission_parent_id FOREIGN KEY (forum_permission_parent_id)
         REFERENCES cmw_forums_permissions (forum_permission_id)ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_roles_permissions
 (
@@ -203,7 +217,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_roles_permissions
     CONSTRAINT fk_forum_roles_permissions_role_id FOREIGN KEY (forum_role_id)
         REFERENCES cmw_forums_roles (forums_role_id)ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS cmw_forums_discord
 (
@@ -245,7 +260,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
     CONSTRAINT `discord_biding_forum_response_id` FOREIGN KEY (`forum_response_id`)
         REFERENCES `cmw_forums_response` (`forum_response_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
 VALUES ('Membre', 'Rôle pour les membres', 0, 1),
@@ -268,7 +284,8 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_special_roles_permissions`
 
     PRIMARY KEY (`forums_role_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 Permeta d'ajouter un utilisateur avec des droit special sur un topic ou une cat (par exemple permettre des créer des catégorie privé etc etc)
 CREATE TABLE IF NOT EXISTS `cmw_forums_special_users_permissions`
@@ -278,5 +295,6 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_special_users_permissions`
 
     PRIMARY KEY (`forums_role_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 */
