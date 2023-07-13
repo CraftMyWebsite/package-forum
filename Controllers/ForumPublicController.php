@@ -54,7 +54,7 @@ class ForumPublicController extends CoreController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "forumModel" => forumModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->view();
     }
 
