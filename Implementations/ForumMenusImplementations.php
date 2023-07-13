@@ -10,10 +10,10 @@ class ForumMenusImplementations implements IMenus {
     public function getRoutes(): array
     {
         $forums = [];
-        $forums[] = 'forum';
+        $forums['Forum'] = 'forum';
 
         foreach ((new ForumModel())->getForums() as $forum) {
-            $forums[] = 'f/' . $forum->getSlug();
+            $forums["Forum : ".$forum->getName()] = 'f/' . $forum->getSlug();
         }
 
         return $forums;
