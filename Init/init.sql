@@ -167,6 +167,10 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response_feedback
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
+
+
+
+
 CREATE TABLE IF NOT EXISTS `cmw_forums_roles`
 (
     `forums_role_id`          INT(11)  NOT NULL AUTO_INCREMENT,
@@ -220,6 +224,20 @@ CREATE TABLE IF NOT EXISTS cmw_forums_roles_permissions
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
+INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
+VALUES ('Membre', 'Rôle pour les membres', 0, 1),
+       ('Modérateur', 'Rôle pour les modérateurs', 10, 0),
+       ('Administrateur', 'Rôle pour les administrateurs', 100, 0);
+
+INSERT INTO `cmw_forums_permissions` (`forum_permission_id`, `forum_permission_parent_id`, `forum_permission_code`)
+VALUES (1, NULL, 'operator');
+
+INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`)
+VALUES ('1', '3');
+
+
+
+
 CREATE TABLE IF NOT EXISTS cmw_forums_discord
 (
     `forum_discord_id`   INT AUTO_INCREMENT PRIMARY KEY,
@@ -263,16 +281,6 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
-INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
-VALUES ('Membre', 'Rôle pour les membres', 0, 1),
-       ('Modérateur', 'Rôle pour les modérateurs', 10, 0),
-       ('Administrateur', 'Rôle pour les administrateurs', 100, 0);
-
-INSERT INTO `cmw_forums_permissions` (`forum_permission_id`, `forum_permission_parent_id`, `forum_permission_code`)
-VALUES (1, NULL, 'operator');
-
-INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`)
-VALUES ('1', '3');
 /*
 a faire plus tard par ce que galere de fou :
 

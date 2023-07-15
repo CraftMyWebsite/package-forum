@@ -9,11 +9,13 @@
       "urls_submenu_fr": {
         "Paramètres": "forum/settings",
         "Gestion": "forum/manage",
+        "Rôles": "forum/roles",
         "Corbeille": "forum/trash"
       },
       "urls_submenu_en": {
         "Settings": "forum/settings",
         "Manage": "forum/manage",
+        "Roles": "forum/roles",
         "Trash": "forum/trash"
       }
     }
