@@ -12,6 +12,7 @@ use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumDiscordModel;
 use CMW\Model\Forum\ForumFeedbackModel;
 use CMW\Model\Forum\ForumModel;
+use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
@@ -45,6 +46,8 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
     public function publicForumView(Request $request, string $forumSlug): void
     {
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
@@ -78,7 +81,14 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
     public function publicForumAddTopicPost(Request $request, string $forumSlug): void
     {
+        $userId = UsersModel::getCurrentUser()->getId();
+
         [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
+
+        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId,"user_create_topic_tag") && $tags !== "") {
+            ForumController::getInstance()->alertNotHavePermissions("user_create_topic_tag");
+            $tags = "";
+        }
 
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
@@ -89,7 +99,7 @@ class ForumPublicController extends CoreController
             return;
         }
 
-        $res = ForumTopicModel::getInstance()->createTopic($name, $content, UsersModel::getCurrentUser()?->getId(), $forum->getId(),
+        $res = ForumTopicModel::getInstance()->createTopic($name, $content, $userId, $forum->getId(),
             (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
         if (is_null($res)) {

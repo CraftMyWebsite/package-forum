@@ -230,7 +230,30 @@ VALUES ('Membre', 'Rôle pour les membres', 0, 1),
        ('Administrateur', 'Rôle pour les administrateurs', 100, 0);
 
 INSERT INTO `cmw_forums_permissions` (`forum_permission_id`, `forum_permission_parent_id`, `forum_permission_code`)
-VALUES (1, NULL, 'operator');
+VALUES (1, NULL, 'operator'),
+       (2, NULL, 'user_view_forum'),
+       (3, NULL, 'user_view_topic'),
+       (4, NULL, 'user_create_topic'),
+       (5, NULL, 'user_create_topic_tag'),
+       (6, NULL, 'user_create_pool'),
+       (7, NULL, 'user_edit_topic'),
+       (8, NULL, 'user_edit_tag'),
+       (9, NULL, 'user_edit_pool'),
+       (10, NULL, 'user_remove_topic'),
+       (11, NULL, 'user_react_topic'),
+       (12, NULL, 'user_change_react_topic'),
+       (13, NULL, 'user_remove_react_topic'),
+       (14, NULL, 'user_response_topic'),
+       (15, NULL, 'user_response_react'),
+       (16, NULL, 'user_response_change_react'),
+       (17, NULL, 'user_response_remove_react'),
+       (18, NULL, 'admin_change_topic_name'),
+       (19, NULL, 'admin_change_topic_tag'),
+       (20, NULL, 'admin_change_topic_prefix'),
+       (21, NULL, 'admin_set_important'),
+       (22, NULL, 'admin_set_pin'),
+       (23, NULL, 'admin_set_closed'),
+       (24, NULL, 'admin_move_topic');
 
 INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`)
 VALUES ('1', '3');

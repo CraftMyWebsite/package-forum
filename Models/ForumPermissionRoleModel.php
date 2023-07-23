@@ -1,0 +1,101 @@
+<?php
+
+namespace CMW\Model\Forum;
+
+use CMW\Entity\Forum\ForumPermissionEntity;
+use CMW\Entity\Forum\ForumPermissionRoleEntity;
+use CMW\Manager\Database\DatabaseManager;
+use CMW\Manager\Package\AbstractModel;
+
+/**
+ * Class: @ForumPermissionRoleModel
+ * @package Forum
+ * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @version 1.0
+ */
+
+class ForumPermissionRoleModel extends AbstractModel
+{
+    private ForumPermissionModel $forumPermissionModel;
+
+    public function __construct()
+    {
+        $this->forumPermissionModel = new ForumPermissionModel();
+    }
+
+    public function getRoleById($id): ?ForumPermissionRoleEntity
+    {
+
+        $sql = "SELECT * FROM cmw_forums_roles WHERE forums_role_id = :forums_role_id";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(array("forums_role_id" => $id))) {
+            return null;
+        }
+
+        $res = $req->fetch();
+
+        if (!$res) {
+            return null;
+        }
+
+        return new ForumPermissionRoleEntity(
+            $id,
+            $res['forums_role_name'],
+            $res['forums_role_description'],
+            $res['forums_role_weight'],
+            $res['forums_role_is_default'],
+            $this->getPermissions($id)
+        );
+
+    }
+
+    /**
+     * @param int $forumRoleId
+     * @return ForumPermissionEntity[]
+     */
+    public function getPermissions(int $forumRoleId): array
+    {
+        $sql = "SELECT forum_permission_id FROM cmw_forums_roles_permissions WHERE forum_role_id = :forum_role_id";
+        $db = DatabaseManager::getInstance();
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("forum_role_id" => $forumRoleId))) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($perm = $res->fetch()) {
+            $toReturn[] = $this->forumPermissionModel->getPermissionById($perm["forum_permission_id"]);
+        }
+
+        return $toReturn;
+
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity[]
+     */
+    public function getRolesByUser(int $userId): array
+    {
+        $sql = "SELECT forums_role_id FROM cmw_forums_users_roles WHERE user_id = :user_id";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(array("user_id" => $userId))) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($role = $req->fetch()) {
+            $toReturn[] = $this->getRoleById($role["forums_role_id"]);
+        }
+
+        return $toReturn;
+    }
+}

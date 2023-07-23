@@ -4,12 +4,16 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Flash\Alert;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
+use CMW\Model\Forum\ForumPermissionModel;
+use CMW\Model\Users\UsersModel;
+use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Utils\Website;
 
@@ -21,6 +25,7 @@ use CMW\Utils\Website;
  */
 class ForumController extends AbstractController
 {
+
     #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
     public function adminAddForumPost(): void
     {
@@ -57,13 +62,13 @@ class ForumController extends AbstractController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),"ça va pas du tout !");
+            Flash::send("error", LangManager::translate("core.toaster.error"), "ça va pas du tout !");
             Website::refresh();
             return;
         }
 
         [$name, $icon, $description, $category_id] = Utils::filterInput("name", "icon", "description", "category_id");
-        
+
         forumModel::getInstance()->editForum($id, $name, $icon, $description, $category_id);
 
         header("location: ../../manage");
@@ -90,6 +95,29 @@ class ForumController extends AbstractController
             LangManager::translate("forum.forum.delete.success"));
 
         header("location: ../../manage/");
+    }
+
+    /*--------PERM UTILS--------*/
+    public function redirectIfNotHavePermissions(string $permCode): void
+    {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "L'accès au forum est reservé au membre, merci de vous connectez avant d'allez plus loin.");
+            Redirect::redirect('login');
+        }
+
+        $userId = UsersModel::getCurrentUser()->getId();
+
+        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, $permCode)) {
+            Flash::send(Alert::ERROR, "Forum", "Vous n'avez pas la permission de consulter ceci");
+            Redirect::redirectPreviousRoute();
+        }
+    }
+
+    public function alertNotHavePermissions(string $permCode): void
+    {
+        if ($permCode === "user_create_topic_tag") {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez pas définir de tag, ce champ à été vidé");
+        }
     }
 
 }
