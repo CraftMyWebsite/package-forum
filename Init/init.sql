@@ -112,7 +112,8 @@ INSERT INTO `cmw_forums_settings` (`forum_settings_name`, `forum_settings_value`
 VALUES ('IconNotRead', 'fa-solid fa-eye'),
        ('IconImportant', 'fa-solid fa-triangle-exclamation'),
        ('IconPin', 'fa-solid fa-thumbtack'),
-       ('IconClosed', 'fa-solid fa-lock');
+       ('IconClosed', 'fa-solid fa-lock'),
+       ('visitorCanViewForum', '0');
 
 
 CREATE TABLE IF NOT EXISTS cmw_forums_topics_views

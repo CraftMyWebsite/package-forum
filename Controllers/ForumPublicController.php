@@ -37,6 +37,12 @@ class ForumPublicController extends CoreController
     #[Link("/", Link::GET, [], "/forum")]
     public function publicBaseView(): void
     {
+        $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
+
+        if ($visitorCanViewForum === "0") {
+            ForumController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
+        }
+
         $view = new View("Forum", "main");
         $view->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => ForumCategoryModel::getInstance()]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
@@ -46,7 +52,11 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
     public function publicForumView(Request $request, string $forumSlug): void
     {
-        ForumController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
+        $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
+
+        if ($visitorCanViewForum === "0") {
+            ForumController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
+        }
 
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         $forumModel = forumModel::getInstance();
@@ -57,13 +67,15 @@ class ForumPublicController extends CoreController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
         $view->view();
     }
 
     #[Link("/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
     public function publicForumAddTopicView(Request $request, string $forumSlug): void
     {
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
@@ -72,8 +84,8 @@ class ForumPublicController extends CoreController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "addTopic");
-        $view->addVariableList(["forum" => $forum,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
-        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addVariableList(["forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
@@ -81,11 +93,13 @@ class ForumPublicController extends CoreController
     #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
     public function publicForumAddTopicPost(Request $request, string $forumSlug): void
     {
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
+
         $userId = UsersModel::getCurrentUser()->getId();
 
         [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
 
-        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId,"user_create_topic_tag") && $tags !== "") {
+        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, "user_create_topic_tag") && $tags !== "") {
             ForumController::getInstance()->alertNotHavePermissions("user_create_topic_tag");
             $tags = "";
         }
@@ -127,7 +141,7 @@ class ForumPublicController extends CoreController
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
-        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(),$name,$forum->getName(),"test",UsersModel::getCurrentUser()->getUserPicture()->getImageName(),UsersModel::getCurrentUser()->getPseudo());
+        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()->getUserPicture()->getImageName(), UsersModel::getCurrentUser()->getPseudo());
 
         header("location: ../$forumSlug");
     }
@@ -172,7 +186,7 @@ class ForumPublicController extends CoreController
 
             header("location: ../$forumSlug");
         } else {
-            Flash::send(Alert::ERROR,"Erreur","Vous n'êtes pas autoriser à faire ceci !");
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'êtes pas autoriser à faire ceci !");
             Redirect::redirect("forum");
         }
 
@@ -182,8 +196,14 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(Request $request, string $topicSlug): void
     {
+        $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
+
+        if ($visitorCanViewForum === "0") {
+            ForumController::getInstance()->redirectIfNotHavePermissions("user_view_topic");
+        }
+
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
-        $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(),Website::getClientIp());
+        $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(), Website::getClientIp());
         $currentUser = usersModel::getInstance()::getCurrentUser();
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
@@ -197,8 +217,8 @@ class ForumPublicController extends CoreController
         }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(),"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
-        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
@@ -206,6 +226,13 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicTopicAddFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Redirect::redirect('login');
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_react_topic");
+
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->addFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
@@ -215,6 +242,13 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/un_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicTopicDeleteFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Redirect::redirect('login');
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_remove_react_topic");
+
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->removeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
@@ -224,6 +258,13 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/change_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicTopicChangeFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Redirect::redirect('login');
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_change_react_topic");
+
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->changeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
@@ -233,6 +274,13 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicResponseAddFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Redirect::redirect('login');
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_response_react");
+
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->addFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
@@ -242,6 +290,13 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicResponseDeleteFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Redirect::redirect('login');
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_response_remove_react");
+
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->removeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
@@ -251,6 +306,13 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
     public function publicResponseChangeFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Redirect::redirect('login');
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_response_change_react");
+
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->changeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
@@ -278,7 +340,7 @@ class ForumPublicController extends CoreController
                 header("location: ../../f/{$topic->getForum()->getSlug()}");
             }
         } else {
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
 
@@ -305,7 +367,7 @@ class ForumPublicController extends CoreController
                 header("location: ../../f/{$topic->getForum()->getSlug()}");
             }
         } else {
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
     }
@@ -331,7 +393,7 @@ class ForumPublicController extends CoreController
                 header("location: ../../f/{$topic->getForum()->getSlug()}");
             }
         } else {
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
     }
@@ -349,12 +411,12 @@ class ForumPublicController extends CoreController
 
             if (ForumTopicModel::getInstance()->trashTopic($topic)) {
 
-                Flash::send("success", LangManager::translate("core.toaster.success"),"Topic mis à la poubelle !");
+                Flash::send("success", LangManager::translate("core.toaster.success"), "Topic mis à la poubelle !");
 
                 header("location: ../../f/{$topic->getForum()->getSlug()}");
             }
         } else {
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
     }
@@ -362,7 +424,19 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
     public function publicTopicResponsePost(Request $request, string $topicSlug): void
     {
-        usersController::isAdminLogged(); //TODO Need to "Is User Logged" && Permissions
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de répondre.");
+            Redirect::redirect('login');
+        }
+
+        $userId = UsersModel::getCurrentUser()->getId();
+
+        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, "user_response_topic")) {
+            ForumController::getInstance()->alertNotHavePermissions("user_response_topic");
+            Redirect::redirectPreviousRoute();
+        }
+
+        ForumController::getInstance()->redirectIfNotHavePermissions("user_response_change_react");
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         $responseModel = ForumResponseModel::getInstance();
@@ -411,8 +485,8 @@ class ForumPublicController extends CoreController
     {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()){
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()) {
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
 
@@ -443,16 +517,21 @@ class ForumPublicController extends CoreController
     #[Link("/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
     public function publicTopicEdit(Request $request, string $topicSlug): void
     {
+        if (!UsersController::isUserLogged()) {
+            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de modifier ce topic.");
+            Redirect::redirect('login');
+        }
+
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()){
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()) {
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
 
         $view = new View("Forum", "editTopic");
         $view->addVariableList(["topic" => $topic]);
-        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js","Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
@@ -464,8 +543,8 @@ class ForumPublicController extends CoreController
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if ( UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()){
-            Flash::send(Alert::ERROR,"Erreur","Vous n'avez pas la permission de faire ceci !");
+        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()) {
+            Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
 
@@ -490,7 +569,7 @@ class ForumPublicController extends CoreController
             if (empty($tag)) {
                 continue;
             }
-            
+
             ForumTopicModel::getInstance()->addTag($tag, $topicId);
         }
 
