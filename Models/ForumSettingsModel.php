@@ -47,4 +47,11 @@ class ForumSettingsModel extends AbstractModel
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'IconNotRead' THEN :iconNotRead WHEN 'IconImportant' THEN :iconImportant WHEN 'IconPin' THEN :iconPin WHEN 'IconClosed' THEN :iconClosed ELSE forum_settings_value END WHERE forum_settings_name IN('IconNotRead','IconImportant','IconPin','IconClosed')");
         $req->execute(array("iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed));
     }
+
+    public function updateVisitorCanViewForum(string $visitorCanViewForum): void
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :visitorCanViewForum WHERE forum_settings_name = 'visitorCanViewForum'");
+        $req->execute(array("visitorCanViewForum" => $visitorCanViewForum));
+    }
 }
