@@ -6,6 +6,7 @@ use CMW\Entity\Forum\ForumPermissionEntity;
 use CMW\Entity\Forum\ForumPermissionRoleEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
+use CMW\Model\Users\UsersModel;
 
 /**
  * Class: @ForumPermissionRoleModel
@@ -13,7 +14,6 @@ use CMW\Manager\Package\AbstractModel;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-
 class ForumPermissionRoleModel extends AbstractModel
 {
     private ForumPermissionModel $forumPermissionModel;
@@ -49,6 +49,31 @@ class ForumPermissionRoleModel extends AbstractModel
             $res['forums_role_is_default'],
             $this->getPermissions($id)
         );
+
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity []
+     */
+    public function getRole(): array
+    {
+
+        $sql = "SELECT forums_role_id FROM cmw_forums_roles";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute()) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($role = $res->fetch()) {
+            $toReturn[] = $this->getRoleById($role["forums_role_id"]);
+        }
+
+        return $toReturn;
 
     }
 
@@ -97,5 +122,94 @@ class ForumPermissionRoleModel extends AbstractModel
         }
 
         return $toReturn;
+    }
+
+    /**
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity
+     */
+    public function getHighestRoleByUser(int $userId): ?ForumPermissionRoleEntity
+    {
+        $sql = "SELECT cmw_forums_users_roles.forums_role_id 
+                FROM cmw_forums_users_roles
+                JOIN cmw_forums_roles ON cmw_forums_users_roles.forums_role_id = cmw_forums_roles.forums_role_id
+                WHERE user_id = :user_id
+                ORDER BY cmw_forums_roles.forums_role_weight DESC
+                LIMIT 1";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(array("user_id" => $userId))) {
+            return null;
+        }
+
+        $res = $req->fetch();
+
+        if (empty($res)) {
+            return null;
+        }
+
+        return $this->getRoleById($res["forums_role_id"]);
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity
+     */
+    public function getDefaultRole(): ?ForumPermissionRoleEntity
+    {
+        $sql = "SELECT * FROM `cmw_forums_roles` WHERE forums_role_is_default = 1";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        $res = $req->fetch();
+
+        if (empty($res)) {
+            return null;
+        }
+
+        return $this->getRoleById($res["forums_role_id"]);
+    }
+
+    /**
+     * @return void
+     */
+    public function changeDefaultRole(int $id, string $question): void
+    {
+        if ($question === "yes") {
+            $this->updateDefaultRoleForAllUser($id);
+        }
+        $this->removePreviousDefaultRole();
+
+        $sql = "UPDATE cmw_forums_roles SET forums_role_is_default = 1 WHERE forums_role_id = :id";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute(array("id" => $id));
+    }
+
+    /**
+     * @return void
+     */
+    public function removePreviousDefaultRole(): void
+    {
+        $sql = "UPDATE cmw_forums_roles SET forums_role_is_default = 0 WHERE forums_role_is_default = 1";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute();
+    }
+
+    public function updateDefaultRoleForAllUser($newDefaultRole): void
+    {
+        foreach (UsersModel::getInstance()->getUsers() as $user) {
+            $userId = $user->getId();
+            if ($this->getHighestRoleByUser($userId)->isDefault()) {
+                $sql = "UPDATE cmw_forums_users_roles SET forums_role_id = :newDefaultRole WHERE user_id = :userId";
+                $db = DatabaseManager::getInstance();
+                $res = $db->prepare($sql);
+                $res->execute(["newDefaultRole" =>$newDefaultRole, "userId" =>$userId]);
+            }
+        }
     }
 }
