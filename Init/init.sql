@@ -305,6 +305,8 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
+INSERT INTO cmw_forums_users_roles (`user_id`,`forums_role_id`)
+SELECT user_id, 1 FROM cmw_users
 /*
 a faire plus tard par ce que galere de fou :
 
