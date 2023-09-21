@@ -436,7 +436,6 @@ class ForumPublicController extends CoreController
             Redirect::redirectPreviousRoute();
         }
 
-        ForumController::getInstance()->redirectIfNotHavePermissions("user_response_change_react");
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         $responseModel = ForumResponseModel::getInstance();
