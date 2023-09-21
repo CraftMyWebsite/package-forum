@@ -153,24 +153,6 @@ class ForumPermissionRoleModel extends AbstractModel
         return $this->getRoleById($res["forums_role_id"]);
     }
 
-    /**
-     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity
-     */
-    public function getDefaultRole(): ?ForumPermissionRoleEntity
-    {
-        $sql = "SELECT * FROM `cmw_forums_roles` WHERE forums_role_is_default = 1";
-
-        $db = DatabaseManager::getInstance();
-        $req = $db->prepare($sql);
-
-        $res = $req->fetch();
-
-        if (empty($res)) {
-            return null;
-        }
-
-        return $this->getRoleById($res["forums_role_id"]);
-    }
 
     /**
      * @return void
@@ -211,5 +193,20 @@ class ForumPermissionRoleModel extends AbstractModel
                 $res->execute(["newDefaultRole" =>$newDefaultRole, "userId" =>$userId]);
             }
         }
+    }
+
+    public function addUserForumDefaultRoleOnRegister(int $userId): void
+    {
+        $data = array(
+            "user_id" => $userId
+        );
+
+        $sql = "INSERT INTO cmw_forums_users_roles (user_id, forums_role_id) SELECT :user_id, forums_role_id FROM cmw_forums_roles WHERE forums_role_is_default = 1;";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        $req->execute($data);
+
     }
 }

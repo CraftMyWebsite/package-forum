@@ -4,6 +4,8 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Event\Users\RegisterEvent;
+use CMW\Manager\Events\Listener;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
@@ -12,6 +14,7 @@ use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
 use CMW\Model\Forum\ForumPermissionModel;
+use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
@@ -147,6 +150,15 @@ class ForumController extends AbstractController
         if ($permCode === "user_response_topic") {
             Flash::send(Alert::ERROR, "Forum", "Vous n'avez pas la permission de répondre au topic");
         }
+    }
+
+    /*------------------------
+     * USERS EVENT DEPENDENCIES
+     * ----------------------*/
+    #[Listener(eventName: RegisterEvent::class, times: 0, weight: 1)]
+    public static function onRegister(mixed $userId): void
+    {
+        ForumPermissionRoleModel::getInstance()->addUserForumDefaultRoleOnRegister($userId);
     }
 
 }
