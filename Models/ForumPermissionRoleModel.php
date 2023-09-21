@@ -153,6 +153,16 @@ class ForumPermissionRoleModel extends AbstractModel
         return $this->getRoleById($res["forums_role_id"]);
     }
 
+    /**
+     * @return void
+     */
+    public function changeUserRole(int $userId, int $roleId): void
+    {
+        $sql = "UPDATE cmw_forums_users_roles SET forums_role_id = :role_id WHERE user_id = :user_id";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute(["role_id" =>$roleId, "user_id" =>$userId]);
+    }
 
     /**
      * @return void

@@ -148,12 +148,47 @@ $description = "desc";
                             <td><small><?= $user->getHighestRole()->getName() ?></small></td>
                             <td><b><?= $userRole->getHighestRoleByUser($user->getId())->getName() ?></b></td>
                             <td>
-                                <a class="me-3 "
-                                   href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>cmw-admin/users/manage/edit/">
-                                    <i class="text-primary fa-solid fa-gears"></i>
+                                <a class="text-center" type="button" data-bs-toggle="modal" data-bs-target="#edit-user-role">
+                                    <i class="text-primary fa-solid fa-edit"></i>
                                 </a>
                             </td>
                         </tr>
+
+                        <!--
+                        ----MODAL EDIT ROLE FOR USER ----
+                        -->
+                        <div class="modal fade text-left" id="edit-user-role" tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary">
+                                        <h5 class="modal-title white" id="myModalLabel160">Modifier le rôle de <?= $user->getPseudo() ?></h5>
+                                    </div>
+                                    <form action="roles/user_role/<?= $user->getId() ?>" method="post">
+                                        <?php (new SecurityManager())->insertHiddenToken() ?>
+                                    <div class="modal-body">
+                                        <h6>Nouveau rôle :</h6>
+                                        <select class="form-select" name="role_id" required>
+                                            <?php foreach ($roles as $role) : ?>
+                                                <option value="<?= $role->getId() ?>"
+                                                    <?= ($userRole->getHighestRoleByUser($user->getId())->getName() === $role->getName() ? "selected" : "") ?>>
+                                                    <?= $role->getName() ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                            <span class=""><?= LangManager::translate("core.btn.edit") ?></span>
+                                        </button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                     <?php endforeach; ?>
                     </tbody>
                 </table>

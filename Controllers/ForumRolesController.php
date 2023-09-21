@@ -49,6 +49,18 @@ class ForumRolesController extends AbstractController {
         Redirect::redirectPreviousRoute();
     }
 
+    #[Link("/roles/user_role/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
+    private function forumUserRoleSettings(Request $request, int $userId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+
+        [$roleId] = Utils::filterInput("role_id");
+
+        ForumPermissionRoleModel::getInstance()->changeUserRole($userId,$roleId);
+
+        Redirect::redirectPreviousRoute();
+    }
+
     #[Link("/roles/set_default/:id/:question", Link::GET, ["id" => "[0-9]+"], "/cmw-admin/forum")]
     #[NoReturn] private function forumRolesSetDefault(Request $request, int $id, string $question): void
     {
