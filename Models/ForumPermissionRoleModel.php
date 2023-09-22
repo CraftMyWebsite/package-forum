@@ -153,6 +153,80 @@ class ForumPermissionRoleModel extends AbstractModel
         return $this->getRoleById($res["forums_role_id"]);
     }
 
+    public function addRole(string $name, int $weight, string $description): ?ForumPermissionRoleEntity
+    {
+        $data = array(
+            "name" => $name,
+            "weight" => $weight,
+            "description" => $description
+        );
+        $sql = "INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`) VALUES (:name, :description, :weight, '0');";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        if ($req->execute($data)) {
+            $id = $db->lastInsertId();
+            return $this->getRoleById($id);
+        }
+        return null;
+    }
+
+    public function removeRole(int $roleId): void
+    {
+        $data = array(
+            "role_id" => $roleId
+        );
+        $sql = "DELETE FROM `cmw_forums_roles` WHERE `forums_role_id` = :role_id";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute($data);
+    }
+
+    public function addRolePermissions(int $permissionId, int $roleId): void
+    {
+        $data = array(
+            "permission_id" => $permissionId,
+            "role_id" => $roleId
+        );
+        $sql = "INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`) VALUES (:permission_id, :role_id);";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute($data);
+    }
+
+    public function removeRolePermissions(int $permissionId, int $roleId): void
+    {
+        $data = array(
+            "permission_id" => $permissionId,
+            "role_id" => $roleId
+        );
+        $sql = "DELETE FROM `cmw_forums_roles_permissions` WHERE `forum_permission_id` = :permission_id AND `forum_role_id` = :role_id";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute($data);
+    }
+
+    /**
+     * @return bool
+     * @desc Check if we already have a config
+     */
+    public function roleHasPerm(int $roleId, int $permissionId): bool
+    {
+        $data = array(
+            "permission_id" => $permissionId,
+            "role_id" => $roleId
+        );
+        $sql = "SELECT * FROM `cmw_forums_roles_permissions` WHERE forum_permission_id = :permission_id AND forum_role_id = :role_id";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        if ($req->execute($data)) {
+            return count($req->fetchAll());
+        }
+
+        return 0;
+    }
+
     /**
      * @return void
      */

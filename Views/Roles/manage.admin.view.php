@@ -26,7 +26,7 @@ $description = "desc";
                 <h4>Rôles</h4>
             </div>
             <div class="position-absolute end-0">
-                <a href="test"
+                <a href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>cmw-admin/forum/roles/add"
                    class="text-bg-primary rounded-2 py-1 px-2"><?= LangManager::translate("core.btn.add") ?></a>
             </div>
             <div class="card-body">
@@ -87,7 +87,7 @@ $description = "desc";
                                 <?php endif; ?></td>
                             <td>
                                 <a class="me-3 "
-                                   href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>cmw-admin/users/manage/edit/">
+                                   href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>cmw-admin/forum/roles/edit/<?= $role->getId() ?>">
                                     <i class="text-primary fa-solid fa-gears"></i>
                                 </a>
                                 <a type="button" data-bs-toggle="modal" data-bs-target="#delete-<?= $role->getId() ?>">
@@ -110,7 +110,7 @@ $description = "desc";
                                                         data-bs-dismiss="modal">
                                                     <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                                                 </button>
-                                                <a href="/cmw-admin/users/delete/"
+                                                <a href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>cmw-admin/forum/roles/delete/<?= $role->getId() ?>"
                                                    class="btn btn-danger">
                                                     <span class="">Supprimé</span>
                                                 </a>

@@ -4,6 +4,7 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
@@ -17,6 +18,7 @@ use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
+use JetBrains\PhpStorm\NoReturn;
 
 
 class ForumRolesController extends AbstractController {
@@ -34,6 +36,83 @@ class ForumRolesController extends AbstractController {
             ->addVariableList(["visitorCanViewForum" => $visitorCanViewForum, "roles" => $roles, "userList" => $userList, "userRole" => $userRole])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
+            ->view();
+    }
+
+    #[Link("/roles/add", Link::GET, [], "/cmw-admin/forum")]
+    public function forumRoleAddView(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.add");
+
+        View::createAdminView("Forum", "Roles/add")
+            ->view();
+    }
+
+    #[NoReturn] #[Link("/roles/delete/:roleId", Link::GET, [], "/cmw-admin/forum")]
+    public function deleteRole(Request $request, int $roleId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.role.remove");
+
+        ForumPermissionRoleModel::getInstance()->removeRole($roleId);
+
+        Flash::send(Alert::SUCCESS,"Forum","Ce role n'existe plus");
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[NoReturn] #[Link("/roles/add", Link::POST, [], "/cmw-admin/forum")]
+    private function forumRoleAddPost(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+
+        /*Role*/
+        [$name, $weight, $description] = Utils::filterInput("name", "weight", "description");
+
+        $role = ForumPermissionRoleModel::getInstance()->addRole($name, $weight, $description);
+
+        /*Permissions*/
+        $roleId = $role->getId();
+        [$operator, $user_view_forum, $user_view_topic, $user_create_topic, $user_create_topic_tag, $user_create_pool, $user_edit_topic, $user_edit_tag, $user_edit_pool, $user_remove_topic, $user_react_topic, $user_change_react_topic, $user_remove_react_topic, $user_response_topic, $user_response_react, $user_response_change_react, $user_response_remove_react, $admin_change_topic_name, $admin_change_topic_tag, $admin_change_topic_prefix, $admin_set_important, $admin_set_pin, $admin_set_closed, $admin_move_topic] = Utils::filterInput("operator", "user_view_forum", "user_view_topic", "user_create_topic", "user_create_topic_tag", "user_create_pool", "user_edit_topic", "user_edit_tag", "user_edit_pool", "user_remove_topic", "user_react_topic", "user_change_react_topic", "user_remove_react_topic", "user_response_topic", "user_response_react", "user_response_change_react", "user_response_remove_react", "admin_change_topic_name", "admin_change_topic_tag", "admin_change_topic_prefix", "admin_set_important", "admin_set_pin", "admin_set_closed", "admin_move_topic");
+
+        if ($operator != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(1,$roleId);}
+        if ($user_view_forum != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(2,$roleId);}
+        if ($user_view_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(3,$roleId);}
+        if ($user_create_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(4,$roleId);}
+        if ($user_create_topic_tag != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(5,$roleId);}
+        if ($user_create_pool != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(6,$roleId);}
+        if ($user_edit_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(7,$roleId);}
+        if ($user_edit_tag != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(8,$roleId);}
+        if ($user_edit_pool != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(9,$roleId);}
+        if ($user_remove_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(10,$roleId);}
+        if ($user_react_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(11,$roleId);}
+        if ($user_change_react_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(12,$roleId);}
+        if ($user_remove_react_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(13,$roleId);}
+        if ($user_response_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(14,$roleId);}
+        if ($user_response_react != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(15,$roleId);}
+        if ($user_response_change_react != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(16,$roleId);}
+        if ($user_response_remove_react != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(17,$roleId);}
+        if ($admin_change_topic_name != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(18,$roleId);}
+        if ($admin_change_topic_tag != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(19,$roleId);}
+        if ($admin_change_topic_prefix != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(20,$roleId);}
+        if ($admin_set_important != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(21,$roleId);}
+        if ($admin_set_pin != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(22,$roleId);}
+        if ($admin_set_closed != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(23,$roleId);}
+        if ($admin_move_topic != null) {ForumPermissionRoleModel::getInstance()->addRolePermissions(24,$roleId);}
+
+        Flash::send(Alert::SUCCESS,"Forum", "Le rôle ". $role->getName(). " est ajouté !");
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[Link("/roles/edit/:role_id", Link::GET, [], "/cmw-admin/forum")]
+    public function forumRoleEditView(Request $request, int $role_id): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.add");
+
+        $role = ForumPermissionRoleModel::getInstance()->getRoleById($role_id);
+
+        View::createAdminView("Forum", "Roles/edit")
+            ->addVariableList(["role" => $role])
             ->view();
     }
 
