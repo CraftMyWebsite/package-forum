@@ -170,6 +170,17 @@ class ForumPermissionRoleModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @return void
+     */
+    public function editRole(string $name, int $weight, string $description, int $roleId): void
+    {
+        $sql = "UPDATE cmw_forums_roles SET forums_role_name = :role_name, forums_role_description = :role_description, forums_role_weight = :role_weight  WHERE forums_role_id = :role_id";
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+        $req->execute(["role_id" =>$roleId, "role_name" =>$name, "role_description" =>$description, "role_weight" =>$weight]);
+    }
+
     public function removeRole(int $roleId): void
     {
         $data = array(

@@ -116,6 +116,146 @@ class ForumRolesController extends AbstractController {
             ->view();
     }
 
+    #[NoReturn] #[Link("/roles/edit/:role_id", Link::POST, [], "/cmw-admin/forum")]
+    private function forumRoleEditPost(Request $request, int $role_id): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+
+        /*Role*/
+        [$name, $weight, $description] = Utils::filterInput("name", "weight", "description");
+
+        ForumPermissionRoleModel::getInstance()->editRole($name, $weight, $description,$role_id);
+
+        /*Permissions*/
+        [$operator, $user_view_forum, $user_view_topic, $user_create_topic, $user_create_topic_tag, $user_create_pool, $user_edit_topic, $user_edit_tag, $user_edit_pool, $user_remove_topic, $user_react_topic, $user_change_react_topic, $user_remove_react_topic, $user_response_topic, $user_response_react, $user_response_change_react, $user_response_remove_react, $admin_change_topic_name, $admin_change_topic_tag, $admin_change_topic_prefix, $admin_set_important, $admin_set_pin, $admin_set_closed, $admin_move_topic] = Utils::filterInput("operator", "user_view_forum", "user_view_topic", "user_create_topic", "user_create_topic_tag", "user_create_pool", "user_edit_topic", "user_edit_tag", "user_edit_pool", "user_remove_topic", "user_react_topic", "user_change_react_topic", "user_remove_react_topic", "user_response_topic", "user_response_react", "user_response_change_react", "user_response_remove_react", "admin_change_topic_name", "admin_change_topic_tag", "admin_change_topic_prefix", "admin_set_important", "admin_set_pin", "admin_set_closed", "admin_move_topic");
+
+
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,1) && $operator == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(1,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,1) && $operator != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(1,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,2) && $user_view_forum == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(2,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,2) && $user_view_forum != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(2,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,3) && $user_view_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(3,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,3) && $user_view_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(3,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,4) && $user_create_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(4,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,4) && $user_create_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(4,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,5) && $user_create_topic_tag == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(5,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,5) && $user_create_topic_tag != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(5,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,6) && $user_create_pool == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(6,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,6) && $user_create_pool != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(6,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,7) && $user_edit_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(7,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,7) && $user_edit_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(7,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,8) && $user_edit_tag == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(8,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,8) && $user_edit_tag != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(8,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,9) && $user_edit_pool == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(9,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,9) && $user_edit_pool != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(9,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,10) && $user_remove_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(10,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,10) && $user_remove_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(10,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,11) && $user_react_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(11,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,11) && $user_react_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(11,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,12) && $user_change_react_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(12,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,12) && $user_change_react_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(12,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,13) && $user_remove_react_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(13,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,13) && $user_remove_react_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(13,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,14) && $user_response_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(14,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,14) && $user_response_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(14,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,15) && $user_response_react == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(15,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,15) && $user_response_react != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(15,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,16) && $user_response_change_react == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(16,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,16) && $user_response_change_react != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(16,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,17) && $user_response_remove_react == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(17,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,17) && $user_response_remove_react != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(17,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,18) && $admin_change_topic_name == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(18,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,18) && $admin_change_topic_name != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(18,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,19) && $admin_change_topic_tag == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(19,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,19) && $admin_change_topic_tag != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(19,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,20) && $admin_change_topic_prefix == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(20,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,20) && $admin_change_topic_prefix != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(20,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,21) && $admin_set_important == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(21,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,21) && $admin_set_important != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(21,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,22) && $admin_set_pin == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(22,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,22) && $admin_set_pin != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(22,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,23) && $admin_set_closed == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(23,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,23) && $admin_set_closed != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(23,$role_id);
+        }
+        if (ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,24) && $admin_move_topic == null) {
+            ForumPermissionRoleModel::getInstance()->removeRolePermissions(24,$role_id);
+        } elseif (!ForumPermissionRoleModel::getInstance()->roleHasPerm($role_id,24) && $admin_move_topic != null) {
+            ForumPermissionRoleModel::getInstance()->addRolePermissions(24,$role_id);
+        }
+
+        Flash::send(Alert::SUCCESS,"Forum", "Le rôle est modifié !");
+
+        Redirect::redirectPreviousRoute();
+    }
+
     #[Link("/roles/settings", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleSettings(): void
     {
