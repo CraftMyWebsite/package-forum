@@ -1,5 +1,6 @@
 <?php
 
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Security\SecurityManager;
 use CMW\Model\Forum\ForumPermissionRoleModel;
@@ -22,15 +23,15 @@ $test = ForumPermissionRoleModel::getInstance();
 
 <form id="add_role" method="post" action="" class="row">
     <?php (new SecurityManager())->insertHiddenToken() ?>
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-lg-6 mx-auto">
         <div class="card">
-            <div class="card-header">
-                <h4>Rôles</h4>
-            </div>
             <div class="card-body">
 
                 <div class="row">
                     <div class="col-12 col-lg-6">
+                        <input hidden value="<?= $role->getWeight() ?>" type="number" name="weight" class="form-control"
+                               placeholder="1"
+                               required>
                         <h6>Nom :</h6>
                         <div class="form-group position-relative has-icon-left">
                             <input type="text" class="form-control" name="name" value="<?= $role->getName() ?>" placeholder="Community Manager"
@@ -41,19 +42,6 @@ $test = ForumPermissionRoleModel::getInstance();
                         </div>
                     </div>
                     <div class="col-12 col-lg-6">
-                        <h6>Poid :</h6>
-                        <div class="form-group position-relative has-icon-left">
-                            <input value="<?= $role->getWeight() ?>" type="number" name="weight" class="form-control"
-                                   placeholder="1"
-                                   required>
-                            <div class="form-control-icon">
-                                <i class="fa-solid fa-weight-hanging"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-lg-9">
                         <h6>Description :</h6>
                         <div class="form-group position-relative has-icon-left">
                             <input value="<?= $role->getDescription() ?>" type="text" class="form-control" name="description"
@@ -64,17 +52,8 @@ $test = ForumPermissionRoleModel::getInstance();
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h4>Permissions</h4>
-            </div>
-            <div class="card-body">
+                <hr>
+                <h4 class="text-center">Permissions</h4>
                 <h5 class="mt-2">Administrateur</h5>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="operator" name="operator" <?= $test->roleHasPerm($role->getId(),1) ? 'checked' : '' ?>>
@@ -125,19 +104,11 @@ $test = ForumPermissionRoleModel::getInstance();
                             <input class="form-check-input" type="checkbox" id="user_view_forum" name="user_view_forum" <?= $test->roleHasPerm($role->getId(),2) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_view_forum"><h6>Consulter le forum</h6></label>
                         </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="user_react_topic" name="user_react_topic" <?= $test->roleHasPerm($role->getId(),11) ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="user_react_topic"><h6>Réagir à un topic</h6></label>
-                        </div>
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="user_change_react_topic" name="user_change_react_topic" <?= $test->roleHasPerm($role->getId(),12) ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="user_change_react_topic"><h6>Changer sa réaction sur un topic</h6></label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="user_remove_react_topic" name="user_remove_react_topic" <?= $test->roleHasPerm($role->getId(),13) ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="user_remove_react_topic"><h6>Supprimé sa réaction sur un topic</h6></label>
+                            <input class="form-check-input" type="checkbox" id="user_view_topic" name="user_view_topic" <?= $test->roleHasPerm($role->getId(),3) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_view_topic"><h6>Consulter des topic</h6></label>
                         </div>
                     </div>
                 </div>
@@ -145,23 +116,13 @@ $test = ForumPermissionRoleModel::getInstance();
                 <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="user_view_topic" name="user_view_topic" <?= $test->roleHasPerm($role->getId(),3) ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="user_view_topic"><h6>Consulter des topic</h6></label>
-                        </div>
-                        <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_create_topic" name="user_create_topic" <?= $test->roleHasPerm($role->getId(),4) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_create_topic"><h6>Créer des topics</h6></label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="user_create_pool" name="user_create_pool" <?= $test->roleHasPerm($role->getId(),6) ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="user_create_pool"><h6>Créer des sondages</h6></label>
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_edit_topic" name="user_edit_topic" <?= $test->roleHasPerm($role->getId(),7) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_edit_topic"><h6>Éditer ses topics</h6></label>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_create_topic_tag" name="user_create_topic_tag" <?= $test->roleHasPerm($role->getId(),5) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_create_topic_tag"><h6>Créer des Tags sur ces topics</h6></label>
@@ -171,8 +132,27 @@ $test = ForumPermissionRoleModel::getInstance();
                             <label class="form-check-label" for="user_edit_tag"><h6>Éditer ses Tags</h6></label>
                         </div>
                         <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_create_pool" name="user_create_pool" <?= $test->roleHasPerm($role->getId(),6) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_create_pool"><h6>Créer des sondages</h6></label>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_edit_pool" name="user_edit_pool" <?= $test->roleHasPerm($role->getId(),9) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_edit_pool"><h6>Éditer ses sondages</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_react_topic" name="user_react_topic" <?= $test->roleHasPerm($role->getId(),11) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_react_topic"><h6>Réagir à un topic</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_change_react_topic" name="user_change_react_topic" <?= $test->roleHasPerm($role->getId(),12) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_change_react_topic"><h6>Changer sa réaction sur un topic</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_remove_react_topic" name="user_remove_react_topic" <?= $test->roleHasPerm($role->getId(),13) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_remove_react_topic"><h6>Supprimé sa réaction sur un topic</h6></label>
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_remove_topic" name="user_remove_topic" <?= $test->roleHasPerm($role->getId(),10) ? 'checked' : '' ?>>
@@ -208,3 +188,5 @@ $test = ForumPermissionRoleModel::getInstance();
     </div>
 </form>
 
+
+<script src="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'App/Package/Forum/Views/Assets/Js/permCheck.js' ?>"></script>
