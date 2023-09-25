@@ -56,7 +56,14 @@ $description = "desc";
                     <label class="form-check-label" for="operator"><h6>Toutes les permissions</h6></label>
                 </div>
                 <hr>
-                <h5 class="mt-2">Modérateur</h5>
+
+                <div class="d-flex flex-wrap " style="align-items: center">
+                    <label for="moderator_all_check" class="mt-2 text-xl font-bold">Modérateur</label>
+                    <div class="form-check-reverse form-switch d-inline">
+                        <input class="form-check-input" type="checkbox" id="moderator_all_check" name="moderator_all_check">
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
@@ -92,7 +99,12 @@ $description = "desc";
                     </div>
                 </div>
                 <hr>
-                <h5 class="mt-2">Utilisateur</h5>
+                <div class="d-flex flex-wrap " style="align-items: center">
+                    <label for="user_all_check" class="mt-2 text-xl font-bold">Utilisateur</label>
+                    <div class="form-check-reverse form-switch d-inline">
+                        <input class="form-check-input" type="checkbox" id="user_all_check" name="user_all_check">
+                    </div>
+                </div>
                 <h6 class="text-center">Forum</h6>
                 <div class="row">
                     <div class="col-12 col-lg-6">
