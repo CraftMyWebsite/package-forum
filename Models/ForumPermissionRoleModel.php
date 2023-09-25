@@ -192,7 +192,7 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute($data);
     }
 
-    public function addRolePermissions(int $permissionId, int $roleId): void
+    public function addRolePermissions(int $roleId, int $permissionId): void
     {
         $data = array(
             "permission_id" => $permissionId,
@@ -204,7 +204,7 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute($data);
     }
 
-    public function removeRolePermissions(int $permissionId, int $roleId): void
+    public function removeRolePermissions(int $roleId, int $permissionId): void
     {
         $data = array(
             "permission_id" => $permissionId,
