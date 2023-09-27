@@ -15,6 +15,7 @@ use CMW\Utils\Website;
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
+/* @var \CMW\Entity\Forum\ForumPermissionRoleEntity[] $ForumRoles */
 
 $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
@@ -38,6 +39,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <tr>
                                     <th id="categorie-<?= $category->getId() ?>"><small><i
                                                 class="text-secondary fa-solid fa-circle-dot"></i></small> <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?>
+                                        <?php if ($category->isRestricted()): ?><small style="color: #af1a1a">(Accès restreint)</small><?php endif; ?>
                                         -<i>
                                             <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i>
                                     </th>
@@ -660,7 +662,7 @@ $description = LangManager::translate("forum.forum.list.description");
     --MODAL AJOUT CATEGORIE--
 -->
 <div class="modal fade " id="add-cat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title white"
@@ -694,6 +696,21 @@ $description = LangManager::translate("forum.forum.list.description");
                             <i class="fas fa-paragraph"></i>
                         </div>
                     </div>
+                    <div class="form-check form-switch mt-2">
+                        <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
+                        <label class="form-check-label" for="allowedGroupsToggle"><h6>Accès restreint</h6></label>
+                    </div>
+                    <div class="mt-2 listAllowedGroups d-none">
+                        <h6>Rôle autorisé :</h6>
+                        <div class="form-group">
+                            <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
+                                <?php foreach ($ForumRoles as $ForumRole): ?>
+                                    <option
+                                        value="<?= $ForumRole->getId() ?>"><?= $ForumRole->getName() ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
@@ -711,3 +728,15 @@ $description = LangManager::translate("forum.forum.list.description");
 </div>
 
 
+<script>
+    const toggleBtn = document.getElementsByClassName('allowedGroups')
+    const allowedGroupsParent = document.getElementsByClassName('listAllowedGroups')
+
+    for (let u = 0; u < toggleBtn.length; u++) {
+        toggleBtn[u].addEventListener("change", () => {
+            for (let y = 0; y < allowedGroupsParent.length; y++) {
+                allowedGroupsParent[y].classList.toggle('d-none')
+            }
+        })
+    }
+</script>

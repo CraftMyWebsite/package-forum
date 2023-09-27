@@ -11,6 +11,7 @@ use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
+use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
@@ -41,9 +42,10 @@ class ForumCategoryController extends AbstractController
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
 
         View::createAdminView("Forum", "list")
-            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
+            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();
@@ -63,7 +65,15 @@ class ForumCategoryController extends AbstractController
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        ForumCategoryModel::getInstance()->createCategory($name, $icon, $description);
+        $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+
+        $forum = ForumCategoryModel::getInstance()->createCategory($name, $icon, $description, $isRestricted);
+
+        if (!empty($_POST['allowedGroupsToggle']) && !empty($_POST['allowedGroups'])) {
+            foreach ($_POST['allowedGroups'] as $roleId) {
+                ForumCategoryModel::getInstance()->addForumCategoryGroupsAllowed($roleId, $forum->getId());
+            }
+        }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.category.toaster.success"));

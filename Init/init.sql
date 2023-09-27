@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
     forum_category_name        VARCHAR(50) NOT NULL,
     forum_category_icon        VARCHAR(50) NULL,
     forum_category_description TEXT        NULL,
+    forum_category_restricted INT(1)  DEFAULT 0,
     forum_category_created     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_category_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB
@@ -224,6 +225,19 @@ CREATE TABLE IF NOT EXISTS cmw_forums_roles_permissions
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS cmw_forums_categories_groups_allowed
+(
+    forums_role_id INT(11) NOT NULL,
+    forum_category_id  INT(11) NOT NULL,
+    PRIMARY KEY (`forums_role_id`),
+    CONSTRAINT fk_forums_categories_groups_allowed_role_id FOREIGN KEY (`forums_role_id`)
+    REFERENCES cmw_forums_roles (forums_role_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_forums_categories_groups_allowed_category_id FOREIGN KEY (`forum_category_id`)
+    REFERENCES cmw_forums_categories (`forum_category_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
 VALUES ('Membre', 'Rôle pour les membres', 0, 1),

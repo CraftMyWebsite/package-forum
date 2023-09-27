@@ -61,20 +61,23 @@ class ForumCategoryModel extends AbstractModel
             $res["forum_category_icon"],
             $res["forum_category_created"],
             $res["forum_category_updated"],
-            $res["forum_category_description"] ?? ""
+            $res["forum_category_description"] ?? "",
+            $res["forum_category_restricted"],
+            $this->getAllowedRoles($res["forum_category_id"])
         );
     }
 
-    public function createCategory(string $name, string $icon, string $description): ?ForumCategoryEntity
+    public function createCategory(string $name, string $icon, string $description, int $isRestricted): ?ForumCategoryEntity
     {
 
         $data = array(
             "category_name" => $name,
             "category_icon" => $icon,
-            "category_description" => $description
+            "category_description" => $description,
+            "category_restricted" => $isRestricted
         );
 
-        $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_icon, forum_category_description) VALUES (:category_name, :category_icon, :category_description)";
+        $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_icon, forum_category_description, forum_category_restricted) VALUES (:category_name, :category_icon, :category_description, :category_restricted)";
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
@@ -85,6 +88,39 @@ class ForumCategoryModel extends AbstractModel
         }
 
         return null;
+    }
+
+    public function addForumCategoryGroupsAllowed(int $roleId, int $categoryId): void
+    {
+        $sql = "INSERT INTO cmw_forums_categories_groups_allowed (forums_role_id, forum_category_id)
+                VALUES (:role_id, :category_id)";
+        $db = DatabaseManager::getInstance();
+        $req = $db ->prepare($sql);
+        $req->execute(['role_id' => $roleId, 'category_id' => $categoryId]);
+    }
+
+    /**
+     * @param int $forumId
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity[]|null
+     */
+    public function getAllowedRoles(int $forumId): ?array
+    {
+        $sql = "SELECT forums_role_id FROM cmw_forums_categories_groups_allowed WHERE forum_category_id = :id";
+        $db = DatabaseManager::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(['id' => $forumId])){
+            return null;
+        }
+
+
+        $roles = [];
+        while ($role = $req->fetch()) {
+            $roles[] = ForumPermissionRoleModel::getInstance()->getRoleById($role['forums_role_id']);
+        }
+
+        return $roles;
     }
 
     public function editCategory(int $id, string $name, string $icon, string $description): ?ForumCategoryEntity

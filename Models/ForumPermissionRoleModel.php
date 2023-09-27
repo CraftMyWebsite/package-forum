@@ -304,4 +304,20 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute($data);
 
     }
+
+    public static function playerHasForumRole(int $roleId): bool
+    {
+        if (is_null(UsersModel::getCurrentUser()->getId())) {
+            return false;
+        }
+
+        $roles = ForumPermissionRoleModel::getInstance()->getRolesByUser(UsersModel::getCurrentUser()->getId());
+        foreach ($roles as $role) {
+            if ($role->getId() === $roleId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
