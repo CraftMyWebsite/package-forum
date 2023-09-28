@@ -5,6 +5,7 @@ namespace CMW\Model\Forum;
 use CMW\Entity\Forum\ForumCategoryEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
+use CMW\Utils\Utils;
 
 
 /**
@@ -58,6 +59,7 @@ class ForumCategoryModel extends AbstractModel
         return new ForumCategoryEntity(
             $res["forum_category_id"],
             $res["forum_category_name"],
+            $res["forum_category_slug"],
             $res["forum_category_icon"],
             $res["forum_category_created"],
             $res["forum_category_updated"],
@@ -67,27 +69,72 @@ class ForumCategoryModel extends AbstractModel
         );
     }
 
+    public function getCatBySlug(string $slug): ?ForumCategoryEntity
+    {
+        $sql = "SELECT forum_category_id FROM cmw_forums_categories WHERE forum_category_slug = :cat_slug";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("cat_slug" => $slug))) {
+            return null;
+        }
+
+        $res = $res->fetch();
+
+        if (!$res) {
+            return null;
+        }
+
+        return $this->getCategoryById($res["forum_category_id"]);
+    }
+
     public function createCategory(string $name, string $icon, string $description, int $isRestricted): ?ForumCategoryEntity
     {
 
         $data = array(
             "category_name" => $name,
+            "category_slug" => "NOT_DEFINED",
             "category_icon" => $icon,
             "category_description" => $description,
             "category_restricted" => $isRestricted
         );
 
-        $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_icon, forum_category_description, forum_category_restricted) VALUES (:category_name, :category_icon, :category_description, :category_restricted)";
+        $sql = "INSERT INTO cmw_forums_categories(forum_category_name, forum_category_slug, forum_category_icon, forum_category_description, forum_category_restricted) VALUES (:category_name, :category_slug, :category_icon, :category_description, :category_restricted)";
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         if ($req->execute($data)) {
             $id = $db->lastInsertId();
+            $this->setCatSlug($id, $name);
             return $this->getCategoryById($id);
         }
 
         return null;
+    }
+
+    private function setCatSlug(int $id, string $name): void
+    {
+        $slug = $this->generateSlug($id, $name);
+
+        $data = array(
+            "category_slug" => $slug,
+            "category_id" => $id,
+        );
+
+        $sql = "UPDATE cmw_forums_categories SET forum_category_slug = :category_slug WHERE forum_category_id = :category_id";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        $req->execute($data);
+    }
+
+    public function generateSlug(int $id, string $name): string
+    {
+        return Utils::normalizeForSlug($name) . "-$id";
     }
 
     public function addForumCategoryGroupsAllowed(int $roleId, int $categoryId): void

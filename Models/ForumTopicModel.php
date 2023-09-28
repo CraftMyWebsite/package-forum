@@ -100,6 +100,7 @@ class ForumTopicModel extends AbstractModel
             $res["forum_topic_slug"],
             $res["forum_topic_content"] ?? "",
             $res["forum_topic_is_trash"],
+            $res["forum_topic_trash_reason"],
             $res["forum_topic_created"],
             $res["forum_topic_updated"],
             $res["forum_topic_pinned"],

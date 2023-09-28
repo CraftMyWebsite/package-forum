@@ -13,6 +13,7 @@ use CMW\Model\Forum\ForumDiscordModel;
 use CMW\Model\Forum\ForumFeedbackModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumPermissionModel;
+use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
@@ -49,8 +50,8 @@ class ForumPublicController extends CoreController
         $view->view();
     }
 
-    #[Link("/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
-    public function publicForumView(Request $request, string $forumSlug): void
+    #[Link("/c/:catSlug", Link::GET, ['.*?'], "/forum")]
+    public function publicCatView(Request $request, string $catSlug): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -58,6 +59,25 @@ class ForumPublicController extends CoreController
             ForumController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
         }
 
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+
+        $view = new View("Forum", "cat");
+        $view->addVariableList(["forumModel" => forumModel::getInstance(), "category" => $category]);
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
+        $view->view();
+    }
+
+    #[Link("/c/:catSlug/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
+    public function publicForumView(Request $request, string $catSlug, string $forumSlug): void
+    {
+        $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
+
+        if ($visitorCanViewForum === "0") {
+            ForumController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
+        }
+
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
@@ -67,15 +87,16 @@ class ForumPublicController extends CoreController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
         $view->view();
     }
 
-    #[Link("/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
-    public function publicForumAddTopicView(Request $request, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
+    public function publicForumAddTopicView(Request $request, string $catSlug, string $forumSlug): void
     {
         ForumController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
@@ -84,14 +105,14 @@ class ForumPublicController extends CoreController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "addTopic");
-        $view->addVariableList(["forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
-    #[Link("/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAddTopicPost(Request $request, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAddTopicPost(Request $request, string $catSlug, string $forumSlug): void
     {
         ForumController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
@@ -146,8 +167,8 @@ class ForumPublicController extends CoreController
         header("location: ../$forumSlug");
     }
 
-    #[Link("/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAdminEditTopicPost(Request $request, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAdminEditTopicPost(Request $request, string $catSlug, string $forumSlug): void
     {
 
         if (UsersController::isAdminLogged()) {
@@ -193,14 +214,17 @@ class ForumPublicController extends CoreController
 
     }
 
-    #[Link("/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicView(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicView(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
         if ($visitorCanViewForum === "0") {
             ForumController::getInstance()->redirectIfNotHavePermissions("user_view_topic");
         }
+
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(), Website::getClientIp());
@@ -217,14 +241,14 @@ class ForumPublicController extends CoreController
         }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed]);
+        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
-    #[Link("/t/:topicSlug/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicAddFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicAddFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -239,8 +263,8 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/t/:topicSlug/un_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicDeleteFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/un_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicDeleteFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -255,8 +279,8 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/t/:topicSlug/change_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicChangeFeedback(Request $request, string $topicSlug, int $topicId, int $feedbackId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/change_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicChangeFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -271,8 +295,8 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicResponseAddFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseAddFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -287,8 +311,8 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/t/:topicSlug/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicResponseDeleteFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseDeleteFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -303,8 +327,8 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/t/:topicSlug/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicResponseChangeFeedback(Request $request, string $topicSlug, int $responseId, int $feedbackId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseChangeFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -319,8 +343,8 @@ class ForumPublicController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicPinned(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicPinned(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -346,8 +370,8 @@ class ForumPublicController extends CoreController
 
     }
 
-    #[Link("/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicDisallowReplies(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicDisallowReplies(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -372,8 +396,8 @@ class ForumPublicController extends CoreController
         }
     }
 
-    #[Link("/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsImportant(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsImportant(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -398,8 +422,8 @@ class ForumPublicController extends CoreController
         }
     }
 
-    #[Link("/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsTrash(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsTrash(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -413,7 +437,7 @@ class ForumPublicController extends CoreController
 
                 Flash::send("success", LangManager::translate("core.toaster.success"), "Topic mis à la poubelle !");
 
-                header("location: ../../f/{$topic->getForum()->getSlug()}");
+                header("location: ../../");
             }
         } else {
             Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
@@ -421,8 +445,8 @@ class ForumPublicController extends CoreController
         }
     }
 
-    #[Link("/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicResponsePost(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
+    public function publicTopicResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de répondre.");
@@ -479,8 +503,8 @@ class ForumPublicController extends CoreController
         Website::refresh();
     }
 
-    #[Link("/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
-    public function publicTopicReplyDelete(Request $request, string $topicSlug, int $replyId, int $reason): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
+    public function publicTopicReplyDelete(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $replyId, int $reason): void
     {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
@@ -508,18 +532,21 @@ class ForumPublicController extends CoreController
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));
 
-            header("location: ../../../{$topic->getSlug()}");
+            Redirect::redirectPreviousRoute();
         }
     }
 
 
-    #[Link("/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicEdit(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/edit", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicEdit(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de modifier ce topic.");
             Redirect::redirect('login');
         }
+
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
@@ -529,14 +556,14 @@ class ForumPublicController extends CoreController
         }
 
         $view = new View("Forum", "editTopic");
-        $view->addVariableList(["topic" => $topic]);
+        $view->addVariableList(["topic" => $topic,"category" => $category,"forum" => $forum]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
-    #[Link("/t/:topicSlug/edit", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicEditPost(Request $request, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/edit", Link::POST, ['.*?'], "/forum")]
+    public function publicTopicEditPost(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 
@@ -573,9 +600,9 @@ class ForumPublicController extends CoreController
         }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
-            LangManager::translate("forum.topic.add.success"));
+            "Topic mis à jour");
 
-        header("location: ../../f/{$topic->getForum()->getSlug()}");
+        header("location: ../../t/{$topic->getSlug()}");
     }
 
 

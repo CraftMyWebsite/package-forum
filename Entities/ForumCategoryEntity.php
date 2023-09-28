@@ -3,6 +3,7 @@
 namespace CMW\Entity\Forum;
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Env\EnvManager;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Users\RolesModel;
@@ -13,6 +14,7 @@ class ForumCategoryEntity
 
     private int $categoryId;
     private string $categoryName;
+    private string $categorySlug;
     private string $categoryIcon;
     private string $categoryDescription;
     private int $categoryIsRestricted;
@@ -23,6 +25,7 @@ class ForumCategoryEntity
     /**
      * @param int $categoryId
      * @param string $categoryName
+     * @param string $categorySlug
      * @param string $categoryIcon
      * @param string $categoryDescription
      * @param int $categoryIsRestricted
@@ -31,10 +34,11 @@ class ForumCategoryEntity
      * @param \CMW\Entity\Forum\ForumPermissionRoleEntity[]|null $restrictedRoles
      */
 
-    public function __construct(int $id, string $name, string $icon,string $categoryCreated, string $categoryUpdate, string $desc = "", int $categoryIsRestricted, ?array $restrictedRoles)
+    public function __construct(int $id, string $name, string $categorySlug, string $icon,string $categoryCreated, string $categoryUpdate, string $desc = "", int $categoryIsRestricted, ?array $restrictedRoles)
     {
         $this->categoryId = $id;
         $this->categoryName = $name;
+        $this->categorySlug = $categorySlug;
         $this->categoryIcon = $icon;
         $this->categoryDescription = $desc;
         $this->categoryIsRestricted = $categoryIsRestricted;
@@ -57,6 +61,14 @@ class ForumCategoryEntity
     public function getName(): string
     {
         return $this->categoryName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/c/".$this->categorySlug;
     }
 
     /**

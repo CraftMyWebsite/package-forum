@@ -93,9 +93,13 @@ class ForumEntity
         return CoreController::formatDate($this->forumUpdated);
     }
 
-    public function getLink(): string
+    /**
+     * @return string
+     * @param $catSlug
+     */
+    public function getLink($catSlug): string
     {
-        return "forum/f/$this->forumSlug";
+        return "$catSlug/f/$this->forumSlug";
     }
 
     public function getParent(): ForumEntity|ForumCategoryEntity

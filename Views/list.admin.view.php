@@ -39,9 +39,9 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <tr>
                                     <th id="categorie-<?= $category->getId() ?>"><small><i
                                                 class="text-secondary fa-solid fa-circle-dot"></i></small> <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?>
-                                        <?php if ($category->isRestricted()): ?><small style="color: #af1a1a">(Accès restreint)</small><?php endif; ?>
-                                        -<i>
-                                            <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i>
+                                        <?php if ($category->isRestricted()): ?><small style="color: #af1a1a">Restreint <i data-bs-toggle="tooltip" title="<?php foreach ($categoryModel->getAllowedRoles($category->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach; ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
+                                        <?php endif; ?>
+                                        -<i> <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i>
                                     </th>
                                     <th class="text-end">
                                         <a type="button" data-bs-toggle="modal"
@@ -228,7 +228,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                         </td>
                                         <td class="text-end">
                                             <a target="_blank"
-                                               href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $forumObj->getLink() ?>"><i
+                                               href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . $forumObj->getLink($category->getSlug()) ?>"><i
                                                     class="me-3 fa-solid fa-up-right-from-square"></i></a>
                                             <a type="button" data-bs-toggle="modal"
                                                data-bs-target="#add-subforum-<?= $forumObj->getId() ?>">
@@ -256,7 +256,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <i><small><?= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?></small></i>
                                             </td>
                                             <td class="text-end">
-                                                <!--<a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $subForumObj->getLink() ?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
+                                                <!--<a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . $subForumObj->getLink($category->getSlug()) ?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $subForumObj->getId() ?>">
                                             <i class="text-primary me-3 fas fa-edit"></i>
                                         </a>
@@ -490,14 +490,16 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2"
                                                                           style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
                                 <?= mb_strimwidth($topic->getName(), 0, 65, '...') ?>
+                                <?php if($topic->getIsTrash()) :?><small style="color: #d00d0d">En corbeille</small><?php endif; ?>
                             </td>
                             <td class="text-center"><a target="_blank"
-                                   href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/t/<?= $topic->getSlug() ?>"><?= $topic->getForum()->getName() ?></a>
+                                                       href="<?= $topic->getLink($category->getSlug(), $topic->getForum()->getSlug()) ?>"><?= $topic->getForum()->getName() ?></a>
                             </td>
-                            <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px" width="32px"
-                                     height="32px"
-                                     src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topic->getUser()->getUserPicture()->getImageName() ?>"
-                                     alt="..."><?= $topic->getUser()->getPseudo() ?></td>
+                            <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px"
+                                                         width="32px"
+                                                         height="32px"
+                                                         src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topic->getUser()->getUserPicture()->getImageName() ?>"
+                                                         alt="..."><?= $topic->getUser()->getPseudo() ?></td>
                             <td class="text-center"><?= $topic->getCreated() ?></td>
                             <td class="text-center"><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>
                             <td class="text-center"><?= $topic->countViews() ?></td>
@@ -600,9 +602,11 @@ $description = LangManager::translate("forum.forum.list.description");
                                                         <?php foreach ($categoryModel->getCategories() as $cat): ?>
                                                             <option disabled>──── <?= $cat->getName() ?> ────</option>
                                                             <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObject): ?>
-                                                            <option value="<?= $forumObject->getId() ?>" <?= ($forumObject->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObject->getName() ?></option>
+                                                                <option
+                                                                    value="<?= $forumObject->getId() ?>" <?= ($forumObject->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObject->getName() ?></option>
                                                                 <?php foreach ($forumModel->getSubforumByForum($forumObject->getId()) as $subForumObject): ?>
-                                                                    <option value="<?= $subForumObject->getId() ?>">↪ <?= $subForumObject->getName() ?></option>
+                                                                    <option value="<?= $subForumObject->getId() ?>">
+                                                                        ↪ <?= $subForumObject->getName() ?></option>
                                                                 <?php endforeach; ?>
                                                             <?php endforeach; ?>
                                                         <?php endforeach; ?>
@@ -697,7 +701,8 @@ $description = LangManager::translate("forum.forum.list.description");
                         </div>
                     </div>
                     <div class="form-check form-switch mt-2">
-                        <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
+                        <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle"
+                               name="allowedGroupsToggle">
                         <label class="form-check-label" for="allowedGroupsToggle"><h6>Accès restreint</h6></label>
                     </div>
                     <div class="mt-2 listAllowedGroups d-none">

@@ -17,6 +17,7 @@ class ForumTopicEntity
     private string $topicSlug;
     private string $topicContent;
     private int $topicIsTrash;
+    private int $topicTrashReason;
     private string $topicCreated;
     private string $topicUpdate;
     private bool $topicPinned;
@@ -34,6 +35,7 @@ class ForumTopicEntity
      * @param string $topicSlug
      * @param string $topicContent
      * @param int $topicIsTrash
+     * @param int $topicTrashReason
      * @param string $topicCreated
      * @param string $topicUpdate
      * @param bool $topicPinned
@@ -43,7 +45,7 @@ class ForumTopicEntity
      * @param \CMW\Entity\Forum\ForumEntity $topicForum
      * @param \CMW\Entity\Forum\ForumTopicTagEntity[] $tags
      */
-    public function __construct(int $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, string $topicCreated, string $topicUpdate,
+    public function __construct(int $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, int $topicTrashReason, string $topicCreated, string $topicUpdate,
                                 bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
                                 ForumEntity $topicForum, array $tags)
     {
@@ -53,6 +55,7 @@ class ForumTopicEntity
         $this->topicSlug = $topicSlug;
         $this->topicContent = $topicContent;
         $this->topicIsTrash = $topicIsTrash;
+        $this->topicTrashReason = $topicTrashReason;
         $this->topicCreated = $topicCreated;
         $this->topicUpdate = $topicUpdate;
         $this->topicPinned = $topicPinned;
@@ -147,6 +150,16 @@ class ForumTopicEntity
     /**
      * @return string
      */
+    public function getTrashReason(): string
+    {
+        if ($this->topicTrashReason == 0) {
+            return "Staff";
+        }
+    }
+
+    /**
+     * @return string
+     */
     public function getCreated(): string
     {
         return CoreController::formatDate($this->topicCreated);
@@ -210,33 +223,52 @@ class ForumTopicEntity
 
     /**
      * @return string
+     * @param $catSlug
+     * @param $forumSlug
      */
-    public function getLink(): string
+    public function getLink($catSlug, $forumSlug): string
     {
-        return "forum/t/$this->topicSlug";
-    }
-
-    public function getPinnedLink(): string
-    {
-        return "forum/t/$this->topicSlug/pinned";
-    }
-
-    public function getDisallowRepliesLink(): string
-    {
-        return "forum/t/$this->topicSlug/disallowreplies";
-    }
-
-    public function getIsImportantLink(): string
-    {
-        return "forum/t/$this->topicSlug/isimportant";
+        return "$catSlug/f/$forumSlug/t/$this->topicSlug";
     }
 
     /**
      * @return string
+     * @param $catSlug
+     * @param $forumSlug
      */
-    public function trashLink(): string
+    public function getPinnedLink($catSlug, $forumSlug): string
     {
-        return "forum/t/$this->topicSlug/trash";
+        return "$catSlug/f/$forumSlug/t/$this->topicSlug/pinned";
+    }
+
+    /**
+     * @return string
+     * @param $catSlug
+     * @param $forumSlug
+     */
+    public function getDisallowRepliesLink($catSlug, $forumSlug): string
+    {
+        return "$catSlug/f/$forumSlug/t/$this->topicSlug/disallowreplies";
+    }
+
+    /**
+     * @return string
+     * @param $catSlug
+     * @param $forumSlug
+     */
+    public function getIsImportantLink($catSlug, $forumSlug): string
+    {
+        return "$catSlug/f/$forumSlug/t/$this->topicSlug/isimportant";
+    }
+
+    /**
+     * @return string
+     * @param $catSlug
+     * @param $forumSlug
+     */
+    public function trashLink($catSlug, $forumSlug): string
+    {
+        return "$catSlug/f/$forumSlug/t/$this->topicSlug/trash";
     }
 
     /**

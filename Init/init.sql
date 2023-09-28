@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_categories
 (
     forum_category_id          INT AUTO_INCREMENT PRIMARY KEY,
     forum_category_name        VARCHAR(50) NOT NULL,
+    forum_category_slug             VARCHAR(255)        NOT NULL,
     forum_category_icon        VARCHAR(50) NULL,
     forum_category_description TEXT        NULL,
     forum_category_restricted INT(1)  DEFAULT 0,
@@ -228,9 +229,9 @@ CREATE TABLE IF NOT EXISTS cmw_forums_roles_permissions
 
 CREATE TABLE IF NOT EXISTS cmw_forums_categories_groups_allowed
 (
+    forums_cat_group_allowed_id INT AUTO_INCREMENT PRIMARY KEY,
     forums_role_id INT(11) NOT NULL,
     forum_category_id  INT(11) NOT NULL,
-    PRIMARY KEY (`forums_role_id`),
     CONSTRAINT fk_forums_categories_groups_allowed_role_id FOREIGN KEY (`forums_role_id`)
     REFERENCES cmw_forums_roles (forums_role_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_forums_categories_groups_allowed_category_id FOREIGN KEY (`forum_category_id`)

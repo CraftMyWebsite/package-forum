@@ -4,6 +4,9 @@ use CMW\Manager\Lang\LangManager;
 use CMW\Utils\Utils;
 use CMW\Manager\Security\SecurityManager;
 
+/* @var \CMW\Entity\Forum\ForumResponseEntity $response*/
+/* @var \CMW\Entity\Forum\ForumTopicEntity $topic*/
+
 $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
 ?>
@@ -139,7 +142,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         <?php foreach ($topicModel->getTrashTopic() as $topic) : ?>
                         <tr>
                             <td><?= $topic->getUser()->getPseudo() ?></td>
-                            <td>NA</td>
+                            <td><?= $topic->getTrashReason() ?></td>
                             <td><?= $topic->getUpdate() ?></td>
                             <td>
                                 <a type="button" data-bs-toggle="modal" data-bs-target="#vieww-<?= $topic->getId() ?>">
@@ -164,6 +167,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                     </div>
                                     <div class="modal-body">
                                         <p><b>Était dans :</b> <a href="/forum/f/<?= $topic->getForum()->getSlug() ?>" target="_blank"><?= $topic->getForum()->getName() ?></a></p>
+                                        <p><b>Titre : <?= $topic->getName() ?></b></p>
                                         <p><b>Messages : <?= $topic->getContent() ?></b></p>
                                         <p><b>Publié le :</b> <?= $topic->getCreated() ?></p>
                                     </div>
