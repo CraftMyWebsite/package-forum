@@ -320,28 +320,3 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
 
 INSERT INTO cmw_forums_users_roles (`user_id`,`forums_role_id`)
 SELECT user_id, 1 FROM cmw_users
-/*
-a faire plus tard par ce que galere de fou :
-
-Permeta d'ajouter une permission role special sur un topic ou une cat (par exemple permettre des créer des catégorie privé etc etc)
-CREATE TABLE IF NOT EXISTS `cmw_forums_special_roles_permissions`
-(
-    `forums_role_id`          INT(11)  NOT NULL AUTO_INCREMENT,
-    `forum_permission_id`        INT(11)  NOT NULL,
-
-    PRIMARY KEY (`forums_role_id`)
-) ENGINE = InnoDB
-  CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-
-Permeta d'ajouter un utilisateur avec des droit special sur un topic ou une cat (par exemple permettre des créer des catégorie privé etc etc)
-CREATE TABLE IF NOT EXISTS `cmw_forums_special_users_permissions`
-(
-    `user_id`          INT(11)  NOT NULL AUTO_INCREMENT,
-    `forum_permission_id`        INT(11)  NOT NULL,
-
-    PRIMARY KEY (`forums_role_id`)
-) ENGINE = InnoDB
-  CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-*/

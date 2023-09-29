@@ -260,6 +260,7 @@ class ForumPublicController extends CoreController
             Redirect::redirect("forum");
         }
 
+        $forumModel = forumModel::getInstance();
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(), Website::getClientIp());
         $currentUser = usersModel::getInstance()::getCurrentUser();
@@ -275,7 +276,7 @@ class ForumPublicController extends CoreController
         }
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category]);
+        $view->addVariableList(["forumModel" => $forumModel,"currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
