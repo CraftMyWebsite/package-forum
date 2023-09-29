@@ -39,9 +39,13 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <tr>
                                     <th id="categorie-<?= $category->getId() ?>"><small><i
                                                 class="text-secondary fa-solid fa-circle-dot"></i></small> <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?>
-                                        <?php if ($category->isRestricted()): ?><small style="color: #af1a1a">Restreint <i data-bs-toggle="tooltip" title="<?php foreach ($categoryModel->getAllowedRoles($category->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach; ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
+                                        <?php if ($category->isRestricted()): ?><small style="color: #af1a1a">Restreint
+                                            <i data-bs-toggle="tooltip"
+                                               title="<?php foreach ($categoryModel->getAllowedRoles($category->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach; ?>"
+                                               class="fa-sharp fa-solid fa-circle-info"></i></small>
                                         <?php endif; ?>
-                                        -<i> <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i>
+                                        -<i>
+                                            <small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i>
                                     </th>
                                     <th class="text-end">
                                         <a type="button" data-bs-toggle="modal"
@@ -248,24 +252,58 @@ $description = LangManager::translate("forum.forum.list.description");
                                     <!--
                                         --LISTAGE SOUS-FORUM --
                                     -->
+
+<!--                                    TODO : Besoin de Teyir ou Badiiix pour supprimé cette merde -->
                                     <?php foreach ($forumModel->getSubforumByForum($forumObj->getId()) as $subForumObj): ?>
-                                        <tr id="forum-<?= $subForumObj->getId() ?>">
-                                            <td class="ps-5 text-bold-500"><small><i
-                                                        class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small> <?= $subForumObj->getFontAwesomeIcon() ?> <?= $subForumObj->getName() ?>
-                                                -
-                                                <i><small><?= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?></small></i>
-                                            </td>
-                                            <td class="text-end">
-                                                <!--<a target="_blank" href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . $subForumObj->getLink($category->getSlug()) ?>"><i class="me-3 fa-solid fa-up-right-from-square"></i></a>
-                                        <a type="button" data-bs-toggle="modal" data-bs-target="#edit-forums-<?= $subForumObj->getId() ?>">
-                                            <i class="text-primary me-3 fas fa-edit"></i>
-                                        </a>
-                                        <a type="button" data-bs-toggle="modal" data-bs-target="#deletee-<?= $subForumObj->getId() ?>">
-                                            <i class="text-danger fas fa-trash-alt"></i>
-                                        </a>-->
-                                            </td>
-                                        </tr>
+                                        <tr><td style="padding-left: 5rem"><?= $subForumObj->getName()?></td></tr>
+                                        <?php foreach ($forumModel->getSubforumByForum($subForumObj->getId()) as $subsubForumObj): ?>
+                                            <tr><td style="padding-left: 7rem"><?= $subsubForumObj->getName() ?></td></tr>
+                                            <?php foreach ($forumModel->getSubforumByForum($subsubForumObj->getId()) as $subsubsubForumObj): ?>
+                                                <tr><td style="padding-left: 10rem"><?= $subsubsubForumObj->getName() ?></td></tr>
+                                            <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                     <?php endforeach; ?>
+
+
+
+<!--                                    --><?php //foreach ($forumModel->getSubforumByForum($forumObj->getId()) as $subForumObj): ?>
+<!--                                        <tr id="forum---><?php //= $subForumObj->getId() ?><!--">-->
+<!--                                            <td class="ps-5 text-bold-500"><small><i-->
+<!--                                                        class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small> --><?php //= $subForumObj->getFontAwesomeIcon() ?><!-- --><?php //= $subForumObj->getName() ?>
+<!--                                                --->
+<!--                                                <i><small>--><?php //= mb_strimwidth($subForumObj->getDescription(), 0, 45, '...') ?><!--</small></i>-->
+<!--                                            </td>-->
+<!--                                            <td class="text-end">-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        --><?php //foreach ($forumModel->getSubforumByForum($subForumObj->getId()) as $subsubForumObj): ?>
+<!--                                            <tr id="forum---><?php //= $subsubForumObj->getId() ?><!--">-->
+<!--                                                <td style="padding-left: 5rem" class="text-bold-500"><small><i-->
+<!--                                                            class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small> --><?php //= $subsubForumObj->getFontAwesomeIcon() ?><!-- --><?php //= $subsubForumObj->getName() ?>
+<!--                                                    --->
+<!--                                                    <i><small>--><?php //= mb_strimwidth($subsubForumObj->getDescription(), 0, 45, '...') ?><!--</small></i>-->
+<!--                                                </td>-->
+<!--                                                <td class="text-end">-->
+<!--                                                </td>-->
+<!--                                            </tr>-->
+<!--                                            --><?php //foreach ($forumModel->getSubforumByForum($subsubForumObj->getId()) as $subsubsubForumObj): ?>
+<!--                                                <tr id="forum---><?php //= $subsubsubForumObj->getId() ?><!--">-->
+<!--                                                    <td style="padding-left: 10rem" class=" text-bold-500"><small><i-->
+<!--                                                                class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small> --><?php //= $subsubsubForumObj->getFontAwesomeIcon() ?><!-- --><?php //= $subsubsubForumObj->getName() ?>
+<!--                                                        --->
+<!--                                                        <i><small>--><?php //= mb_strimwidth($subsubsubForumObj->getDescription(), 0, 45, '...') ?><!--</small></i>-->
+<!--                                                    </td>-->
+<!--                                                    <td class="text-end">-->
+<!--                                                    </td>-->
+<!--                                                </tr>-->
+<!--                                            --><?php //endforeach; ?>
+<!--                                        --><?php //endforeach; ?>
+<!--                                    --><?php //endforeach; ?>
+
+
+
+
+
                                     <!--
                                         --MODAL AJOUT SOUS-FORUM--
                                     -->
@@ -490,7 +528,8 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2"
                                                                           style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
                                 <?= mb_strimwidth($topic->getName(), 0, 65, '...') ?>
-                                <?php if($topic->getIsTrash()) :?><small style="color: #d00d0d">En corbeille</small><?php endif; ?>
+                                <?php if ($topic->getIsTrash()) : ?><small style="color: #d00d0d">En
+                                    corbeille</small><?php endif; ?>
                             </td>
                             <td class="text-center"><a target="_blank"
                                                        href="<?= $topic->getLink($category->getSlug(), $topic->getForum()->getSlug()) ?>"><?= $topic->getForum()->getName() ?></a>

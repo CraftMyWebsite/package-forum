@@ -154,6 +154,38 @@ FROM ForumHierarchy ORDER BY forum_id ASC";
         return $toReturn;
     }
 
+    //TODO : Tenté d'améliorer ceci
+    public function getChildForumByCatId(int $catId): array
+    {
+        $sql = "WITH RECURSIVE ForumHierarchy AS (
+  SELECT forum_id, forum_name, forum_category_id, forum_subforum_id
+  FROM cmw_forums
+  WHERE `forum_category_id` = :cat_id
+
+  UNION ALL
+
+  SELECT f.forum_id, f.forum_name, f.forum_category_id, f.forum_subforum_id
+  FROM ForumHierarchy fh
+  JOIN cmw_forums f ON fh.forum_id = f.forum_subforum_id
+)
+SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("cat_id" => $catId))) {
+            return array();
+        }
+
+        $toReturn = array();
+
+        while ($forum = $res->fetch()) {
+            $toReturn[] = $this->getForumById($forum["forum_id"]);
+        }
+
+        return $toReturn;
+    }
+
     public function getForumBySlug(string $slug): ?ForumEntity
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_slug = :forum_slug";
