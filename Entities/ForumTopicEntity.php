@@ -226,9 +226,9 @@ class ForumTopicEntity
      * @param $catSlug
      * @param $forumSlug
      */
-    public function getLink($catSlug, $forumSlug): string
+    public function getLink(): string
     {
-        return "$catSlug/f/$forumSlug/t/$this->topicSlug";
+        return $this->getForum()->getParent()->getLink()."/f/".$this->getForum()->getSlug()."/t/$this->topicSlug";
     }
 
     /**

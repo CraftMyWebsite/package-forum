@@ -95,11 +95,10 @@ class ForumEntity
 
     /**
      * @return string
-     * @param $catSlug
      */
-    public function getLink($catSlug): string
+    public function getLink(): string
     {
-        return "$catSlug/f/$this->forumSlug";
+        return "../f/$this->forumSlug";
     }
 
     public function getParent(): ForumEntity|ForumCategoryEntity

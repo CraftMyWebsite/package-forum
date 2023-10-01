@@ -68,6 +68,14 @@ class ForumCategoryEntity
      */
     public function getSlug(): string
     {
+        return $this->categorySlug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink(): string
+    {
         return EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/c/".$this->categorySlug;
     }
 
