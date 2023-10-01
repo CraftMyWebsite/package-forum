@@ -10,6 +10,8 @@ use CMW\Manager\Flash\Alert;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
+use CMW\Manager\Views\View;
+use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
@@ -28,35 +30,87 @@ use CMW\Utils\Website;
  */
 class ForumController extends AbstractController
 {
+    #[Link("/manage/addForum/:catId", Link::GET, [], "/cmw-admin/forum")]
+    public function adminAddForum(Request $request, int $catId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
-    #[Link("/add", Link::POST, [], "/cmw-admin/forum/forums")]
-    public function adminAddForumPost(): void
+        $category = ForumCategoryModel::getInstance()->getCategoryById($catId);
+        $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
+
+        View::createAdminView("Forum", "Manage/addForum")
+            ->addVariableList(["category" => $category, "ForumRoles" => $ForumRoles])
+            ->view();
+    }
+    #[Link("/manage/addForum/:catId", Link::POST, [], "/cmw-admin/forum")]
+    public function adminAddForumPost(Request $request, int $catId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
 
-        [$name, $icon, $description, $categoryId] = Utils::filterInput("name", "icon", "description", "category_id");
+        [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        forumModel::getInstance()->createForum($name, $icon, $description, $categoryId);
+        forumModel::getInstance()->createForum($name, $icon, $description, $catId);
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
 
-        header("location: ../manage");
+        header("location: ../");
     }
 
-    #[Link("/add", Link::POST, [], "/cmw-admin/forum/subforums")]
-    public function adminAddSubForumPost(): void
+    #[Link("/manage/addSubForum/:forumId", Link::GET, [], "/cmw-admin/forum")]
+    public function adminAddSubForum(Request $request, int $forumId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+
+        $forum = ForumModel::getInstance()->getForumById($forumId);
+        $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
+
+        View::createAdminView("Forum", "Manage/addSubForum")
+            ->addVariableList(["forum" => $forum, "ForumRoles" => $ForumRoles])
+            ->view();
+    }
+
+    #[Link("/manage/addSubForum/:forumId", Link::POST, [], "/cmw-admin/forum")]
+    public function adminAddSubForumPost(Request $request, int $forumId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
 
-        [$name, $icon, $description, $forumId] = Utils::filterInput("name", "icon", "description", "forum_id");
+        [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
         forumModel::getInstance()->createSubForum($name, $icon, $description, $forumId);
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
 
-        header("location: ../manage");
+        header("location: ../");
+    }
+
+    #[Link("/manage/editForum/:forumId", Link::GET, [], "/cmw-admin/forum")]
+    public function adminEditForum(Request $request, int $forumId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+
+        $forum = ForumModel::getInstance()->getForumById($forumId);
+        $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
+
+        View::createAdminView("Forum", "Manage/editForum")
+            ->addVariableList(["forum" => $forum, "ForumRoles" => $ForumRoles])
+            ->view();
+    }
+
+    #[Link("/manage/editForum/:forumId", Link::POST, [], "/cmw-admin/forum")]
+    public function adminEditForumPost(Request $request, int $forumId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+
+        [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
+
+        forumModel::getInstance()->editForum($forumId, $name, $icon, $description);
+
+        Flash::send("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.forum.add.toaster.success"));
+
+        header("location: ../");
     }
 
     #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/forums")]

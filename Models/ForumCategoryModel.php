@@ -137,6 +137,15 @@ class ForumCategoryModel extends AbstractModel
         return Utils::normalizeForSlug($name) . "-$id";
     }
 
+    public function deleteForumCategoryGroupsAllowed(int $id): bool
+    {
+        $sql = "DELETE FROM cmw_forums_categories_groups_allowed WHERE forum_category_id = :category_id";
+
+        $db = DatabaseManager::getInstance();
+
+        return $db->prepare($sql)->execute(array("category_id" => $id));
+    }
+
     public function addForumCategoryGroupsAllowed(int $roleId, int $categoryId): void
     {
         $sql = "INSERT INTO cmw_forums_categories_groups_allowed (forums_role_id, forum_category_id)
@@ -170,17 +179,18 @@ class ForumCategoryModel extends AbstractModel
         return $roles;
     }
 
-    public function editCategory(int $id, string $name, string $icon, string $description): ?ForumCategoryEntity
+    public function editCategory(int $id, string $name, string $icon, string $description, int $isRestricted): ?ForumCategoryEntity
     {
 
         $data = array(
             "category_id" => $id,
             "category_name" => $name,
             "category_icon" => $icon,
-            "category_description" => $description
+            "category_description" => $description,
+            "category_restricted" => $isRestricted
         );
 
-        $sql = "UPDATE cmw_forums_categories SET forum_category_name=:category_name, forum_category_icon=:category_icon, forum_category_description=:category_description WHERE forum_category_id=:category_id";
+        $sql = "UPDATE cmw_forums_categories SET forum_category_name=:category_name, forum_category_icon=:category_icon, forum_category_description=:category_description, forum_category_restricted=:category_restricted WHERE forum_category_id=:category_id";
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
