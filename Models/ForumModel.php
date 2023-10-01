@@ -124,6 +124,28 @@ class ForumModel extends AbstractModel
         return $toReturn;
     }
 
+    function getSubsForums($forum_Id) :array
+    {
+        $toReturn = array();
+        $forumStack = array();
+        $forumStack[] = array($forum_Id, 0);
+        while (!empty($forumStack)) {
+            list($forumId, $depth) = array_pop($forumStack);
+            $subforums = $this->getSubforumByForum($forumId);
+
+            foreach ($subforums as $subForumObj) {
+                $subForumData = array(
+                    'subforum' => $subForumObj,
+                    'depth' => $depth + 1
+                );
+                $toReturn[] = $subForumData;
+                $forumStack[] = array($subForumObj->getId(), $depth + 1);
+            }
+        }
+        return $toReturn;
+    }
+
+
     public function getParentByForumId(int $forumId): array
     {
         $sql = "WITH RECURSIVE ForumHierarchy AS (
@@ -359,18 +381,17 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
         return null;
     }
 
-    public function editForum(int $id, string $name, string $icon, string $description, int $reattached_Id, bool $isCategory = true): ?ForumEntity
+    public function editForum(int $id, string $name, string $icon, string $description): ?ForumEntity
     {
         $data = array(
             "forum_id" => $id,
             "forum_name" => $name,
             "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
-            "forum_description" => $description,
-            "reattached_Id" => $reattached_Id
+            "forum_description" => $description
         );
 
-        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_category_id=:reattached_Id WHERE forum_id=:forum_id";
+        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description WHERE forum_id=:forum_id";
 
 
         $db = DatabaseManager::getInstance();
