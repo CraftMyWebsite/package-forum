@@ -7,15 +7,17 @@
       "icon_menu": "fas fa-comment",
       "url_menu": "",
       "urls_submenu_fr": {
-        "Paramètres": "forum/settings",
-        "Gestion": "forum/manage",
+        "Catégories et forums": "forum/manage",
+        "Topics": "forum/topics",
         "Rôles": "forum/roles",
+        "Paramètres": "forum/settings",
         "Corbeille": "forum/trash"
       },
       "urls_submenu_en": {
-        "Settings": "forum/settings",
-        "Manage": "forum/manage",
+        "Catgories and forums": "forum/manage",
+        "Topics": "forum/topics",
         "Roles": "forum/roles",
+        "Settings": "forum/settings",
         "Trash": "forum/trash"
       }
     }
