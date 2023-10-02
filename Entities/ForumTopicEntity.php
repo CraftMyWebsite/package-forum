@@ -7,6 +7,7 @@ use CMW\Controller\Core\CoreController;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Website;
 
 class ForumTopicEntity
 {
@@ -228,7 +229,7 @@ class ForumTopicEntity
      */
     public function getLink(): string
     {
-        return $this->getForum()->getParent()->getLink()."/f/".$this->getForum()->getSlug()."/t/$this->topicSlug";
+        return Website::getProtocol()."://".$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']."/t/$this->topicSlug";
     }
 
     /**

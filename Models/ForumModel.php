@@ -231,20 +231,30 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
 
     public function countTopicInForum(int $id): mixed
     {
-        $sql = "SELECT COUNT(cmw_forums_topics.forum_topic_id) AS count FROM cmw_forums_topics
-                JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
-                WHERE cmw_forums_topics.forum_id IN 
-                      (SELECT cmw_forums.forum_id FROM cmw_forums WHERE cmw_forums.forum_subforum_id = :forum_id)
-                OR cmw_forums.forum_id = :forum_id_2";
+        $sql = "WITH RECURSIVE ForumHierarchy AS (
+  SELECT forum_id, forum_subforum_id
+  FROM cmw_forums
+  WHERE forum_id = :forum_id
+
+  UNION ALL
+
+  SELECT f.forum_id, f.forum_subforum_id
+  FROM cmw_forums f
+  INNER JOIN ForumHierarchy fh ON f.forum_subforum_id = fh.forum_id
+)
+
+SELECT COUNT(DISTINCT ft.forum_topic_id) AS total_forum_topics
+FROM cmw_forums_topics ft
+INNER JOIN ForumHierarchy fh ON ft.forum_id = fh.forum_id;";
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id, "forum_id_2" => $id))) {
+        if (!$res->execute(array("forum_id" => $id))) {
             return 0;
         }
 
-        return $res->fetch(0)['count'];
+        return $res->fetch(0)['total_forum_topics'];
     }
 
     public function countAllTopicsInAllForum(): int
