@@ -256,20 +256,33 @@ class ForumResponseModel extends AbstractModel
      */
     public function getLatestResponseInForum(int $forumId): ?ForumResponseEntity
     {
-        $sql = "SELECT cmw_forums_response.forum_topic_id, cmw_forums_response.*
-                FROM cmw_forums_response
-                JOIN cmw_forums_topics ON cmw_forums_response.forum_topic_id = cmw_forums_topics.forum_topic_id
-                JOIN cmw_forums ON cmw_forums_topics.forum_id = cmw_forums.forum_id
-                WHERE cmw_forums_topics.forum_id IN
-                (SELECT cmw_forums.forum_id FROM cmw_forums WHERE cmw_forums.forum_subforum_id = :forum_id)
-                OR cmw_forums.forum_id = :forum_id_2 AND forum_response_is_trash = 0
-                ORDER BY cmw_forums_response.forum_response_id DESC LIMIT 1";
+        $sql = "WITH RECURSIVE ForumHierarchy AS (
+  SELECT forum_id, forum_subforum_id, forum_id AS root_forum_id
+  FROM cmw_forums
+  WHERE forum_id = :forum_id
+  
+  UNION ALL
+  
+  SELECT f2.forum_id, f2.forum_subforum_id, fh.root_forum_id
+  FROM cmw_forums f2
+  INNER JOIN ForumHierarchy fh ON f2.forum_subforum_id = fh.forum_id
+)
+
+SELECT r.*
+FROM ForumHierarchy fh
+LEFT JOIN cmw_forums_topics t ON fh.forum_id = t.forum_id
+LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id
+WHERE r.forum_response_created = (
+  SELECT MAX(forum_response_created)
+  FROM cmw_forums_response
+  WHERE forum_topic_id = t.forum_topic_id
+) AND r.forum_response_is_trash = 0 ORDER BY r.forum_response_id DESC LIMIT 1;";
 
         $db = DatabaseManager::getInstance();
 
         $req = $db->prepare($sql);
 
-        if (!$req->execute(["forum_id" => $forumId, "forum_id_2" => $forumId])){
+        if (!$req->execute(["forum_id" => $forumId])){
             return null;
         }
 
