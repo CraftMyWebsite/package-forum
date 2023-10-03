@@ -59,7 +59,11 @@ $description = LangManager::translate("forum.forum.list.description");
                                         <td class="ps-4 text-bold-500">
                                             <small><i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small>
                                             <?= $forumObj->getFontAwesomeIcon() ?>
-                                            <?= $forumObj->getName() ?> -
+                                            <?= $forumObj->getName() ?>
+                                            <?php if ($forumObj->isRestricted()): ?><small style="color: #af1a1a">Restreint
+                                                <i data-bs-toggle="tooltip" title="<?php foreach ($forumModel->getAllowedRoles($forumObj->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
+                                            <?php endif; ?>
+                                            -
                                             <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
                                         </td>
                                         <td class="text-end">
@@ -86,7 +90,11 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 class="text-bold-500">
                                                 <i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i>
                                                 <?= $subForum["subforum"]->getFontAwesomeIcon() ?>
-                                                <?= $subForum["subforum"]->getName() ?> -
+                                                <?= $subForum["subforum"]->getName() ?>
+                                                <?php if ($subForum["subforum"]->isRestricted()): ?><small style="color: #af1a1a">Restreint
+                                                    <i data-bs-toggle="tooltip" title="<?php foreach ($forumModel->getAllowedRoles($subForum["subforum"]->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
+                                                <?php endif; ?>
+                                                -
                                                 <i><small><?= mb_strimwidth($subForum["subforum"]->getDescription(), 0, 45, '...') ?></small></i>
                                             </td>
                                             <td class="text-end">

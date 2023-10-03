@@ -1,5 +1,6 @@
 <?php
 
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Security\SecurityManager;
 
@@ -47,6 +48,21 @@ $description = LangManager::translate("forum.forum.list.description");
                         <i class="fas fa-paragraph"></i>
                     </div>
                 </div>
+                <div class="form-check form-switch mt-4">
+                    <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
+                    <label class="form-check-label" for="allowedGroupsToggle"><h6>Accès restreint</h6></label>
+                </div>
+                <div class="mt-2" id="listAllowedGroups">
+                    <h6>Rôle autorisé :</h6>
+                    <div class="form-group">
+                        <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
+                            <?php foreach ($ForumRoles as $ForumRole): ?>
+                                <option
+                                    value="<?= $ForumRole->getId() ?>"><?= $ForumRole->getName() ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">
@@ -57,3 +73,5 @@ $description = LangManager::translate("forum.forum.list.description");
         </form>
     </div>
 </section>
+
+<script src="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'App/Package/Forum/Views/Assets/Js/allowedGroups.js' ?>"></script>

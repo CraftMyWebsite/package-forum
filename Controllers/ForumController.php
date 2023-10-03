@@ -49,7 +49,15 @@ class ForumController extends AbstractController
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        forumModel::getInstance()->createForum($name, $icon, $description, $catId);
+        $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+
+        $forum = forumModel::getInstance()->createForum($name, $icon, $description,$isRestricted , $catId);
+
+        if (!empty($_POST['allowedGroupsToggle']) && !empty($_POST['allowedGroups'])) {
+            foreach ($_POST['allowedGroups'] as $roleId) {
+                ForumModel::getInstance()->addForumGroupsAllowed($roleId, $forum->getId());
+            }
+        }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
@@ -77,7 +85,15 @@ class ForumController extends AbstractController
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        forumModel::getInstance()->createSubForum($name, $icon, $description, $forumId);
+        $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+
+        $forum = forumModel::getInstance()->createSubForum($name, $icon, $description,$isRestricted , $forumId);
+
+        if (!empty($_POST['allowedGroupsToggle']) && !empty($_POST['allowedGroups'])) {
+            foreach ($_POST['allowedGroups'] as $roleId) {
+                ForumModel::getInstance()->addForumGroupsAllowed($roleId, $forum->getId());
+            }
+        }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));
@@ -91,10 +107,11 @@ class ForumController extends AbstractController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         $forum = ForumModel::getInstance()->getForumById($forumId);
+        $forumModel = ForumModel::getInstance();
         $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
 
         View::createAdminView("Forum", "Manage/editForum")
-            ->addVariableList(["forum" => $forum, "ForumRoles" => $ForumRoles])
+            ->addVariableList(["forum" => $forum, "ForumRoles" => $ForumRoles, "forumModel" => $forumModel])
             ->view();
     }
 
@@ -103,9 +120,22 @@ class ForumController extends AbstractController
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
 
+        $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        forumModel::getInstance()->editForum($forumId, $name, $icon, $description);
+        ForumModel::getInstance()->editForum($forumId, $name, $icon, $description, $isRestricted);
+
+        if ($isRestricted === 0) {
+            ForumModel::getInstance()->deleteForumGroupsAllowed($forumId);
+        }
+
+        if (!empty($_POST['allowedGroupsToggle'])) {
+            ForumModel::getInstance()->deleteForumGroupsAllowed($forumId);
+            foreach ($_POST['allowedGroups'] as $roleId) {
+                ForumModel::getInstance()->addForumGroupsAllowed($roleId, $forumId);
+            }
+        }
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.forum.add.toaster.success"));

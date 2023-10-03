@@ -1,9 +1,11 @@
 <?php
 
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Security\SecurityManager;
 
 /* @var \CMW\Entity\Forum\ForumEntity $forum */
+/* @var CMW\Model\Forum\ForumModel $forumModel */
 /* @var \CMW\Entity\Forum\ForumPermissionRoleEntity[] $ForumRoles */
 
 $title = LangManager::translate("forum.forum.list.title");
@@ -47,6 +49,24 @@ $description = LangManager::translate("forum.forum.list.description");
                         <i class="fas fa-paragraph"></i>
                     </div>
                 </div>
+                <div class="form-check form-switch mt-4">
+                    <input <?= $forum->isRestricted() ? 'checked' : '' ?> class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
+                    <label class="form-check-label" for="allowedGroupsToggle"><h6>Accès restreint</h6></label>
+                </div>
+                <div class="mt-2" id="listAllowedGroups">
+                    <h6>Rôle autorisé :</h6>
+                    <div class="form-group">
+                        <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
+                            <?php foreach ($ForumRoles as $ForumRole): ?>
+                                <option
+                                    <?php foreach ($forumModel::getInstance()->getAllowedRoles($forum->getId()) as $allowedRoles): ?>
+                                        <?= $allowedRoles->getName() === $ForumRole->getName() ? 'selected' : '' ?>
+                                    <?php endforeach ?>
+                                    value="<?= $ForumRole->getId() ?>"><?= $ForumRole->getName() ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">
@@ -57,3 +77,5 @@ $description = LangManager::translate("forum.forum.list.description");
         </form>
     </div>
 </section>
+
+<script src="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'App/Package/Forum/Views/Assets/Js/allowedGroups.js' ?>"></script>

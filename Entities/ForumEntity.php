@@ -3,6 +3,8 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
+use CMW\Controller\Users\UsersController;
+use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumResponseModel;
 
 class ForumEntity
@@ -12,21 +14,25 @@ class ForumEntity
     private string $forumName;
     private string $forumIcon;
     private string $forumDescription;
+    private int $forumIsRestricted;
     private string $forumSlug;
     private string $forumCreated;
     private string $forumUpdated;
     private ForumEntity|ForumCategoryEntity $forumParent;
+    private ?array $restrictedRoles;
 
-    public function __construct(int $id, string $name, string $icon, string $desc, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|ForumCategoryEntity $parent)
+    public function __construct(int $id, string $name, string $icon, string $desc, int $forumIsRestricted, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|ForumCategoryEntity $parent, ?array $restrictedRoles)
     {
         $this->forumId = $id;
         $this->forumName = $name;
         $this->forumIcon = $icon;
         $this->forumDescription = $desc;
+        $this->forumIsRestricted = $forumIsRestricted;
         $this->forumSlug = $forumSlug;
         $this->forumCreated = $forumCreated;
         $this->forumUpdated = $forumUpdated;
         $this->forumParent = $parent;
+        $this->restrictedRoles = $restrictedRoles;
     }
 
     /**
@@ -67,6 +73,40 @@ class ForumEntity
     public function getDescription(): string
     {
         return $this->forumDescription;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRestricted(): bool
+    {
+        return $this->forumIsRestricted;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUserAllowed(): bool
+    {
+        if (!$this->isRestricted()) {
+            return true;
+        }
+
+        if (!UsersController::isUserLogged() && $this->isRestricted()) {
+            return false;
+        }
+
+        if ($this->restrictedRoles === null) {
+            return true;
+        }
+
+        foreach ($this->restrictedRoles as $restrictedRole) {
+            if (ForumPermissionRoleModel::playerHasForumRole($restrictedRole?->getId())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

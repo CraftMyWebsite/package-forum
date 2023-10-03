@@ -88,6 +88,10 @@ class ForumPublicController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
         }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
+            Redirect::redirect("forum");
+        }
 
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
@@ -113,6 +117,10 @@ class ForumPublicController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
         }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
+            Redirect::redirect("forum");
+        }
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
@@ -132,9 +140,14 @@ class ForumPublicController extends CoreController
         ForumController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -194,9 +207,14 @@ class ForumPublicController extends CoreController
     {
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -259,6 +277,10 @@ class ForumPublicController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
         }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
+            Redirect::redirect("forum");
+        }
 
         $forumModel = forumModel::getInstance();
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -291,8 +313,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -313,8 +340,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -335,8 +367,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -357,8 +394,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -379,8 +421,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -401,8 +448,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -426,8 +478,13 @@ class ForumPublicController extends CoreController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+            $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+                Redirect::redirect("forum");
+            }
+            if (!$forum->isUserAllowed()) {
+                Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
                 Redirect::redirect("forum");
             }
 
@@ -459,8 +516,13 @@ class ForumPublicController extends CoreController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+            $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+                Redirect::redirect("forum");
+            }
+            if (!$forum->isUserAllowed()) {
+                Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
                 Redirect::redirect("forum");
             }
 
@@ -491,8 +553,13 @@ class ForumPublicController extends CoreController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+            $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+                Redirect::redirect("forum");
+            }
+            if (!$forum->isUserAllowed()) {
+                Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
                 Redirect::redirect("forum");
             }
 
@@ -523,8 +590,13 @@ class ForumPublicController extends CoreController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+            $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+                Redirect::redirect("forum");
+            }
+            if (!$forum->isUserAllowed()) {
+                Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
                 Redirect::redirect("forum");
             }
 
@@ -549,8 +621,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -621,8 +698,13 @@ class ForumPublicController extends CoreController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -654,9 +736,12 @@ class ForumPublicController extends CoreController
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
-
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 
@@ -680,8 +765,13 @@ class ForumPublicController extends CoreController
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
 

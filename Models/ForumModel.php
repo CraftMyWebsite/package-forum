@@ -74,10 +74,12 @@ class ForumModel extends AbstractModel
             $res["forum_name"],
             $res["forum_icon"],
             $res["forum_description"] ?? "",
+            $res["forum_restricted"],
             $res["forum_slug"],
             $res["forum_created"],
             $res["forum_updated"],
-            $element
+            $element,
+            $this->getAllowedRoles($res["forum_id"])
         );
     }
 
@@ -323,18 +325,19 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return (bool)$res->fetch(0);
     }
 
-    public function createForum(string $name, string $icon, string $description, int $reattached_Id): ?ForumEntity
+    public function createForum(string $name, string $icon, string $description, int $isRestricted, int $reattached_Id): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,
             "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
+            "is_restricted" => $isRestricted,
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_category_id)
-                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)";
+        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description,forum_restricted , forum_category_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :reattached_Id)";
 
 
         $db = DatabaseManager::getInstance();
@@ -347,6 +350,47 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         }
 
         return null;
+    }
+
+    public function addForumGroupsAllowed(int $roleId, int $forumId): void
+    {
+        $sql = "INSERT INTO cmw_forums_groups_allowed (forums_role_id, forum_id)
+                VALUES (:role_id, :forum_id)";
+        $db = DatabaseManager::getInstance();
+        $req = $db ->prepare($sql);
+        $req->execute(['role_id' => $roleId, 'forum_id' => $forumId]);
+    }
+
+    public function deleteForumGroupsAllowed(int $id): bool
+    {
+        $sql = "DELETE FROM cmw_forums_groups_allowed WHERE forum_id = :forum_id";
+
+        $db = DatabaseManager::getInstance();
+
+        return $db->prepare($sql)->execute(array("forum_id" => $id));
+    }
+
+    /**
+     * @param int $forumId
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity[]|null
+     */
+    public function getAllowedRoles(int $forumId): ?array
+    {
+        $sql = "SELECT forums_role_id FROM cmw_forums_groups_allowed WHERE forum_id = :id";
+        $db = DatabaseManager::getInstance();
+
+        $req = $db->prepare($sql);
+
+        if (!$req->execute(['id' => $forumId])){
+            return null;
+        }
+
+        $roles = [];
+        while ($role = $req->fetch()) {
+            $roles[] = ForumPermissionRoleModel::getInstance()->getRoleById($role['forums_role_id']);
+        }
+
+        return $roles;
     }
 
     private function setForumSlug(int $id, string $name): void
@@ -374,18 +418,19 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
     /*=> CONSTRUCTORS */
 
-    public function createSubForum(string $name, string $icon, string $description, int $reattached_Id): ?ForumEntity
+    public function createSubForum(string $name, string $icon, string $description, int $isRestricted, int $reattached_Id): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,
             "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
+            "is_restricted" => $isRestricted,
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description,  forum_subforum_id)
-                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description, :reattached_Id)";
+        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_restricted,  forum_subforum_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :reattached_Id)";
 
 
         $db = DatabaseManager::getInstance();
@@ -400,17 +445,18 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return null;
     }
 
-    public function editForum(int $id, string $name, string $icon, string $description): ?ForumEntity
+    public function editForum(int $id, string $name, string $icon, string $description, int $isRestricted): ?ForumEntity
     {
         $data = array(
             "forum_id" => $id,
             "forum_name" => $name,
             "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
-            "forum_description" => $description
+            "forum_description" => $description,
+            "is_restricted" => $isRestricted,
         );
 
-        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description WHERE forum_id=:forum_id";
+        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_restricted=:is_restricted WHERE forum_id=:forum_id";
 
 
         $db = DatabaseManager::getInstance();
