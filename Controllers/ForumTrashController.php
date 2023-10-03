@@ -1,6 +1,4 @@
 <?php
-
-
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
@@ -15,6 +13,12 @@ use CMW\Manager\Views\View;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
 
+/**
+ * Class: @ForumTrashController
+ * @package Forum
+ * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @version 1.0
+ */
 class ForumTrashController extends AbstractController
 {
     #[Link("/trash", Link::GET, [], "/cmw-admin/forum")]

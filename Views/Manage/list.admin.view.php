@@ -135,7 +135,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                             <span
                                                                 class=""><?= LangManager::translate("core.btn.close") ?></span>
                                                         </button>
-                                                        <a href="forums/delete/<?= $subForum["subforum"]->getId() ?>"
+                                                        <a href="manage/deleteForum/<?= $subForum["subforum"]->getId() ?>"
                                                            class="btn btn-danger ml-1">
                                                             <i class="bx bx-check"></i>
                                                             <span
@@ -167,7 +167,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                         <span
                                                             class=""><?= LangManager::translate("core.btn.close") ?></span>
                                                     </button>
-                                                    <a href="forums/delete/<?= $forumObj->getId() ?>"
+                                                    <a href="manage/deleteForum/<?= $forumObj->getId() ?>"
                                                        class="btn btn-danger ml-1">
                                                         <i class="bx bx-check"></i>
                                                         <span
@@ -192,7 +192,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                             de <?= $category->getName() ?></h5>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="post" action="categories/edit/<?= $category->getId() ?>">
+                                        <form method="post" action="manage/edit/<?= $category->getId() ?>">
                                             <?php (new SecurityManager())->insertHiddenToken() ?>
                                             <h6>Icon :</h6>
                                             <div class="form-group position-relative has-icon-left">
@@ -282,7 +282,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                             <span
                                                 class=""><?= LangManager::translate("core.btn.close") ?></span>
                                         </button>
-                                        <a href="categories/delete/<?= $category->getId() ?>"
+                                        <a href="manage/delete/<?= $category->getId() ?>"
                                            class="btn btn-danger ml-1">
                                             <i class="bx bx-check"></i>
                                             <span
@@ -317,7 +317,7 @@ $description = LangManager::translate("forum.forum.list.description");
                     id="myModalLabel160"><?= LangManager::translate("wiki.title.add_category") ?></h5>
             </div>
             <div class="modal-body">
-                <form method="post" action="categories/add">
+                <form method="post" action="manage/add">
                     <?php (new SecurityManager())->insertHiddenToken() ?>
                     <h6>Icon :</h6>
                     <div class="form-group position-relative has-icon-left">

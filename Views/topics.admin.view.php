@@ -95,7 +95,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                             de <?= $topic->getName() ?></h5>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="modal-<?= $topic->getId() ?>" action="manage/edit" method="post">
+                                        <form id="modal-<?= $topic->getId() ?>" method="post">
                                             <?php (new SecurityManager())->insertHiddenToken() ?>
                                             <input type="text" name="topicId" hidden value="<?= $topic->getId() ?>">
 

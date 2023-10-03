@@ -1,6 +1,4 @@
 <?php
-
-
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
@@ -15,13 +13,19 @@ use CMW\Model\Forum\ForumPrefixModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
+use JetBrains\PhpStorm\NoReturn;
 
+/**
+ * Class: @ForumSettingsController
+ * @package Forum
+ * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @version 1.0
+ */
 class ForumSettingsController extends AbstractController {
     #[Link("/settings", Link::GET, [], "/cmw-admin/forum")]
     public function adminSettingsView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
-
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
@@ -37,7 +41,7 @@ class ForumSettingsController extends AbstractController {
             ->view();
     }
 
-    #[Link("/settings/applyicons", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/settings/applyicons", Link::POST, [], "/cmw-admin/forum")]
     private function settingsIconsPost(): void
         {
             UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
@@ -52,7 +56,7 @@ class ForumSettingsController extends AbstractController {
             Redirect::redirectPreviousRoute();
         }
 
-    #[Link("/settings/addprefix", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/settings/addprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddPrefixPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
@@ -64,7 +68,7 @@ class ForumSettingsController extends AbstractController {
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/settings/editprefix", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/settings/editprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsEditPrefixPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
@@ -89,7 +93,7 @@ class ForumSettingsController extends AbstractController {
         }
     }
 
-    #[Link("/settings/addreaction", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/settings/addreaction", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddReactionPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
@@ -101,7 +105,7 @@ class ForumSettingsController extends AbstractController {
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/settings/editreaction", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/settings/editreaction", Link::POST, [], "/cmw-admin/forum")]
     private function settingsEditReactionPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");

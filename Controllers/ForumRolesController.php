@@ -1,6 +1,4 @@
 <?php
-
-
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
@@ -20,7 +18,12 @@ use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use JetBrains\PhpStorm\NoReturn;
 
-
+/**
+ * Class: @ForumRolesController
+ * @package Forum
+ * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @version 1.0
+ */
 class ForumRolesController extends AbstractController
 {
     #[Link("/roles", Link::GET, [], "/cmw-admin/forum")]
@@ -88,7 +91,6 @@ class ForumRolesController extends AbstractController
         Flash::send(Alert::SUCCESS, "Forum", "Le rôle " . $role->getName() . " est ajouté !");
 
         Redirect::redirectPreviousRoute();
-
     }
 
     #[Link("/roles/edit/:role_id", Link::GET, [], "/cmw-admin/forum")]
@@ -133,7 +135,7 @@ class ForumRolesController extends AbstractController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/roles/settings", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/roles/settings", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleSettings(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
@@ -145,7 +147,7 @@ class ForumRolesController extends AbstractController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/roles/user_role/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/roles/user_role/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
     private function forumUserRoleSettings(Request $request, int $userId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");

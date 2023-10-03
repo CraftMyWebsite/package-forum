@@ -1,6 +1,4 @@
 <?php
-
-
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
@@ -12,14 +10,9 @@ use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
 use CMW\Model\Forum\ForumPermissionRoleModel;
-use CMW\Model\Forum\ForumResponseModel;
-use CMW\Model\Forum\ForumSettingsModel;
-use CMW\Model\Forum\ForumTopicModel;
-use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
 use CMW\Utils\Website;
-
 
 /**
  * Class: @ForumCategoryController
@@ -43,18 +36,16 @@ class ForumCategoryController extends AbstractController
             ->view();
     }
 
-    #[Link("/add", Link::POST, [], "/cmw-admin/forum/categories")]
+    #[Link("/manage/add", Link::POST, [], "/cmw-admin/forum")]
     public function adminAddCategoryPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
-
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.category.toaster.error.empty_input"));
             Website::refresh();
             return;
         }
-
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
         $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
@@ -73,7 +64,7 @@ class ForumCategoryController extends AbstractController
         header("location: ../manage");
     }
 
-    #[Link("/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    #[Link("/manage/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum")]
     public function adminEditCategory(Request $request, int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
@@ -105,7 +96,7 @@ class ForumCategoryController extends AbstractController
         header("location: ../../manage");
     }
 
-    #[Link("/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum/categories")]
+    #[Link("/manage/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
     public function adminDeleteCategory(Request $request, int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
@@ -126,35 +117,5 @@ class ForumCategoryController extends AbstractController
             LangManager::translate("forum.category.delete.success"));
 
         header("location: ../../manage");
-    }
-
-    #[Link("/manage/edit", Link::POST, ['.*?'], "/cmw-admin/forum")]
-    public function adminEditTopicPost(): void
-    {
-        [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
-
-
-        ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
-
-        // Add tags
-
-
-        $tags = explode(",", $tags);
-        //Need to clear tag befor update
-        ForumTopicModel::getInstance()->clearTag($topicId);
-        foreach ($tags as $tag) {
-            //Clean tag
-            $tag = mb_strtolower(trim($tag));
-
-            if (empty($tag)) {
-                continue;
-            }
-
-            ForumTopicModel::getInstance()->addTag($tag, $topicId);
-        }
-
-        //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
-
-        Redirect::redirectPreviousRoute();
     }
 }
