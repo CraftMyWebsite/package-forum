@@ -96,6 +96,10 @@ $description = "desc";
                             <input class="form-check-input" type="checkbox" id="admin_set_closed" name="admin_set_closed">
                             <label class="form-check-label" for="admin_set_closed"><h6>Définir sur clos / ouvert</h6></label>
                         </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="admin_bypass_forum_disallow_topics" name="admin_bypass_forum_disallow_topics">
+                            <label class="form-check-label" for="admin_bypass_forum_disallow_topics"><h6>Peuvent poster des topics dans les forums clos</h6></label>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -178,6 +182,10 @@ $description = "desc";
                             <input class="form-check-input" type="checkbox" id="user_response_react" name="user_response_react">
                             <label class="form-check-label" for="user_response_react"><h6>Réagir à des réponses</h6></label>
                         </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_edit_response" name="user_edit_response">
+                            <label class="form-check-label" for="user_edit_response"><h6>Éditer ses réponses</h6></label>
+                        </div>
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
@@ -187,6 +195,10 @@ $description = "desc";
                         <div class="form-check form-switch">
                             <input readonly class="form-check-input" type="checkbox" id="user_response_remove_react" name="user_response_remove_react">
                             <label class="form-check-label" for="user_response_remove_react"><h6>Supprimé sa réaction sur des méssages</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_remove_response" name="user_remove_response">
+                            <label class="form-check-label" for="user_remove_response"><h6>Supprimé ses réponses</h6></label>
                         </div>
                     </div>
                 </div>
