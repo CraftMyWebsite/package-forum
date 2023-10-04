@@ -15,19 +15,21 @@ class ForumEntity
     private string $forumIcon;
     private string $forumDescription;
     private int $forumIsRestricted;
+    private int $disallowTopics;
     private string $forumSlug;
     private string $forumCreated;
     private string $forumUpdated;
     private ForumEntity|ForumCategoryEntity $forumParent;
     private ?array $restrictedRoles;
 
-    public function __construct(int $id, string $name, string $icon, string $desc, int $forumIsRestricted, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|ForumCategoryEntity $parent, ?array $restrictedRoles)
+    public function __construct(int $id, string $name, string $icon, string $desc, int $forumIsRestricted, int $disallowTopics, string $forumSlug, string $forumCreated, string $forumUpdated, ForumEntity|ForumCategoryEntity $parent, ?array $restrictedRoles)
     {
         $this->forumId = $id;
         $this->forumName = $name;
         $this->forumIcon = $icon;
         $this->forumDescription = $desc;
         $this->forumIsRestricted = $forumIsRestricted;
+        $this->disallowTopics = $disallowTopics;
         $this->forumSlug = $forumSlug;
         $this->forumCreated = $forumCreated;
         $this->forumUpdated = $forumUpdated;
@@ -107,6 +109,14 @@ class ForumEntity
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function disallowTopics(): bool
+    {
+        return $this->disallowTopics;
     }
 
     /**

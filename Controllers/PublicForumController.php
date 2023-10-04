@@ -77,6 +77,10 @@ class PublicForumController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
+        if ($forum->disallowTopics()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
+            Redirect::redirectPreviousRoute();
+        }
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
@@ -105,6 +109,10 @@ class PublicForumController extends CoreController
         if (!$forum->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
+        }
+        if ($forum->disallowTopics()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
+            Redirect::redirectPreviousRoute();
         }
 
         $userId = UsersModel::getCurrentUser()->getId();

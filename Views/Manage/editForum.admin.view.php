@@ -50,6 +50,10 @@ $description = LangManager::translate("forum.forum.list.description");
                     </div>
                 </div>
                 <div class="form-check form-switch mt-4">
+                    <input <?= $forum->disallowTopics() ? 'checked' : '' ?> class="form-check-input " type="checkbox" id="disallowTopics" name="disallowTopics">
+                    <label class="form-check-label" for="disallowTopics"><h6>N'autorise pas la création de nouveau topics</h6></label>
+                </div>
+                <div class="form-check form-switch mt-4">
                     <input <?= $forum->isRestricted() ? 'checked' : '' ?> class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
                     <label class="form-check-label" for="allowedGroupsToggle"><h6>Accès restreint</h6></label>
                 </div>

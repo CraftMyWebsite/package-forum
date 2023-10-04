@@ -75,6 +75,7 @@ class ForumModel extends AbstractModel
             $res["forum_icon"],
             $res["forum_description"] ?? "",
             $res["forum_restricted"],
+            $res["forum_disallow_topics"],
             $res["forum_slug"],
             $res["forum_created"],
             $res["forum_updated"],
@@ -325,7 +326,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return (bool)$res->fetch(0);
     }
 
-    public function createForum(string $name, string $icon, string $description, int $isRestricted, int $reattached_Id): ?ForumEntity
+    public function createForum(string $name, string $icon, string $description, int $isRestricted, int $disallowTopics, int $reattached_Id): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,
@@ -333,11 +334,12 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
             "is_restricted" => $isRestricted,
+            "disallow_topics" => $disallowTopics,
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description,forum_restricted , forum_category_id)
-                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :reattached_Id)";
+        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_restricted, forum_disallow_topics, forum_category_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :disallow_topics, :reattached_Id)";
 
 
         $db = DatabaseManager::getInstance();
@@ -418,7 +420,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
     /*=> CONSTRUCTORS */
 
-    public function createSubForum(string $name, string $icon, string $description, int $isRestricted, int $reattached_Id): ?ForumEntity
+    public function createSubForum(string $name, string $icon, string $description, int $isRestricted,int $disallowTopics, int $reattached_Id): ?ForumEntity
     {
         $data = array(
             "forum_name" => $name,
@@ -426,11 +428,12 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
             "is_restricted" => $isRestricted,
+            "disallow_topics" => $disallowTopics,
             "reattached_Id" => $reattached_Id
         );
 
-        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_restricted,  forum_subforum_id)
-                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :reattached_Id)";
+        $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_restricted, forum_disallow_topics,  forum_subforum_id)
+                VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :disallow_topics, :reattached_Id)";
 
 
         $db = DatabaseManager::getInstance();
@@ -445,7 +448,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return null;
     }
 
-    public function editForum(int $id, string $name, string $icon, string $description, int $isRestricted): ?ForumEntity
+    public function editForum(int $id, string $name, string $icon, string $description, int $isRestricted, int $disallowTopics): ?ForumEntity
     {
         $data = array(
             "forum_id" => $id,
@@ -454,10 +457,10 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
             "is_restricted" => $isRestricted,
+            "disallow_topics" => $disallowTopics,
         );
 
-        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_restricted=:is_restricted WHERE forum_id=:forum_id";
-
+        $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_restricted=:is_restricted, forum_disallow_topics=:disallow_topics WHERE forum_id=:forum_id";
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);

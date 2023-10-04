@@ -32,7 +32,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                         <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?>
                                         <?php if ($category->isRestricted()): ?><small style="color: #af1a1a">Restreint
                                             <i data-bs-toggle="tooltip" title="<?php foreach ($categoryModel->getAllowedRoles($category->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
-                                        <?php endif; ?> -
+                                        <?php endif; ?>-
                                         <i><small><?= mb_strimwidth($category->getDescription(), 0, 45, '...') ?></small></i>
                                     </th>
                                     <th class="text-end">
@@ -63,6 +63,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                             <?php if ($forumObj->isRestricted()): ?><small style="color: #af1a1a">Restreint
                                                 <i data-bs-toggle="tooltip" title="<?php foreach ($forumModel->getAllowedRoles($forumObj->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
                                             <?php endif; ?>
+                                            <?php if ($forumObj->disallowTopics()): ?> - <i data-bs-toggle="tooltip" title="Ce forum n'autorise pas la création de nouveau topics" class="fa-sharp fa-solid fa-lock"></i></small> <?php endif; ?>
                                             -
                                             <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
                                         </td>
@@ -94,6 +95,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <?php if ($subForum["subforum"]->isRestricted()): ?><small style="color: #af1a1a">Restreint
                                                     <i data-bs-toggle="tooltip" title="<?php foreach ($forumModel->getAllowedRoles($subForum["subforum"]->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
                                                 <?php endif; ?>
+                                                <?php if ($subForum["subforum"]->disallowTopics()): ?> - <i data-bs-toggle="tooltip" title="Ce forum n'autorise pas la création de nouveau topics" class="fa-sharp fa-solid fa-lock"></i></small> <?php endif; ?>
                                                 -
                                                 <i><small><?= mb_strimwidth($subForum["subforum"]->getDescription(), 0, 45, '...') ?></small></i>
                                             </td>

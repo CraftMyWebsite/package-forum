@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums
     forum_slug        VARCHAR(255) NOT NULL,
     forum_description TEXT         NULL,
     forum_restricted INT(1)  DEFAULT 0,
+    forum_disallow_topics TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
     forum_subforum_id INT          NULL,
     forum_category_id INT          NULL,
     forum_created     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,

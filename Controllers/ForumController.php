@@ -44,8 +44,9 @@ class ForumController extends AbstractController
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
         $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+        $disallowTopics = empty($_POST['disallowTopics']) ? 0 : 1;
 
-        $forum = forumModel::getInstance()->createForum($name, $icon, $description,$isRestricted , $catId);
+        $forum = forumModel::getInstance()->createForum($name, $icon, $description, $isRestricted, $disallowTopics, $catId);
 
         if (!empty($_POST['allowedGroupsToggle']) && !empty($_POST['allowedGroups'])) {
             foreach ($_POST['allowedGroups'] as $roleId) {
@@ -80,8 +81,9 @@ class ForumController extends AbstractController
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
         $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+        $disallowTopics = empty($_POST['disallowTopics']) ? 0 : 1;
 
-        $forum = forumModel::getInstance()->createSubForum($name, $icon, $description,$isRestricted , $forumId);
+        $forum = forumModel::getInstance()->createSubForum($name, $icon, $description, $isRestricted, $disallowTopics, $forumId);
 
         if (!empty($_POST['allowedGroupsToggle']) && !empty($_POST['allowedGroups'])) {
             foreach ($_POST['allowedGroups'] as $roleId) {
@@ -115,10 +117,11 @@ class ForumController extends AbstractController
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
 
         $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
+        $disallowTopics = empty($_POST['disallowTopics']) ? 0 : 1;
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
-        ForumModel::getInstance()->editForum($forumId, $name, $icon, $description, $isRestricted);
+        ForumModel::getInstance()->editForum($forumId, $name, $icon, $description, $isRestricted, $disallowTopics);
 
         if ($isRestricted === 0) {
             ForumModel::getInstance()->deleteForumGroupsAllowed($forumId);
