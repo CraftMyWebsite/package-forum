@@ -251,6 +251,21 @@ CREATE TABLE IF NOT EXISTS cmw_forums_groups_allowed
     CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `cmw_forums_users_blocked`
+(
+    forums_users_blocked_id      INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    forum_user_is_blocked INT(1)  DEFAULT 0,
+    forum_blocked_reason VARCHAR(255) NULL,
+    forum_blocked_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `cmw_forums_users_blocked_ibfk_1` FOREIGN KEY (`user_id`)
+    REFERENCES `cmw_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
+
 INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
 VALUES ('Membre', 'Rôle pour les membres', 0, 1),
        ('Modérateur', 'Rôle pour les modérateurs', 10, 0),
@@ -335,3 +350,6 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
 
 INSERT INTO cmw_forums_users_roles (`user_id`,`forums_role_id`)
 SELECT user_id, 1 FROM cmw_users
+
+INSERT INTO cmw_forums_users_blocked (`user_id`)
+SELECT user_id FROM cmw_users

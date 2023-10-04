@@ -9,14 +9,14 @@
       "urls_submenu_fr": {
         "Catégories et forums": "forum/manage",
         "Topics": "forum/topics",
-        "Rôles": "forum/roles",
+        "Rôles et Utilisateurs": "forum/roles",
         "Paramètres": "forum/settings",
         "Corbeille": "forum/trash"
       },
       "urls_submenu_en": {
         "Catgories and forums": "forum/manage",
         "Topics": "forum/topics",
-        "Roles": "forum/roles",
+        "Roles and Users": "forum/roles",
         "Settings": "forum/settings",
         "Trash": "forum/trash"
       }

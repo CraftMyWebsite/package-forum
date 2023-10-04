@@ -15,6 +15,7 @@ use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
+use CMW\Model\Forum\ForumUserBlockedModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
@@ -77,8 +78,14 @@ class PublicForumController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
-        if ($forum->disallowTopics() && !ForumPermissionController::getInstance()->hasPermission("operator") || !ForumPermissionController::getInstance()->hasPermission("admin_bypass_forum_disallow_topics")) {
+        if ($forum->disallowTopics() ) {
             Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
+            Redirect::redirectPreviousRoute();
+        }
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        $userId = UsersModel::getCurrentUser()->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
             Redirect::redirectPreviousRoute();
         }
 
@@ -116,6 +123,11 @@ class PublicForumController extends CoreController
         }
 
         $userId = UsersModel::getCurrentUser()->getId();
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
 
         [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
 

@@ -13,6 +13,7 @@ use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumSettingsModel;
+use CMW\Model\Forum\ForumUserBlockedModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
@@ -35,9 +36,10 @@ class ForumRolesController extends AbstractController
         $roles = ForumPermissionRoleModel::getInstance()->getRole();
         $userList = UsersModel::getInstance()->getUsers();
         $userRole = ForumPermissionRoleModel::getInstance();
+        $userBlocked = ForumUserBlockedModel::getInstance();
 
         View::createAdminView("Forum", "Roles/manage")
-            ->addVariableList(["visitorCanViewForum" => $visitorCanViewForum, "roles" => $roles, "userList" => $userList, "userRole" => $userRole])
+            ->addVariableList(["visitorCanViewForum" => $visitorCanViewForum, "roles" => $roles, "userList" => $userList, "userRole" => $userRole, "userBlocked" => $userBlocked])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css", "Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js", "Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();
@@ -173,18 +175,6 @@ class ForumRolesController extends AbstractController
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/roles/edit/:role_id", Link::GET, [], "/cmw-admin/forum")]
-    public function forumRoleEditView(Request $request, int $role_id): void
-    {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.add");
-
-        $role = ForumPermissionRoleModel::getInstance()->getRoleById($role_id);
-
-        View::createAdminView("Forum", "Roles/edit")
-            ->addVariableList(["role" => $role])
-            ->view();
-    }
-
     #[NoReturn] #[Link("/roles/edit/:role_id", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleEditPost(Request $request, int $roleId): void
     {
@@ -295,6 +285,18 @@ class ForumRolesController extends AbstractController
         Redirect::redirectPreviousRoute();
     }
 
+    #[Link("/roles/edit/:role_id", Link::GET, [], "/cmw-admin/forum")]
+    public function forumRoleEditView(Request $request, int $role_id): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.add");
+
+        $role = ForumPermissionRoleModel::getInstance()->getRoleById($role_id);
+
+        View::createAdminView("Forum", "Roles/edit")
+            ->addVariableList(["role" => $role])
+            ->view();
+    }
+
     #[NoReturn] #[Link("/roles/settings", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleSettings(): void
     {
@@ -328,6 +330,30 @@ class ForumRolesController extends AbstractController
 
         Flash::send(Alert::SUCCESS, LangManager::translate("core.toaster.success"),
             LangManager::translate('users.toaster.role_edited'));
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[NoReturn] #[Link("/roles/block/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
+    private function forumBlockUser(Request $request, int $userId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+
+        [$reason] = Utils::filterInput("reason");
+
+        ForumUserBlockedModel::getInstance()->blockUser($userId, $reason);
+
+        Redirect::redirectPreviousRoute();
+    }
+
+    #[NoReturn] #[Link("/roles/unblock/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
+    private function forumUnblockUser(Request $request, int $userId): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+
+        [$reason] = Utils::filterInput("reason");
+
+        ForumUserBlockedModel::getInstance()->unblockUser($userId, $reason);
 
         Redirect::redirectPreviousRoute();
     }

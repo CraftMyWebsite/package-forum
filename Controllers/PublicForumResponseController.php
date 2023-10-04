@@ -14,6 +14,7 @@ use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
+use CMW\Model\Forum\ForumUserBlockedModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
@@ -24,7 +25,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * Class: @PublicForumResponseController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 1.0
  */
 class PublicForumResponseController extends CoreController
@@ -49,7 +50,11 @@ class PublicForumResponseController extends CoreController
         }
 
         $userId = UsersModel::getCurrentUser()->getId();
-
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
         if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, "user_response_topic")) {
             ForumPermissionController::getInstance()->alertNotHavePermissions("user_response_topic");
             Redirect::redirectPreviousRoute();
@@ -118,7 +123,12 @@ class PublicForumResponseController extends CoreController
         }
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_response_react");
-
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        $userId = UsersModel::getCurrentUser()->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->addFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
@@ -145,7 +155,12 @@ class PublicForumResponseController extends CoreController
         }
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_response_remove_react");
-
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        $userId = UsersModel::getCurrentUser()->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->removeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
@@ -172,7 +187,12 @@ class PublicForumResponseController extends CoreController
         }
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_response_change_react");
-
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        $userId = UsersModel::getCurrentUser()->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
         $user = usersModel::getInstance()::getCurrentUser();
         ForumFeedbackModel::getInstance()->changeFeedbackResponseByFeedbackId($responseId, $feedbackId, $user?->getId());
 
