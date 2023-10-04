@@ -1,4 +1,5 @@
 <?php
+
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
@@ -20,9 +21,9 @@ class ForumPermissionController extends AbstractController
     /**
      * @param string $permCode
      * @return bool
-     * @desc used in public view : return true if user have permission to do something like "user_create_topic"
+     * @desc used in public view : return true if user have permission to do something like "user_create_topic" find the list of permcodes at the bottom of ForumPermissionController.php
      */
-    public function hasPermission(string $permCode) :bool
+    public function hasPermission(string $permCode): bool
     {
         $userId = UsersModel::getCurrentUser()->getId();
 

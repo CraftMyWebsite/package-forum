@@ -77,7 +77,7 @@ class PublicForumController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
-        if ($forum->disallowTopics()) {
+        if ($forum->disallowTopics() && !ForumPermissionController::getInstance()->hasPermission("operator") || !ForumPermissionController::getInstance()->hasPermission("admin_bypass_forum_disallow_topics")) {
             Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
             Redirect::redirectPreviousRoute();
         }
@@ -110,7 +110,7 @@ class PublicForumController extends CoreController
             Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
             Redirect::redirect("forum");
         }
-        if ($forum->disallowTopics()) {
+        if ($forum->disallowTopics() && !ForumPermissionController::getInstance()->hasPermission("operator") || !ForumPermissionController::getInstance()->hasPermission("admin_bypass_forum_disallow_topics")) {
             Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
             Redirect::redirectPreviousRoute();
         }
