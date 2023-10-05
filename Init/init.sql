@@ -258,10 +258,44 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_users_blocked`
     forum_user_is_blocked INT(1)  DEFAULT 0,
     forum_blocked_reason VARCHAR(255) NULL,
     forum_blocked_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`forums_users_blocked_id`),
     KEY `user_id` (`user_id`),
     CONSTRAINT `cmw_forums_users_blocked_ibfk_1` FOREIGN KEY (`user_id`)
     REFERENCES `cmw_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `cmw_forums_topic_reported`
+(
+    forums_reported_topic_id      INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    forum_reported_topic_id INT(11) NOT NULL,
+    forum_reported_topic_reason     INT(1)              NOT NULL DEFAULT 0,
+    forum_reported_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`forums_reported_topic_id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `cmw_forums_topic_reported_user_ibfk_1` FOREIGN KEY (`user_id`)
+    REFERENCES `cmw_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `cmw_forums_topic_reported_topic_ibfk_1` FOREIGN KEY (`forum_reported_topic_id`)
+    REFERENCES `cmw_forums_topics` (`forum_topic_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `cmw_forums_response_reported`
+(
+    forums_reported_response_id      INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    forum_reported_response_id INT(11) NOT NULL,
+    forum_reported_response_reason     INT(1)              NOT NULL DEFAULT 0,
+    forum_reported_updated     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`forums_reported_response_id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `cmw_forums_response_reported_user_ibfk_1` FOREIGN KEY (`user_id`)
+    REFERENCES `cmw_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `cmw_forums_response_reported_responses_ibfk_1` FOREIGN KEY (`forum_reported_response_id`)
+    REFERENCES `cmw_forums_response` (`forum_response_id`) ON DELETE CASCADE ON UPDATE CASCADE
     ) ENGINE = InnoDB
     CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_unicode_ci;

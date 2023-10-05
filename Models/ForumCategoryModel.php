@@ -37,9 +37,7 @@ class ForumCategoryModel extends AbstractModel
         while ($cat = $res->fetch()) {
             $toReturn[] = $this->getCategoryById($cat["forum_category_id"]);
         }
-
         return $toReturn;
-
     }
 
     public function getCategoryById(int $id): ?ForumCategoryEntity

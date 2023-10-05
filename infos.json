@@ -9,6 +9,7 @@
       "urls_submenu_fr": {
         "Catégories et forums": "forum/manage",
         "Topics": "forum/topics",
+        "Signalement": "forum/report",
         "Rôles et Utilisateurs": "forum/roles",
         "Paramètres": "forum/settings",
         "Corbeille": "forum/trash"
@@ -16,6 +17,7 @@
       "urls_submenu_en": {
         "Catgories and forums": "forum/manage",
         "Topics": "forum/topics",
+        "Report": "forum/report",
         "Roles and Users": "forum/roles",
         "Settings": "forum/settings",
         "Trash": "forum/trash"
