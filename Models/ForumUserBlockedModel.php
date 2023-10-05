@@ -72,4 +72,19 @@ class ForumUserBlockedModel extends AbstractModel
         $req->execute($data);
     }
 
+    public function addDefaultBlockOnRegister(int $userId): void
+    {
+        $data = array(
+            "user_id" => $userId
+        );
+
+        $sql = "INSERT INTO `cmw_forums_users_blocked`(`user_id`) VALUES (:user_id)";
+
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare($sql);
+
+        $req->execute($data);
+
+    }
+
 }

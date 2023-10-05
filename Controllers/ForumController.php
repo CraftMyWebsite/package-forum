@@ -13,6 +13,7 @@ use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
 use CMW\Model\Forum\ForumPermissionRoleModel;
+use CMW\Model\Forum\ForumUserBlockedModel;
 use CMW\Utils\Utils;
 
 /**
@@ -170,6 +171,7 @@ class ForumController extends AbstractController
     public static function onRegister(mixed $userId): void
     {
         ForumPermissionRoleModel::getInstance()->addUserForumDefaultRoleOnRegister($userId);
+        ForumUserBlockedModel::getInstance()->addDefaultBlockOnRegister($userId);
     }
 
 }
