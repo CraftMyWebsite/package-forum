@@ -10,8 +10,11 @@ use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
+use CMW\Model\Forum\ForumDiscordModel;
 use CMW\Model\Forum\ForumFeedbackModel;
+use CMW\Model\Forum\ForumFollowedModel;
 use CMW\Model\Forum\ForumModel;
+use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
@@ -31,6 +34,126 @@ use JetBrains\PhpStorm\NoReturn;
  */
 class PublicForumTopicController extends CoreController
 {
+    #[Link("/c/:catSlug/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
+    public function publicForumAddTopicView(Request $request, string $catSlug, string $forumSlug): void
+    {
+        ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
+
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$category->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
+            Redirect::redirect("forum");
+        }
+        if ($forum->disallowTopics() ) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
+            Redirect::redirectPreviousRoute();
+        }
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        $userId = UsersModel::getCurrentUser()->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
+
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+
+        $view = new View("Forum", "addTopic");
+        $view->addVariableList(["forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/full.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
+        $view->view();
+    }
+
+    #[Link("/c/:catSlug/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAddTopicPost(Request $request, string $catSlug, string $forumSlug): void
+    {
+        ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
+
+        $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$category->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
+            Redirect::redirect("forum");
+        }
+        if (!$forum->isUserAllowed()) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
+            Redirect::redirect("forum");
+        }
+        if ($forum->disallowTopics() && !ForumPermissionController::getInstance()->hasPermission("operator") || !ForumPermissionController::getInstance()->hasPermission("admin_bypass_forum_disallow_topics")) {
+            Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
+            Redirect::redirectPreviousRoute();
+        }
+
+        $userId = UsersModel::getCurrentUser()->getId();
+        $userBlocked = ForumUserBlockedModel::getInstance();
+        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+            Redirect::redirectPreviousRoute();
+        }
+
+        [$name, $content, $disallowReplies, $important, $pin, $tags] = Utils::filterInput('name', 'content', 'disallow_replies', 'important', 'pin', 'tags');
+
+        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, "user_create_topic_tag") && $tags !== "") {
+            ForumPermissionController::getInstance()->alertNotHavePermissions("user_create_topic_tag");
+            $tags = "";
+        }
+
+        $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (is_null($forum) || Utils::containsNullValue($name, $content)) {
+            Flash::send("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Website::refresh();
+            return;
+        }
+
+        $res = ForumTopicModel::getInstance()->createTopic($name, $content, $userId, $forum->getId(),
+            (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
+
+        $followTopic = empty($_POST['followTopic']) ? 0 : 1;
+        if ($followTopic === 1) {
+            ForumFollowedModel::getInstance()->addFollower($res->getId(), $userId);
+        }
+
+        if (is_null($res)) {
+            Flash::send("error", LangManager::translate("core.toaster.error"),
+                LangManager::translate("core.toaster.internalError"));
+            Website::refresh();
+            return;
+        }
+
+        // Add tags
+
+        $tags = explode(",", $tags);
+
+        foreach ($tags as $tag) {
+            //Clean tag
+            $tag = mb_strtolower(trim($tag));
+
+            if (empty($tag)) {
+                continue;
+            }
+
+            ForumTopicModel::getInstance()->addTag($tag, $res->getId());
+        }
+
+        Flash::send("success", LangManager::translate("core.toaster.success"),
+            LangManager::translate("forum.topic.add.success"));
+
+        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()->getUserPicture()->getImageName(), UsersModel::getCurrentUser()->getPseudo());
+
+        header("location: ../$forumSlug");
+    }
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
     {

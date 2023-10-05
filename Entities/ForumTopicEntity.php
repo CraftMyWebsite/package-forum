@@ -307,6 +307,16 @@ class ForumTopicEntity
         return "$this->topicSlug/edit";
     }
 
+    public function followTopicLink(): string
+    {
+        return "$this->topicSlug/follow";
+    }
+
+    public function unfollowTopicLink(): string
+    {
+        return "$this->topicSlug/unfollow";
+    }
+
     /**
      * @return string
      */

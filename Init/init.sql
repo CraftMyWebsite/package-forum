@@ -300,6 +300,21 @@ CREATE TABLE IF NOT EXISTS `cmw_forums_response_reported`
     CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `cmw_forums_followed`
+(
+    forums_followed_id      INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    forum_topic_id INT(11) NOT NULL,
+    PRIMARY KEY (`forums_followed_id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `cmw_forums_followed_user_ibfk_1` FOREIGN KEY (`user_id`)
+    REFERENCES `cmw_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `cmw_forums_followed_topic_ibfk_1` FOREIGN KEY (`forum_topic_id`)
+    REFERENCES `cmw_forums_topics` (`forum_topic_id`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE = InnoDB
+    CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci;
+
 INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`)
 VALUES ('Membre', 'Rôle pour les membres', 0, 1),
        ('Modérateur', 'Rôle pour les modérateurs', 10, 0),

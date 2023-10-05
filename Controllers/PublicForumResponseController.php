@@ -2,19 +2,25 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Core\CoreController;
+use CMW\Controller\Core\MailController;
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
+use CMW\Model\Core\MailModel;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumFeedbackModel;
+use CMW\Model\Forum\ForumFollowedModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Forum\ForumUserBlockedModel;
+use CMW\Model\Newsletter\NewsletterModel;
+use CMW\Model\Newsletter\NewsletterUserModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
@@ -97,6 +103,19 @@ class PublicForumResponseController extends CoreController
             Website::refresh();
             return;
         }
+
+        if (MailModel::getInstance()->getConfig() !== null && MailModel::getInstance()->getConfig()->isEnable()) {
+            $followers = ForumFollowedModel::getInstance()->getFollowerByTopicId($topicId);
+            foreach ($followers as $follower) {
+                $mail = $follower->getUser()->getMail();
+                $responseURL = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") .$_SERVER['REQUEST_URI']."#".$responseEntity->getId();
+                $topicName = $follower->getTopic()->getName();
+                $responseUser = $follower->getTopic()->getLastResponse()->getUser()->getPseudo();
+                $responseContent = $follower->getTopic()->getLastResponse()->getContent();
+                ForumFollowedController::getInstance()->sendMailToFollower($mail,$responseURL,$topicName,$responseUser,$responseContent);
+            }
+        }
+
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.replies.success"));
