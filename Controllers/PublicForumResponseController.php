@@ -119,7 +119,8 @@ class PublicForumResponseController extends CoreController
 
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.replies.success"));
-        Website::refresh();
+
+        header("location: ". Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") .$_SERVER['REQUEST_URI']."#".$responseEntity->getId());
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
