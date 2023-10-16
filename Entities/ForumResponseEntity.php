@@ -113,9 +113,9 @@ class ForumResponseEntity
     public function trashLink(): string
     {
         if ($this->getUser()->getId() === UsersModel::getCurrentUser()?->getId()) {
-            return "{$this->responseTopic->getSlug()}/trash/$this->responseId/1";
+            return "p1/trash/$this->responseId/1";
         } else {
-            return "{$this->responseTopic->getSlug()}/trash/$this->responseId/2";
+            return "p1/trash/$this->responseId/2";
         }
         
     }
@@ -133,7 +133,7 @@ class ForumResponseEntity
      */
     public function getFeedbackAddResponseLink(int $feedbackId): string
     {
-        return "{$this->responseTopic->getSlug()}/response_react/$this->responseId/$feedbackId";
+        return "p1/response_react/$this->responseId/$feedbackId";
     }
 
     /**
@@ -141,7 +141,7 @@ class ForumResponseEntity
      */
     public function getFeedbackDeleteResponseLink(int $feedbackId): string
     {
-        return "{$this->responseTopic->getSlug()}/response_un_react/$this->responseId/$feedbackId";
+        return "p1/response_un_react/$this->responseId/$feedbackId";
     }
 
     /**
@@ -149,6 +149,6 @@ class ForumResponseEntity
      */
     public function getFeedbackChangeResponseLink(int $feedbackId): string
     {
-        return "{$this->responseTopic->getSlug()}/response_change_react/$this->responseId/$feedbackId";
+        return "p1/response_change_react/$this->responseId/$feedbackId";
     }
 }

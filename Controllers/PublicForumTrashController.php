@@ -23,8 +23,8 @@ use CMW\Utils\Redirect;
  */
 class PublicForumTrashController extends CoreController
 {
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
-    public function publicTopicReplyDelete(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $replyId, int $reason): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
+    public function publicTopicReplyDelete(Request $request, string $catSlug, string $forumSlug, string $topicSlug,int $page, int $replyId, int $reason): void
     {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 

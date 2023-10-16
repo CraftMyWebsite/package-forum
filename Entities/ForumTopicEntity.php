@@ -229,7 +229,7 @@ class ForumTopicEntity
      */
     public function getLink(): string
     {
-        return Website::getProtocol()."://".$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']."/t/$this->topicSlug";
+        return Website::getProtocol()."://".$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']."/t/$this->topicSlug/p1";
     }
 
     /**
@@ -304,17 +304,17 @@ class ForumTopicEntity
 
     public function editTopicLink(): string
     {
-        return "$this->topicSlug/edit";
+        return "p1/edit";
     }
 
     public function followTopicLink(): string
     {
-        return "$this->topicSlug/follow";
+        return "p1/follow";
     }
 
     public function unfollowTopicLink(): string
     {
-        return "$this->topicSlug/unfollow";
+        return "p1/unfollow";
     }
 
     /**
@@ -322,7 +322,7 @@ class ForumTopicEntity
      */
     public function getFeedbackAddTopicLink(int $feedbackId): string
     {
-        return "$this->topicSlug/react/$this->topicId/$feedbackId";
+        return "p1/react/$this->topicId/$feedbackId";
     }
 
     /**
@@ -330,7 +330,7 @@ class ForumTopicEntity
      */
     public function getFeedbackDeleteTopicLink(int $feedbackId): string
     {
-        return "$this->topicSlug/un_react/$this->topicId/$feedbackId";
+        return "p1/un_react/$this->topicId/$feedbackId";
     }
 
     /**
@@ -338,6 +338,6 @@ class ForumTopicEntity
      */
     public function getFeedbackChangeTopicLink(int $feedbackId): string
     {
-        return "$this->topicSlug/change_react/$this->topicId/$feedbackId";
+        return "p1/change_react/$this->topicId/$feedbackId";
     }
 }

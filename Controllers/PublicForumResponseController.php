@@ -36,8 +36,8 @@ use JetBrains\PhpStorm\NoReturn;
  */
 class PublicForumResponseController extends CoreController
 {
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page", Link::POST, ['.*?'], "/forum")]
+    public function publicTopicResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de répondre.");
@@ -120,11 +120,11 @@ class PublicForumResponseController extends CoreController
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.replies.success"));
 
-        header("location: ". Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") .$_SERVER['REQUEST_URI']."#".$responseEntity->getId());
+        header("location: ". Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] .$_SERVER['REQUEST_URI']."#".$responseEntity->getId());
     }
 
-    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicResponseAddFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId, int $feedbackId): void
+    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseAddFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -155,8 +155,8 @@ class PublicForumResponseController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicResponseDeleteFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId, int $feedbackId): void
+    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseDeleteFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -187,8 +187,8 @@ class PublicForumResponseController extends CoreController
         Redirect::redirectPreviousRoute();
     }
 
-    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicResponseChangeFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId, int $feedbackId): void
+    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    public function publicResponseChangeFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");

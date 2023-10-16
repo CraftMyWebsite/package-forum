@@ -29,8 +29,8 @@ use CMW\Utils\Website;
  */
 class PublicForumReportController extends AbstractController {
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/reportTopic/:topicId", Link::GET, ['.*?'], "/forum")]
-    public function publicReportTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/reportTopic/:topicId/p:page", Link::GET, ['.*?'], "/forum")]
+    public function publicReportTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId, int $page): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -47,8 +47,8 @@ class PublicForumReportController extends AbstractController {
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/reportResponse/:responseId", Link::GET, ['.*?'], "/forum")]
-    public function publicReportResponse(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId", Link::GET, ['.*?'], "/forum")]
+    public function publicReportResponse(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -66,8 +66,8 @@ class PublicForumReportController extends AbstractController {
         $view->view();
     }
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/reportTopic/:topicId", Link::POST, ['.*?'], "/forum")]
-    public function publicReportTopicPost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportTopic/:topicId", Link::POST, ['.*?'], "/forum")]
+    public function publicReportTopicPost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de signaler ce topic.");
@@ -111,8 +111,8 @@ class PublicForumReportController extends AbstractController {
         Redirect::redirectPreviousRoute();
     }
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/reportResponse/:responseId", Link::POST, ['.*?'], "/forum")]
-    public function publicReportResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $responseId): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId", Link::POST, ['.*?'], "/forum")]
+    public function publicReportResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de signaler ce topic.");

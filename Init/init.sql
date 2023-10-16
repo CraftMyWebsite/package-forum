@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics
     CONSTRAINT fk_prefix_id
         FOREIGN KEY (forum_topic_prefix) REFERENCES cmw_forums_prefixes (forum_prefix_id) ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT fk_topics_user_id
-        FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON UPDATE CASCADE ON DELETE SET NULL
+        FOREIGN KEY (user_id) REFERENCES cmw_users (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;

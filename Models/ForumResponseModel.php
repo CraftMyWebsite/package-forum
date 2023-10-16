@@ -31,13 +31,13 @@ class ForumResponseModel extends AbstractModel
     /**
      * @return \CMW\Entity\Forum\ForumResponseEntity[]
      */
-    public function getResponseByTopic(int $id): array
-    {
-        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
+    public function getResponseByTopicAndOffset(int $id, int $offset): array
+    {//TODO Rendre paramètrable l'offset
+        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0 LIMIT 10 OFFSET :offset";
         $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_topic_id" => $id))) {
+        if (!$res->execute(array("forum_topic_id" => $id, "offset" => $offset))) {
             return array();
         }
 
