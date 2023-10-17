@@ -31,13 +31,13 @@ class ForumResponseModel extends AbstractModel
     /**
      * @return \CMW\Entity\Forum\ForumResponseEntity[]
      */
-    public function getResponseByTopicAndOffset(int $id, int $offset): array
-    {//TODO Rendre paramètrable l'offset
-        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0 LIMIT 10 OFFSET :offset";
+    public function getResponseByTopicAndOffset(int $id, int $offset, int $responsePerPage): array
+    {
+        $sql = "SELECT forum_response_id FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0 LIMIT :responsePerPage OFFSET :offset";
         $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_topic_id" => $id, "offset" => $offset))) {
+        if (!$res->execute(array("forum_topic_id" => $id, "offset" => $offset, "responsePerPage" => $responsePerPage))) {
             return array();
         }
 
@@ -99,14 +99,14 @@ class ForumResponseModel extends AbstractModel
     }
 
 
-    public function getResponsePageNumber(int $topicId, int $responseId): int
+    public function getResponsePageNumber(int $topicId, int $responseId , int $responsePerPage): int
     {
-        $sql = "SELECT*,FLOOR((position - 1) / 10) + 1 AS page FROM (SELECT forum_response_id, ROW_NUMBER() OVER (ORDER BY forum_response_id) AS position FROM cmw_forums_response WHERE forum_topic_id = :topicId) AS response WHERE response.forum_response_id = :responseId";
+        $sql = "SELECT*,FLOOR((position - 1) / :responsePerPage) + 1 AS page FROM (SELECT forum_response_id, ROW_NUMBER() OVER (ORDER BY forum_response_id) AS position FROM cmw_forums_response WHERE forum_topic_id = :topicId AND forum_response_is_trash = 0) AS response WHERE response.forum_response_id = :responseId";
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("topicId" => $topicId, "responseId" => $responseId))) {
+        if (!$res->execute(array("topicId" => $topicId, "responseId" => $responseId, "responsePerPage" => $responsePerPage))) {
             return 0;
         }
 

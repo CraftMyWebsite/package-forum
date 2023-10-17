@@ -2,6 +2,7 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
@@ -27,6 +28,7 @@ class ForumSettingsController extends AbstractController {
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
@@ -35,7 +37,7 @@ class ForumSettingsController extends AbstractController {
         $feedbackModel = ForumFeedbackModel::getInstance();
 
         View::createAdminView("Forum", "settings")
-            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
+            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();
@@ -55,6 +57,20 @@ class ForumSettingsController extends AbstractController {
 
             Redirect::redirectPreviousRoute();
         }
+
+    #[NoReturn] #[Link("/settings/responsePerPage", Link::POST, [], "/cmw-admin/forum")]
+    private function settingsResponsePerPagePost(): void
+    {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+
+        $responsePerPage = filter_input(INPUT_POST, "responsePerPage");
+
+        ForumSettingsModel::getInstance()->updateResponsePerPage($responsePerPage);
+
+        Flash::send(Alert::SUCCESS, "Forum", "Les page affiche désormais " .$responsePerPage." réponses");
+
+        Redirect::redirectPreviousRoute();
+    }
 
     #[NoReturn] #[Link("/settings/addprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddPrefixPost(): void

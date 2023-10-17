@@ -6,6 +6,7 @@ use CMW\Manager\Security\SecurityManager;
 $title = "Paramètres";
 $description = "desc";
 
+/* @var CMW\Controller\Forum\ForumSettingsController $responsePerPage */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconNotRead */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
@@ -20,7 +21,27 @@ $description = "desc";
 
 <section class="row">
 
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-lg-2">
+        <div class="card">
+            <div class="card-header">
+                <h4>Général</h4>
+            </div>
+            <div class="card-body">
+                <form action="settings/responsePerPage" method="post">
+                    <?php (new SecurityManager())->insertHiddenToken() ?>
+                        <h6>Nombre de réponses par page :</h6>
+                        <input type="text" class="form-control" name="responsePerPage" value="<?= $responsePerPage ?>"
+                               required>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <?= LangManager::translate("core.btn.save") ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
         <div class="card">
             <div class="card-header">
                 <h4>Réactions</h4>

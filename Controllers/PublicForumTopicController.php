@@ -177,13 +177,13 @@ class PublicForumTopicController extends CoreController
             Redirect::redirect("forum");
         }
 
-        //TODO Rendre paramètrable l'offset
-        $offset = ($page-1)*10;
-        $totalPage = strval(ceil(ForumResponseModel::getInstance()->countResponseInTopic($topic->getId())/10));
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
+        $offset = ($page-1)*$responsePerPage;
+        $totalPage = strval(ceil(ForumResponseModel::getInstance()->countResponseInTopic($topic->getId())/$responsePerPage));
         preg_match("/\/p(\d+)/", $_SERVER['REQUEST_URI'], $matches);
         $currentPage = $matches[1];
 
-        $responses = ForumResponseModel::getInstance()->getResponseByTopicAndOffset($topic->getId(), $offset);
+        $responses = ForumResponseModel::getInstance()->getResponseByTopicAndOffset($topic->getId(), $offset, $responsePerPage);
 
         $forumModel = forumModel::getInstance();
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);

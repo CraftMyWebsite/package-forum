@@ -4,6 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Model\Forum\ForumResponseModel;
+use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Controller\Core\CoreController;
 
@@ -160,6 +161,7 @@ class ForumResponseEntity
     {
         $topic = $this->getResponseTopic()->getId();
         $response = $this->getId();
-        return ForumResponseModel::getInstance()->getResponsePageNumber($topic, $response);
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
+        return ForumResponseModel::getInstance()->getResponsePageNumber($topic, $response,$responsePerPage);
     }
 }

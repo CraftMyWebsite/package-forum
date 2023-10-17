@@ -54,4 +54,11 @@ class ForumSettingsModel extends AbstractModel
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :visitorCanViewForum WHERE forum_settings_name = 'visitorCanViewForum'");
         $req->execute(array("visitorCanViewForum" => $visitorCanViewForum));
     }
+
+    public function updateResponsePerPage(string $responsePerPage): void
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :responsePerPage WHERE forum_settings_name = 'responsePerPage'");
+        $req->execute(array("responsePerPage" => $responsePerPage));
+    }
 }
