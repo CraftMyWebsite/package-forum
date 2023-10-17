@@ -398,7 +398,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_discord
   COLLATE = utf8mb4_unicode_ci;
 
 INSERT INTO cmw_forums_users_roles (`user_id`,`forums_role_id`)
-SELECT user_id, 1 FROM cmw_users
+SELECT user_id, 1 FROM cmw_users;
 
 INSERT INTO cmw_forums_users_blocked (`user_id`)
-SELECT user_id FROM cmw_users
+SELECT user_id FROM cmw_users;
