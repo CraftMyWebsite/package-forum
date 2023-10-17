@@ -3,6 +3,7 @@
 namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
+use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Controller\Core\CoreController;
 
@@ -150,5 +151,15 @@ class ForumResponseEntity
     public function getFeedbackChangeResponseLink(int $feedbackId): string
     {
         return "p1/response_change_react/$this->responseId/$feedbackId";
+    }
+
+    /**
+     * @return int
+     */
+    public function getPageNumber(): int
+    {
+        $topic = $this->getResponseTopic()->getId();
+        $response = $this->getId();
+        return ForumResponseModel::getInstance()->getResponsePageNumber($topic, $response);
     }
 }

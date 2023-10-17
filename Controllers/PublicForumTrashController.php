@@ -2,6 +2,7 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Core\CoreController;
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
@@ -63,7 +64,7 @@ class PublicForumTrashController extends CoreController
             Flash::send("success", LangManager::translate("core.toaster.success"),
                 LangManager::translate("forum.reply.delete.success"));
 
-            Redirect::redirectPreviousRoute();
+            header("Location: ". EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/c/$catSlug/f/$forumSlug/t/$topicSlug/p1/");
         }
     }
 }
