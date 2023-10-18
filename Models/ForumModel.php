@@ -131,26 +131,6 @@ class ForumModel extends AbstractModel
         return $toReturn;
     }
 
-    public function getSubsForumsa(int $forum_Id): array
-    {
-        $toReturn = [];
-        $forumStack = [];
-        $forumStack[] = [$forum_Id, 0];
-        while (!empty($forumStack)) {
-            [$forumId, $depth] = array_pop($forumStack);
-            $subforums = $this->getSubforumByForum($forumId);
-
-            foreach ($subforums as $subForumObj) {
-                $subForumData = [
-                    'subforum' => $subForumObj,
-                    'depth' => $depth + 1,
-                ];
-                $toReturn[] = $subForumData;
-                $forumStack[] = [$subForumObj->getId(), $depth + 1];
-            }
-        }
-        return $toReturn;
-    }
 
     public function getSubsForums(int $forumId): array
     {

@@ -1,5 +1,6 @@
 <?php
 
+use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Utils\Utils;
 use CMW\Manager\Security\SecurityManager;
@@ -58,7 +59,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                         <h5 class="modal-title white" id="myModalLabel160">Visualisation du message</h5>
                                     </div>
                                     <div class="modal-body">
-                                        <p><b>Était dans : </b> <a href="/forum/t/<?= $response->getResponseTopic()->getSlug() ?>" target="_blank"><?= $response->getResponseTopic()->getName() ?></a></p>
+                                        <p><b>Était dans : </b> <a href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/c/<?=$response->getResponseTopic()->getCat()->getSlug()?>/f/<?=$response->getResponseTopic()->getForum()->getSlug()?>/t/<?= $response->getResponseTopic()->getSlug() ?>/p1" target="_blank"><?= $response->getResponseTopic()->getName() ?></a></p>
                                         <p><b>Messages :</b><?= $response->getContent() ?></p>
                                         <p><b>Publié le :</b> <?= $response->getCreated() ?></p>
                                     </div>

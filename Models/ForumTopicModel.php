@@ -2,12 +2,14 @@
 
 namespace CMW\Model\Forum;
 
+use CMW\Entity\Forum\ForumCategoryEntity;
 use CMW\Entity\Forum\ForumTopicEntity;
 use CMW\Entity\Forum\ForumTopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Website;
+use PDO;
 
 
 /**

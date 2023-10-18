@@ -6,6 +6,7 @@ use CMW\Entity\Forum\ForumCategoryEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Utils\Utils;
+use PDO;
 
 
 /**
@@ -38,6 +39,26 @@ class ForumCategoryModel extends AbstractModel
             $toReturn[] = $this->getCategoryById($cat["forum_category_id"]);
         }
         return $toReturn;
+    }
+
+
+    function getCategoryByForumId($forum_id) :ForumCategoryEntity
+    {
+        $sql = "SELECT forum_category_id, forum_subforum_id FROM cmw_forums WHERE forum_id = :forum_id";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        $res->execute(array("forum_id" => $forum_id));
+
+        $row = $res->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($row['forum_category_id'])) {
+            return ForumCategoryModel::getInstance()->getCategoryById($row['forum_category_id']) ;
+        } elseif (!empty($row['forum_subforum_id'])) {
+            return $this->getCategoryByForumId($row['forum_subforum_id']);
+        }
     }
 
     public function getCategoryById(int $id): ?ForumCategoryEntity

@@ -113,6 +113,20 @@ class ForumResponseModel extends AbstractModel
         return $res->fetch(0)['page'];
     }
 
+    public function getResponsePosition(int $topicId, int $responseId , int $responsePerPage): int
+    {
+        $sql = "SELECT*,FLOOR((position - 1) / :responsePerPage) + 1 AS page FROM (SELECT forum_response_id, ROW_NUMBER() OVER (ORDER BY forum_response_id) AS position FROM cmw_forums_response WHERE forum_topic_id = :topicId AND forum_response_is_trash = 0) AS response WHERE response.forum_response_id = :responseId";
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("topicId" => $topicId, "responseId" => $responseId, "responsePerPage" => $responsePerPage))) {
+            return 0;
+        }
+
+        return $res->fetch(0)['position'];
+    }
+
     public function countResponseInTopicWithoutTrashFunction(int $id): mixed //never use this model without knowing what it really does!!
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";

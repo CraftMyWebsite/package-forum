@@ -164,4 +164,15 @@ class ForumResponseEntity
         $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
         return ForumResponseModel::getInstance()->getResponsePageNumber($topic, $response,$responsePerPage);
     }
+
+    /**
+     * @return int
+     */
+    public function getResponsePosition(): int
+    {
+        $topic = $this->getResponseTopic()->getId();
+        $response = $this->getId();
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
+        return ForumResponseModel::getInstance()->getResponsePosition($topic, $response,$responsePerPage);
+    }
 }

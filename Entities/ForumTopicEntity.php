@@ -4,6 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Controller\Core\CoreController;
+use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Users\UsersModel;
@@ -212,6 +213,15 @@ class ForumTopicEntity
     public function getForum(): ForumEntity
     {
         return $this->topicForum;
+    }
+
+    /**
+     * @return \CMW\Entity\Forum\ForumCategoryEntity
+     */
+    public function getCat(): ForumCategoryEntity
+    {
+        $forumId = $this->getForum()->getId();
+        return ForumCategoryModel::getInstance()->getCategoryByForumId($forumId);
     }
 
     /**

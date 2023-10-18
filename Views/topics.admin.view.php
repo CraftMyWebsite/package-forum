@@ -61,8 +61,8 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <?php if ($topic->getIsTrash()) : ?><small style="color: #d00d0d">En
                                     corbeille</small><?php endif; ?>
                             </td>
-                            <td class="text-center"><a target="_blank"
-                                                       href="<?= $topic->getLink() ?>"><?= $topic->getForum()->getName() ?></a>
+                            <td class="text-center">
+                                <a target="_blank" href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/c/<?= $topic->getCat()->getSlug() ?>/f/<?= $topic->getForum()->getSlug() ?>/t/<?= $topic->getSlug() ?>/p1"><?= $topic->getForum()->getName() ?></a>
                             </td>
                             <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px"
                                                          width="32px"
