@@ -16,25 +16,25 @@ class ForumCategoryEntity
     private string $categoryName;
     private string $categorySlug;
     private string $categoryIcon;
-    private string $categoryDescription;
+    private ?string $categoryDescription;
     private int $categoryIsRestricted;
     private string $categoryCreated;
     private string $categoryUpdate;
     private ?array $restrictedRoles;
 
     /**
-     * @param int $categoryId
-     * @param string $categoryName
+     * @param int $id
+     * @param string $name
      * @param string $categorySlug
-     * @param string $categoryIcon
-     * @param string $categoryDescription
-     * @param int $categoryIsRestricted
+     * @param string $icon
      * @param string $categoryCreated
      * @param string $categoryUpdate
+     * @param ?string $desc
+     * @param int $categoryIsRestricted
      * @param \CMW\Entity\Forum\ForumPermissionRoleEntity[]|null $restrictedRoles
      */
 
-    public function __construct(int $id, string $name, string $categorySlug, string $icon,string $categoryCreated, string $categoryUpdate, string $desc = "", int $categoryIsRestricted, ?array $restrictedRoles)
+    public function __construct(int $id, string $name, string $categorySlug, string $icon,string $categoryCreated, string $categoryUpdate, ?string $desc, int $categoryIsRestricted, ?array $restrictedRoles)
     {
         $this->categoryId = $id;
         $this->categoryName = $name;
@@ -80,9 +80,10 @@ class ForumCategoryEntity
     }
 
     /**
-     * @return string
+     * @param string|null $param
+     * @return ?string
      */
-    public function getFontAwesomeIcon(?string $param = null): string
+    public function getFontAwesomeIcon(?string $param = null): ?string
     {
         return '<i class="' . $this->categoryIcon . '  ' . $param . '"></i>';
     }

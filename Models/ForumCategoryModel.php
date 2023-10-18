@@ -61,7 +61,7 @@ class ForumCategoryModel extends AbstractModel
             $res["forum_category_icon"],
             $res["forum_category_created"],
             $res["forum_category_updated"],
-            $res["forum_category_description"] ?? "",
+            $res["forum_category_description"] ?? null,
             $res["forum_category_restricted"],
             $this->getAllowedRoles($res["forum_category_id"])
         );

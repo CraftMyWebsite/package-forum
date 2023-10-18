@@ -35,10 +35,10 @@ class ForumModel extends AbstractModel
         $res = $db->prepare($sql);
 
         if (!$res->execute()) {
-            return array();
+            return [];
         }
 
-        $toReturn = array();
+        $toReturn = [];
 
         while ($for = $res->fetch()) {
             $toReturn[] = $this->getForumById($for["forum_id"]);
@@ -57,7 +57,7 @@ class ForumModel extends AbstractModel
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
+        if (!$res->execute(["forum_id" => $id])) {
             return null;
         }
 
@@ -94,11 +94,11 @@ class ForumModel extends AbstractModel
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
-            return array();
+        if (!$res->execute(["forum_id" => $id])) {
+            return [];
         }
 
-        $toReturn = array();
+        $toReturn = [];
 
         while ($forum = $res->fetch()) {
             $toReturn[] = $this->getForumById($forum["forum_id"]);
@@ -107,6 +107,10 @@ class ForumModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param int $id
+     * @return ForumEntity[]
+     */
     public function getSubforumByForum(int $id): array
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_subforum_id = :forum_id";
@@ -114,11 +118,11 @@ class ForumModel extends AbstractModel
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
-            return array();
+        if (!$res->execute(["forum_id" => $id])) {
+            return [];
         }
 
-        $toReturn = array();
+        $toReturn = [];
 
         while ($forum = $res->fetch()) {
             $toReturn[] = $this->getForumById($forum["forum_id"]);
@@ -127,24 +131,48 @@ class ForumModel extends AbstractModel
         return $toReturn;
     }
 
-    function getSubsForums($forum_Id) :array
+    public function getSubsForumsa(int $forum_Id): array
     {
-        $toReturn = array();
-        $forumStack = array();
-        $forumStack[] = array($forum_Id, 0);
+        $toReturn = [];
+        $forumStack = [];
+        $forumStack[] = [$forum_Id, 0];
         while (!empty($forumStack)) {
-            list($forumId, $depth) = array_pop($forumStack);
+            [$forumId, $depth] = array_pop($forumStack);
             $subforums = $this->getSubforumByForum($forumId);
 
             foreach ($subforums as $subForumObj) {
-                $subForumData = array(
+                $subForumData = [
                     'subforum' => $subForumObj,
-                    'depth' => $depth + 1
-                );
+                    'depth' => $depth + 1,
+                ];
                 $toReturn[] = $subForumData;
-                $forumStack[] = array($subForumObj->getId(), $depth + 1);
+                $forumStack[] = [$subForumObj->getId(), $depth + 1];
             }
         }
+        return $toReturn;
+    }
+
+    public function getSubsForums(int $forumId): array
+    {
+        return $this->getSubforumsRecursively($forumId, 1);
+    }
+
+    private function getSubforumsRecursively(int $forumId, int $depth): array
+    {
+        $toReturn = [];
+        $subforums = $this->getSubforumByForum($forumId);
+
+        foreach ($subforums as $subForumObj) {
+            $subForumData = [
+                'subforum' => $subForumObj,
+                'depth' => $depth,
+            ];
+            $toReturn[] = $subForumData;
+
+            $subToReturn = $this->getSubforumsRecursively($subForumObj->getId(), $depth + 1);
+            $toReturn = [...$toReturn, ...$subToReturn];
+        }
+
         return $toReturn;
     }
 
@@ -166,11 +194,11 @@ FROM ForumHierarchy ORDER BY forum_id ASC";
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $forumId))) {
-            return array();
+        if (!$res->execute(["forum_id" => $forumId])) {
+            return [];
         }
 
-        $toReturn = array();
+        $toReturn = [];
 
         while ($forum = $res->fetch()) {
             $toReturn[] = $this->getForumById($forum["forum_id"]);
@@ -198,11 +226,11 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("cat_id" => $catId))) {
-            return array();
+        if (!$res->execute(["cat_id" => $catId])) {
+            return [];
         }
 
-        $toReturn = array();
+        $toReturn = [];
 
         while ($forum = $res->fetch()) {
             $toReturn[] = $this->getForumById($forum["forum_id"]);
@@ -219,7 +247,7 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_slug" => $slug))) {
+        if (!$res->execute(["forum_slug" => $slug])) {
             return null;
         }
 
@@ -253,7 +281,7 @@ INNER JOIN ForumHierarchy fh ON ft.forum_id = fh.forum_id;";
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
+        if (!$res->execute(["forum_id" => $id])) {
             return 0;
         }
 
@@ -294,7 +322,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
+        if (!$res->execute(["forum_id" => $id])) {
             return 0;
         }
 
@@ -319,7 +347,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
+        if (!$res->execute(["forum_id" => $id])) {
             return false;
         }
 
@@ -328,15 +356,15 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
     public function createForum(string $name, string $icon, string $description, int $isRestricted, int $disallowTopics, int $reattached_Id): ?ForumEntity
     {
-        $data = array(
+        $data = [
             "forum_name" => $name,
             "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
             "is_restricted" => $isRestricted,
             "disallow_topics" => $disallowTopics,
-            "reattached_Id" => $reattached_Id
-        );
+            "reattached_Id" => $reattached_Id,
+        ];
 
         $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_restricted, forum_disallow_topics, forum_category_id)
                 VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :disallow_topics, :reattached_Id)";
@@ -359,7 +387,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         $sql = "INSERT INTO cmw_forums_groups_allowed (forums_role_id, forum_id)
                 VALUES (:role_id, :forum_id)";
         $db = DatabaseManager::getInstance();
-        $req = $db ->prepare($sql);
+        $req = $db->prepare($sql);
         $req->execute(['role_id' => $roleId, 'forum_id' => $forumId]);
     }
 
@@ -369,7 +397,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
         $db = DatabaseManager::getInstance();
 
-        return $db->prepare($sql)->execute(array("forum_id" => $id));
+        return $db->prepare($sql)->execute(["forum_id" => $id]);
     }
 
     /**
@@ -383,7 +411,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
         $req = $db->prepare($sql);
 
-        if (!$req->execute(['id' => $forumId])){
+        if (!$req->execute(['id' => $forumId])) {
             return null;
         }
 
@@ -399,10 +427,10 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
     {
         $slug = $this->generateSlug($id, $name);
 
-        $data = array(
+        $data = [
             "forum_slug" => $slug,
             "forum_id" => $id,
-        );
+        ];
 
         $sql = "UPDATE cmw_forums SET forum_slug = :forum_slug WHERE forum_id = :forum_id";
 
@@ -420,17 +448,17 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
     /*=> CONSTRUCTORS */
 
-    public function createSubForum(string $name, string $icon, string $description, int $isRestricted,int $disallowTopics, int $reattached_Id): ?ForumEntity
+    public function createSubForum(string $name, string $icon, string $description, int $isRestricted, int $disallowTopics, int $reattached_Id): ?ForumEntity
     {
-        $data = array(
+        $data = [
             "forum_name" => $name,
             "forum_icon" => $icon,
             "forum_slug" => "NOT_DEFINED",
             "forum_description" => $description,
             "is_restricted" => $isRestricted,
             "disallow_topics" => $disallowTopics,
-            "reattached_Id" => $reattached_Id
-        );
+            "reattached_Id" => $reattached_Id,
+        ];
 
         $sql = "INSERT INTO cmw_forums(forum_name, forum_icon, forum_slug, forum_description, forum_restricted, forum_disallow_topics,  forum_subforum_id)
                 VALUES (:forum_name, :forum_icon, :forum_slug, :forum_description,:is_restricted, :disallow_topics, :reattached_Id)";
@@ -450,7 +478,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
     public function editForum(int $id, string $name, string $icon, string $description, int $isRestricted, int $disallowTopics): ?ForumEntity
     {
-        $data = array(
+        $data = [
             "forum_id" => $id,
             "forum_name" => $name,
             "forum_icon" => $icon,
@@ -458,7 +486,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
             "forum_description" => $description,
             "is_restricted" => $isRestricted,
             "disallow_topics" => $disallowTopics,
-        );
+        ];
 
         $sql = "UPDATE cmw_forums SET forum_name=:forum_name, forum_icon=:forum_icon, forum_slug=:forum_slug, forum_description=:forum_description, forum_restricted=:is_restricted, forum_disallow_topics=:disallow_topics WHERE forum_id=:forum_id";
 
@@ -478,7 +506,7 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
         $db = DatabaseManager::getInstance();
 
-        return $db->prepare($sql)->execute(array("forum_id" => $id));
+        return $db->prepare($sql)->execute(["forum_id" => $id]);
     }
 
 }
