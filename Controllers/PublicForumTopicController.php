@@ -35,6 +35,27 @@ use JetBrains\PhpStorm\NoReturn;
  */
 class PublicForumTopicController extends CoreController
 {
+
+    #[Link("/search", Link::POST, ['.*?'], "/forum")]
+    public function publicForumResearch(): void
+    {
+        [$for] = Utils::filterInput('for');
+
+        $results = ForumTopicModel::getInstance()->getTopicByResearch($for);
+        $forumModel = forumModel::getInstance();
+        $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+
+        $view = new View("Forum", "search");
+        $view->addVariableList(["forumModel" => $forumModel, "results" => $results, "for" => $for, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "responseModel" => ForumResponseModel::getInstance()]);
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
+        $view->view();
+    }
+
+
+
     #[Link("/c/:catSlug/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
     public function publicForumAddTopicView(Request $request, string $catSlug, string $forumSlug): void
     {

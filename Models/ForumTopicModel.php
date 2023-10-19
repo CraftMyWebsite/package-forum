@@ -81,6 +81,34 @@ class ForumTopicModel extends AbstractModel
     }
 
     /**
+     * @param string $search
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
+    public function getTopicByResearch(string $search): array
+    {
+        $sql = "SELECT * FROM cmw_forums_topics WHERE MATCH (forum_topic_content, forum_topic_name) AGAINST (:search)";
+
+        $db = DatabaseManager::getInstance();
+
+        $res = $db->prepare($sql);
+
+        if (!$res->execute(array("search" => $search))) {
+            return [];
+        }
+
+        $toReturn = array();
+
+        while ($top = $res->fetch()) {
+            $topic = $this->getTopicById($top["forum_topic_id"]);
+            if (!is_null($topic)) {
+                $toReturn[] = $topic;
+            }
+        }
+
+        return $toReturn;
+    }
+
+    /**
      * @param int $id
      * @return \CMW\Entity\Forum\ForumTopicEntity|null
      */

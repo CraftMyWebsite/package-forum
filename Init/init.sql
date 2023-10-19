@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS cmw_forums_topics
     forum_id                     INT                 NOT NULL,
     forum_topic_created          TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP,
     forum_topic_updated          TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FULLTEXT INDEX idx_fts (forum_topic_content, forum_topic_name),
     CONSTRAINT fk_forum_id
         FOREIGN KEY (forum_id) REFERENCES cmw_forums (forum_id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_prefix_id
