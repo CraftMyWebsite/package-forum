@@ -67,7 +67,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px"
                                                          width="32px"
                                                          height="32px"
-                                                         src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topic->getUser()->getUserPicture()->getImageName() ?>"
+                                                         src="<?= $topic->getUser()->getUserPicture()->getImage() ?>"
                                                          alt="..."><?= $topic->getUser()->getPseudo() ?></td>
                             <td class="text-center"><?= $topic->getCreated() ?></td>
                             <td class="text-center"><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>

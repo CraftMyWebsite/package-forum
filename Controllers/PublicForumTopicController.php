@@ -151,7 +151,7 @@ class PublicForumTopicController extends CoreController
         Flash::send("success", LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
-        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()->getUserPicture()->getImageName(), UsersModel::getCurrentUser()->getPseudo());
+        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()->getUserPicture()->getImage(), UsersModel::getCurrentUser()->getPseudo());
 
         header("location: ../$forumSlug");
     }

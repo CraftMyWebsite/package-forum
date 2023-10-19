@@ -66,7 +66,7 @@ $description = "desc";
                                     </div>
                                     <div class="modal-body">
                                         <h6>Topic signalé :</h6>
-                                        <p>Auteur : <img width="30px" height="30px" src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topicReported->getTopic()->getUser()->getUserPicture()->getImageName() ?>"> <b><?= $topicReported->getTopic()->getUser()->getPseudo() ?></b><br>
+                                        <p>Auteur : <img width="30px" height="30px" src="<?= $topicReported->getTopic()->getUser()->getUserPicture()->getImage() ?>"> <b><?= $topicReported->getTopic()->getUser()->getPseudo() ?></b><br>
                                         Rôle du site : <b><?= $topicReported->getTopic()->getUser()->getHighestRole()->getName() ?></b><br>
                                         Rôle du forum : <b><?= ForumPermissionRoleModel::getInstance()->getHighestRoleByUser($topicReported->getTopic()->getUser()->getId())->getName() ?></b><br>
                                             Date de création : <b><?= $topicReported->getTopic()->getCreated() ?></b><br>
@@ -76,7 +76,7 @@ $description = "desc";
                                         <?= $topicReported->getTopic()->getContent() ?>
                                         <hr>
                                         <h6>Signaleur :</h6>
-                                        <p>Utilisateur : <img width="30px" height="30px" src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $topicReported->getUser()->getUserPicture()->getImageName() ?>"> <b><?= $topicReported->getUser()->getPseudo() ?></b><br>
+                                        <p>Utilisateur : <img width="30px" height="30px" src="<?= $topicReported->getUser()->getUserPicture()->getImage() ?>"> <b><?= $topicReported->getUser()->getPseudo() ?></b><br>
                                             Rôle du site : <b><?= $topicReported->getUser()->getHighestRole()->getName() ?></b><br>
                                             Rôle du forum : <b><?= ForumPermissionRoleModel::getInstance()->getHighestRoleByUser($topicReported->getUser()->getId())->getName() ?></b><br>
                                             Raison : <b><?= $topicReported->getReason() ?></b><br>
@@ -206,7 +206,7 @@ $description = "desc";
                                     </div>
                                     <div class="modal-body">
                                         <h6>Réponse signalé :</h6>
-                                        <p>Auteur : <img width="30px" height="30px" src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $responsesReported->getResponse()->getUser()->getUserPicture()->getImageName() ?>"> <b><?= $responsesReported->getResponse()->getUser()->getPseudo() ?></b><br>
+                                        <p>Auteur : <img width="30px" height="30px" src="<?= $responsesReported->getResponse()->getUser()->getUserPicture()->getImage() ?>"> <b><?= $responsesReported->getResponse()->getUser()->getPseudo() ?></b><br>
                                             Rôle du site : <b><?= $responsesReported->getResponse()->getUser()->getHighestRole()->getName() ?></b><br>
                                             Rôle du forum : <b><?= ForumPermissionRoleModel::getInstance()->getHighestRoleByUser($responsesReported->getResponse()->getUser()->getId())->getName() ?></b><br>
                                             Date de création : <b><?= $responsesReported->getResponse()->getCreated() ?></b><br>
@@ -215,7 +215,7 @@ $description = "desc";
                                         <?= $responsesReported->getResponse()->getContent() ?>
                                         <hr>
                                         <h6>Signaleur :</h6>
-                                        <p>Utilisateur : <img width="30px" height="30px" src="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>Public/Uploads/Users/<?= $responsesReported->getUser()->getUserPicture()->getImageName() ?>"> <b><?= $responsesReported->getUser()->getPseudo() ?></b><br>
+                                        <p>Utilisateur : <img width="30px" height="30px" src="Public/Uploads/Users/<?= $responsesReported->getUser()->getUserPicture()->getImage() ?>"> <b><?= $responsesReported->getUser()->getPseudo() ?></b><br>
                                             Rôle du site : <b><?= $responsesReported->getUser()->getHighestRole()->getName() ?></b><br>
                                             Rôle du forum : <b><?= ForumPermissionRoleModel::getInstance()->getHighestRoleByUser($responsesReported->getUser()->getId())->getName() ?></b><br>
                                             Raison : <b><?= $responsesReported->getReason() ?></b><br>
