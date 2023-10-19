@@ -23,12 +23,18 @@ class ForumTopicModel extends AbstractModel
     private UsersModel $userModel;
     private ForumModel $forumModel;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->userModel = new UsersModel();
         $this->forumModel = new ForumModel();
     }
 
+    /**
+     * @return array
+     */
     public function getTopic(): array
     {
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics";
@@ -49,6 +55,10 @@ class ForumTopicModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param string $slug
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
     public function getTopicBySlug(string $slug): ?ForumTopicEntity
     {
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_topic_slug = :topic_slug";
@@ -70,6 +80,10 @@ class ForumTopicModel extends AbstractModel
         return $this->getTopicById($res["forum_topic_id"]);
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
     public function getTopicById(int $id): ?ForumTopicEntity
     {
         $sql = "SELECT * FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
@@ -239,6 +253,16 @@ class ForumTopicModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param string $name
+     * @param string $content
+     * @param int $userId
+     * @param int $forumId
+     * @param int $disallowReplies
+     * @param int $important
+     * @param int $pin
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
     public function createTopic(string $name, string $content, int $userId, int $forumId, int $disallowReplies, int $important, int $pin): ?ForumTopicEntity
     {
 
@@ -271,6 +295,16 @@ class ForumTopicModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $topicId
+     * @param string $name
+     * @param int $disallowReplies
+     * @param int $important
+     * @param int $pin
+     * @param string $prefix
+     * @param int $move
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
     public function adminEditTopic(int $topicId, string $name, int $disallowReplies, int $important, int $pin, string $prefix, int $move): ?ForumTopicEntity
     {
 
@@ -309,6 +343,12 @@ class ForumTopicModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $topicId
+     * @param string $name
+     * @param string $content
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
     public function authorEditTopic(int $topicId, string $name, string $content): ?ForumTopicEntity
     {
 
@@ -334,6 +374,11 @@ class ForumTopicModel extends AbstractModel
     }
 
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @return void
+     */
     private function setTopicSlug(int $id, string $name): void
     {
         $slug = $this->forumModel->generateSlug($id, $name);
@@ -353,6 +398,10 @@ class ForumTopicModel extends AbstractModel
     }
 
 
+    /**
+     * @param \CMW\Entity\Forum\ForumTopicEntity $topic
+     * @return bool
+     */
     public function pinTopic(ForumTopicEntity $topic): bool
     {
         $data = array(
@@ -372,6 +421,10 @@ class ForumTopicModel extends AbstractModel
         return false;
     }
 
+    /**
+     * @param \CMW\Entity\Forum\ForumTopicEntity $topic
+     * @return bool
+     */
     public function DisallowReplies(ForumTopicEntity $topic): bool
     {
         $data = array(
@@ -391,6 +444,10 @@ class ForumTopicModel extends AbstractModel
         return false;
     }
 
+    /**
+     * @param \CMW\Entity\Forum\ForumTopicEntity $topic
+     * @return bool
+     */
     public function ImportantTopic(ForumTopicEntity $topic): bool
     {
         $data = array(
@@ -410,6 +467,10 @@ class ForumTopicModel extends AbstractModel
         return false;
     }
 
+    /**
+     * @param int $topicId
+     * @return bool
+     */
     public function deleteTopic(int $topicId): bool
     {
         $sql = "DELETE FROM cmw_forums_topics WHERE forum_topic_id = :topic_id";
@@ -419,6 +480,10 @@ class ForumTopicModel extends AbstractModel
         return $db->prepare($sql)->execute(array("topic_id" => $topicId));
     }
 
+    /**
+     * @param \CMW\Entity\Forum\ForumTopicEntity $topic
+     * @return \CMW\Entity\Forum\ForumTopicEntity|null
+     */
     public function trashTopic(ForumTopicEntity $topic): ?ForumTopicEntity
     {
         $topicId = $topic->getId();
@@ -442,6 +507,10 @@ class ForumTopicModel extends AbstractModel
         }
     }
 
+    /**
+     * @param int $topic
+     * @return int
+     */
     public function restoreTopic(int $topic): int
     {
         //Revoir comment fair fonctionner ceci (j'ai pas le time tout de suite)
@@ -459,6 +528,9 @@ class ForumTopicModel extends AbstractModel
 
     }
 
+    /**
+     * @return array
+     */
     public function getTrashTopic(): array
     {
         $sql = "SELECT * FROM `cmw_forums_topics` WHERE `forum_topic_is_trash` = 1 ORDER BY `cmw_forums_topics`.`forum_topic_updated` DESC";
@@ -479,6 +551,10 @@ class ForumTopicModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param $topicId
+     * @return bool
+     */
     public function isTrashedTopic($topicId): bool
     {
         $sql = "SELECT * FROM `cmw_forums_topics` WHERE `forum_topic_is_trash` = 1 AND `forum_topic_id` = :topic_id";
@@ -493,6 +569,11 @@ class ForumTopicModel extends AbstractModel
         return false;
     }
 
+    /**
+     * @param string $content
+     * @param int $topicId
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity|null
+     */
     public function addTag(string $content, int $topicId): ?ForumTopicTagEntity
     {
         $sql = "INSERT INTO cmw_forums_topics_tags (forums_topics_tags_content, forums_topics_tags_topic_id) 
@@ -508,6 +589,10 @@ class ForumTopicModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $topicId
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity|null
+     */
     public function clearTag(int $topicId): ?ForumTopicTagEntity
     {
 
@@ -521,6 +606,10 @@ class ForumTopicModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $tagId
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity|null
+     */
     public function getTagById(int $tagId): ?ForumTopicTagEntity
     {
 
@@ -584,6 +673,12 @@ class ForumTopicModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param int $tagId
+     * @param string $content
+     * @param int $topicId
+     * @return \CMW\Entity\Forum\ForumTopicTagEntity|null
+     */
     public function editTag(int $tagId, string $content, int $topicId): ?ForumTopicTagEntity
     {
         $var = array(
@@ -607,6 +702,10 @@ class ForumTopicModel extends AbstractModel
         );
     }
 
+    /**
+     * @param int $tagId
+     * @return bool
+     */
     public function deleteTag(int $tagId): bool
     {
         $sql = "DELETE FROM cmw_forums_topics_tags WHERE forums_topics_tags_id = :tag_id";

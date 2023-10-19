@@ -39,6 +39,10 @@ class ForumFollowedModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumFollowedEntity|null
+     */
     public function getFollowerById(int $id): ?ForumFollowedEntity
     {
         $sql = "SELECT * FROM cmw_forums_followed WHERE forums_followed_id = :forums_followed_id";
@@ -63,6 +67,11 @@ class ForumFollowedModel extends AbstractModel
         );
     }
 
+    /**
+     * @param int $topicId
+     * @param int $userId
+     * @return void
+     */
     public function addFollower(int $topicId, int $userId): void
     {
         $data = array(
@@ -79,6 +88,11 @@ class ForumFollowedModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $topicId
+     * @param int $userId
+     * @return bool
+     */
     public function removeFollower(int $topicId, int $userId): bool
     {
         $sql = "DELETE FROM cmw_forums_followed WHERE forum_topic_id = :forum_topic_id AND user_id = :user_id";
@@ -88,6 +102,11 @@ class ForumFollowedModel extends AbstractModel
         return $db->prepare($sql)->execute(array("forum_topic_id" => $topicId, "user_id" => $userId));
     }
 
+    /**
+     * @param int $topicId
+     * @param int $userId
+     * @return bool
+     */
     public function isFollower(int $topicId, int $userId): bool
     {
         $sql = "SELECT forums_followed_id FROM cmw_forums_followed WHERE forum_topic_id = :forum_topic_id AND user_id = :user_id";

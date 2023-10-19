@@ -42,6 +42,10 @@ class ForumCategoryModel extends AbstractModel
     }
 
 
+    /**
+     * @param $forum_id
+     * @return \CMW\Entity\Forum\ForumCategoryEntity
+     */
     function getCategoryByForumId($forum_id) :ForumCategoryEntity
     {
         $sql = "SELECT forum_category_id, forum_subforum_id FROM cmw_forums WHERE forum_id = :forum_id";
@@ -61,6 +65,10 @@ class ForumCategoryModel extends AbstractModel
         }
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumCategoryEntity|null
+     */
     public function getCategoryById(int $id): ?ForumCategoryEntity
     {
         $sql = "SELECT * FROM cmw_forums_categories WHERE forum_category_id = :category_id";
@@ -88,6 +96,10 @@ class ForumCategoryModel extends AbstractModel
         );
     }
 
+    /**
+     * @param string $slug
+     * @return \CMW\Entity\Forum\ForumCategoryEntity|null
+     */
     public function getCatBySlug(string $slug): ?ForumCategoryEntity
     {
         $sql = "SELECT forum_category_id FROM cmw_forums_categories WHERE forum_category_slug = :cat_slug";
@@ -109,6 +121,13 @@ class ForumCategoryModel extends AbstractModel
         return $this->getCategoryById($res["forum_category_id"]);
     }
 
+    /**
+     * @param string $name
+     * @param string $icon
+     * @param string $description
+     * @param int $isRestricted
+     * @return \CMW\Entity\Forum\ForumCategoryEntity|null
+     */
     public function createCategory(string $name, string $icon, string $description, int $isRestricted): ?ForumCategoryEntity
     {
 
@@ -134,6 +153,11 @@ class ForumCategoryModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @return void
+     */
     private function setCatSlug(int $id, string $name): void
     {
         $slug = $this->generateSlug($id, $name);
@@ -151,11 +175,20 @@ class ForumCategoryModel extends AbstractModel
         $req->execute($data);
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @return string
+     */
     public function generateSlug(int $id, string $name): string
     {
         return Utils::normalizeForSlug($name) . "-$id";
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function deleteForumCategoryGroupsAllowed(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_categories_groups_allowed WHERE forum_category_id = :category_id";
@@ -165,6 +198,11 @@ class ForumCategoryModel extends AbstractModel
         return $db->prepare($sql)->execute(array("category_id" => $id));
     }
 
+    /**
+     * @param int $roleId
+     * @param int $categoryId
+     * @return void
+     */
     public function addForumCategoryGroupsAllowed(int $roleId, int $categoryId): void
     {
         $sql = "INSERT INTO cmw_forums_categories_groups_allowed (forums_role_id, forum_category_id)
@@ -198,6 +236,14 @@ class ForumCategoryModel extends AbstractModel
         return $roles;
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @param string $icon
+     * @param string $description
+     * @param int $isRestricted
+     * @return \CMW\Entity\Forum\ForumCategoryEntity|null
+     */
     public function editCategory(int $id, string $name, string $icon, string $description, int $isRestricted): ?ForumCategoryEntity
     {
 
@@ -220,6 +266,10 @@ class ForumCategoryModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function deleteCategory(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_categories WHERE forum_category_id = :category_id";
@@ -229,6 +279,10 @@ class ForumCategoryModel extends AbstractModel
         return $db->prepare($sql)->execute(array("category_id" => $id));
     }
 
+    /**
+     * @param int $categoryId
+     * @return int
+     */
     public function getNumberOfTopics(int $categoryId): int
     {
         $sql = "SELECT COUNT('forum_topic_id') AS `count` FROM cmw_forums_topics 
@@ -253,6 +307,10 @@ class ForumCategoryModel extends AbstractModel
         return $res['count'] ?? 0;
     }
 
+    /**
+     * @param int $categoryId
+     * @return int
+     */
     public function getNumberOfMessages(int $categoryId): int
     {
         $sql = "SELECT COUNT('forum_response_id') AS `count` FROM cmw_forums_response 

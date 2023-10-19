@@ -14,6 +14,10 @@ use CMW\Manager\Package\AbstractModel;
  */
 class ForumPermissionModel extends AbstractModel
 {
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumPermissionEntity|null
+     */
     public function getPermissionById(int $id): ?ForumPermissionEntity
     {
         $sql = "SELECT * FROM cmw_forums_permissions WHERE forum_permission_id = :forum_permission_id";
@@ -59,6 +63,11 @@ class ForumPermissionModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $userId
+     * @param string $permissionCode
+     * @return bool
+     */
     public function hasForumPermission(int $userId, string $permissionCode): bool
     {
         foreach ($this->getPermissionsByUser($userId) as $userPermission) {

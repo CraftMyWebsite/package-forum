@@ -39,6 +39,11 @@ class ForumFeedbackModel extends AbstractModel
         return $toReturn;
 
     }
+
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function getFeedbackById(int $id): ?ForumFeedbackEntity
     {
         $sql = "SELECT * FROM cmw_forums_feedback WHERE forum_feedback_id = :feedbackId";
@@ -112,6 +117,12 @@ class ForumFeedbackModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param array $image
+     * @param string $name
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     * @throws \JsonException
+     */
     public function createFeedback(array $image, string $name): ?ForumFeedbackEntity
     {
         $imageName = ImagesManager::upload($image, "Forum");
@@ -133,6 +144,13 @@ class ForumFeedbackModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param array $image
+     * @param string $name
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     * @throws \JsonException
+     */
     public function editFeedback(array $image, string $name, int $id): ?ForumFeedbackEntity
     {
         $imageName = ImagesManager::upload($image, "Forum");
@@ -154,6 +172,10 @@ class ForumFeedbackModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function removeFeedback(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_feedback WHERE `forum_feedback_id` = :id";
@@ -167,6 +189,12 @@ class ForumFeedbackModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $topicId
+     * @param int $feedbackId
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function addFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?ForumFeedbackEntity
     {
         $sql = "INSERT INTO cmw_forums_topics_feedback (forum_topics_id, forum_feedback_id, user_id) VALUES (:topicId, :feedbackId, :userId)";
@@ -181,6 +209,12 @@ class ForumFeedbackModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $topicId
+     * @param int $feedbackId
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function removeFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?ForumFeedbackEntity
     {
         $sql = "DELETE FROM cmw_forums_topics_feedback WHERE `forum_topics_id` = :topicId AND `forum_feedback_id` = :feedbackId AND `user_id` = :userId";
@@ -195,6 +229,12 @@ class ForumFeedbackModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $topicId
+     * @param int $feedbackId
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function changeFeedbackByFeedbackId(int $topicId, int $feedbackId, int $userId): ?ForumFeedbackEntity
     {
         $sql = "UPDATE cmw_forums_topics_feedback SET forum_feedback_id = :feedbackId WHERE forum_topics_id = :topicId AND user_id = :userId";
@@ -290,6 +330,12 @@ class ForumFeedbackModel extends AbstractModel
         return $option['forum_feedback_id'];
     }
 
+    /**
+     * @param int $responseId
+     * @param int $feedbackId
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function addFeedbackResponseByFeedbackId(int $responseId, int $feedbackId, int $userId): ?ForumFeedbackEntity
     {
         $sql = "INSERT INTO cmw_forums_response_feedback (forum_response_id, forum_feedback_id, user_id) VALUES (:ResponseId, :feedbackId, :userId)";
@@ -304,6 +350,12 @@ class ForumFeedbackModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $responseId
+     * @param int $feedbackId
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function removeFeedbackResponseByFeedbackId(int $responseId, int $feedbackId, int $userId): ?ForumFeedbackEntity
     {
         $sql = "DELETE FROM cmw_forums_response_feedback WHERE `forum_response_id` = :ResponseId AND `forum_feedback_id` = :feedbackId AND `user_id` = :userId";
@@ -318,6 +370,12 @@ class ForumFeedbackModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $responseId
+     * @param int $feedbackId
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
+     */
     public function changeFeedbackResponseByFeedbackId(int $responseId, int $feedbackId, int $userId): ?ForumFeedbackEntity
     {
         $sql = "UPDATE cmw_forums_response_feedback SET forum_feedback_id = :feedbackId WHERE forum_response_id = :ResponseId AND user_id = :userId";

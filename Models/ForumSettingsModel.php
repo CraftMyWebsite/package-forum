@@ -14,6 +14,9 @@ use CMW\Manager\Package\AbstractModel;
  */
 class ForumSettingsModel extends AbstractModel
 {
+    /**
+     * @return array
+     */
     public function getSettings(): array
     {
         $db = DatabaseManager::getInstance();
@@ -41,6 +44,13 @@ class ForumSettingsModel extends AbstractModel
         return $option['forum_settings_value'];
     }
 
+    /**
+     * @param string $iconNotRead
+     * @param string $iconImportant
+     * @param string $iconPin
+     * @param string $iconClosed
+     * @return void
+     */
     public function updateIcons(string $iconNotRead, string $iconImportant, string $iconPin, string $iconClosed): void
     {
         $db = DatabaseManager::getInstance();
@@ -48,6 +58,10 @@ class ForumSettingsModel extends AbstractModel
         $req->execute(array("iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed));
     }
 
+    /**
+     * @param string $visitorCanViewForum
+     * @return void
+     */
     public function updateVisitorCanViewForum(string $visitorCanViewForum): void
     {
         $db = DatabaseManager::getInstance();
@@ -55,6 +69,10 @@ class ForumSettingsModel extends AbstractModel
         $req->execute(array("visitorCanViewForum" => $visitorCanViewForum));
     }
 
+    /**
+     * @param string $responsePerPage
+     * @return void
+     */
     public function updateResponsePerPage(string $responsePerPage): void
     {
         $db = DatabaseManager::getInstance();

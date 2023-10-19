@@ -16,6 +16,10 @@ use CMW\Model\Users\UsersModel;
 
 class ForumUserBlockedModel extends AbstractModel
 {
+    /**
+     * @param int $userId
+     * @return \CMW\Entity\Forum\ForumUserBlockedEntity|null
+     */
     public function getUserBlockedByUserId(int $userId): ?ForumUserBlockedEntity
     {
         $sql = "SELECT * FROM cmw_forums_users_blocked WHERE user_id = :user_id";
@@ -40,6 +44,11 @@ class ForumUserBlockedModel extends AbstractModel
         );
     }
 
+    /**
+     * @param int $userId
+     * @param string $reason
+     * @return void
+     */
     public function blockUser(int $userId, string $reason): void
     {
         $data = array(
@@ -56,6 +65,11 @@ class ForumUserBlockedModel extends AbstractModel
         $req->execute($data);
     }
 
+    /**
+     * @param int $userId
+     * @param string $reason
+     * @return void
+     */
     public function unblockUser(int $userId, string $reason): void
     {
         $data = array(
@@ -72,6 +86,10 @@ class ForumUserBlockedModel extends AbstractModel
         $req->execute($data);
     }
 
+    /**
+     * @param int $userId
+     * @return void
+     */
     public function addDefaultBlockOnRegister(int $userId): void
     {
         $data = array(

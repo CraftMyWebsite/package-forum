@@ -16,6 +16,10 @@ use CMW\Utils\Website;
  */
 class ForumDiscordModel extends AbstractModel
 {
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumDiscordEntity|null
+     */
     public function getDiscordById(int $id): ?ForumDiscordEntity
     {
         $sql = "SELECT * FROM cmw_forums_discord WHERE forum_discord_id = :id";
@@ -38,11 +42,20 @@ class ForumDiscordModel extends AbstractModel
         );
     }
 
+    /**
+     * @param $action
+     * @param $type
+     * @return bool
+     */
     public function getAllActionPossibleByType($action, $type) : bool
     {
 
     }
 
+    /**
+     * @param $forumId
+     * @return int
+     */
     public function thisForumCanDoAction($forumId): int
     {
         $sql = "SELECT forum_discord_id FROM cmw_forums_discord WHERE forum_id = :forumId";
@@ -62,6 +75,16 @@ class ForumDiscordModel extends AbstractModel
         return $res['forum_discord_id'] ?? 0;
     }
 
+    /**
+     * @param $forumId
+     * @param $topicName
+     * @param $topicForumName
+     * @param $topicLink
+     * @param $topicUserPicture
+     * @param $topicUserName
+     * @return void
+     * @throws \JsonException
+     */
     public function sendDiscordMsgNewTopic($forumId, $topicName, $topicForumName, $topicLink, $topicUserPicture, $topicUserName): void
     {
         $discordId = $this->thisForumCanDoAction($forumId);

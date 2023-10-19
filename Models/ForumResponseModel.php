@@ -17,7 +17,13 @@ use CMW\Model\Users\UsersModel;
  */
 class ForumResponseModel extends AbstractModel
 {
+    /**
+     * @var \CMW\Model\Users\UsersModel
+     */
     private UsersModel $userModel;
+    /**
+     * @var \CMW\Model\Forum\ForumTopicModel
+     */
     private ForumTopicModel $topicModel;
 
     public function __construct()
@@ -50,6 +56,10 @@ class ForumResponseModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
+     */
     public function getResponseById(int $id): ?ForumResponseEntity
     {
 
@@ -84,6 +94,10 @@ class ForumResponseModel extends AbstractModel
         );
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function countResponseInTopic(int $id): mixed
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id AND forum_response_is_trash = 0";
@@ -99,6 +113,12 @@ class ForumResponseModel extends AbstractModel
     }
 
 
+    /**
+     * @param int $topicId
+     * @param int $responseId
+     * @param int $responsePerPage
+     * @return int
+     */
     public function getResponsePageNumber(int $topicId, int $responseId , int $responsePerPage): int
     {
         $sql = "SELECT*,FLOOR((position - 1) / :responsePerPage) + 1 AS page FROM (SELECT forum_response_id, ROW_NUMBER() OVER (ORDER BY forum_response_id) AS position FROM cmw_forums_response WHERE forum_topic_id = :topicId AND forum_response_is_trash = 0) AS response WHERE response.forum_response_id = :responseId";
@@ -113,6 +133,12 @@ class ForumResponseModel extends AbstractModel
         return $res->fetch(0)['page'];
     }
 
+    /**
+     * @param int $topicId
+     * @param int $responseId
+     * @param int $responsePerPage
+     * @return int
+     */
     public function getResponsePosition(int $topicId, int $responseId , int $responsePerPage): int
     {
         $sql = "SELECT*,FLOOR((position - 1) / :responsePerPage) + 1 AS page FROM (SELECT forum_response_id, ROW_NUMBER() OVER (ORDER BY forum_response_id) AS position FROM cmw_forums_response WHERE forum_topic_id = :topicId AND forum_response_is_trash = 0) AS response WHERE response.forum_response_id = :responseId";
@@ -127,6 +153,10 @@ class ForumResponseModel extends AbstractModel
         return $res->fetch(0)['position'];
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function countResponseInTopicWithoutTrashFunction(int $id): mixed //never use this model without knowing what it really does!!
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE forum_topic_id = :forum_topic_id";
@@ -141,6 +171,10 @@ class ForumResponseModel extends AbstractModel
         return $res->fetch(0)['count'];
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function countResponseByUser(int $id): mixed
     {
         $sql = "SELECT COUNT(forum_response_id) as count FROM cmw_forums_response WHERE user_id = :user_id AND forum_response_is_trash = 0";
@@ -156,6 +190,12 @@ class ForumResponseModel extends AbstractModel
     }
 
 
+    /**
+     * @param string $content
+     * @param int $userId
+     * @param int $topicId
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
+     */
     public function createResponse(string $content, int $userId, int $topicId): ?ForumResponseEntity
     {
 
@@ -177,6 +217,10 @@ class ForumResponseModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function deleteResponse(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_response WHERE forum_response_id = :id";
@@ -191,6 +235,10 @@ class ForumResponseModel extends AbstractModel
         return $req->rowCount() === 1;
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
+     */
     public function restoreResponse(int $id): ?ForumResponseEntity
     {
         $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '0' WHERE `forum_response_id` = :id";
@@ -205,6 +253,11 @@ class ForumResponseModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @param int $reason
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
+     */
     public function trashResponse(int $id, int $reason): ?ForumResponseEntity
     {
         $sql = "UPDATE `cmw_forums_response` SET `forum_response_is_trash` = '1', `forum_response_trash_reason` = :reason WHERE `forum_response_id` = :id";
@@ -219,6 +272,9 @@ class ForumResponseModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @return array
+     */
     public function getTrashResponse(): array
     {
         $sql = "SELECT * FROM `cmw_forums_response` WHERE `forum_response_is_trash` = 1 ORDER BY `cmw_forums_response`.`forum_response_updated` DESC";
@@ -240,6 +296,10 @@ class ForumResponseModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $topicId
+     * @return \CMW\Entity\Forum\ForumResponseEntity|null
+     */
     public function getLatestResponseInTopic(int $topicId): ?ForumResponseEntity
     {
         $sql = "SELECT * FROM `cmw_forums_response` 

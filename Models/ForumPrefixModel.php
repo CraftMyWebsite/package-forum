@@ -39,6 +39,10 @@ class ForumPrefixModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumPrefixesEntity|null
+     */
     public function getPrefixesById(int $id): ?ForumPrefixesEntity
     {
         $sql = "SELECT * FROM cmw_forums_prefixes WHERE forum_prefix_id = :prefix_id";
@@ -63,6 +67,13 @@ class ForumPrefixModel extends AbstractModel
         );
     }
 
+    /**
+     * @param string $name
+     * @param string $color
+     * @param string $textColor
+     * @param string $description
+     * @return \CMW\Entity\Forum\ForumPrefixesEntity|null
+     */
     public function createPrefix(string $name, string $color, string $textColor, string $description): ?ForumPrefixesEntity
     {
 
@@ -86,6 +97,14 @@ class ForumPrefixModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @param string $color
+     * @param string $textColor
+     * @param string $description
+     * @return \CMW\Entity\Forum\ForumPrefixesEntity|null
+     */
     public function editPrefix(int $id, string $name, string $color, string $textColor, string $description): ?ForumPrefixesEntity
     {
 
@@ -108,6 +127,10 @@ class ForumPrefixModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function deletePrefix(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_prefixes WHERE forum_prefix_id = :id";

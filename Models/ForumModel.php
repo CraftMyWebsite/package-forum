@@ -15,6 +15,9 @@ use CMW\Utils\Utils;
  */
 class ForumModel extends AbstractModel
 {
+    /**
+     * @var \CMW\Model\Forum\ForumCategoryModel
+     */
     private ForumCategoryModel $categoryModel;
 
     public function __construct()
@@ -49,6 +52,10 @@ class ForumModel extends AbstractModel
 
     /*=> GETTERS */
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumEntity|null
+     */
     public function getForumById(int $id): ?ForumEntity
     {
         $sql = "SELECT * FROM cmw_forums WHERE forum_id = :forum_id";
@@ -132,11 +139,20 @@ class ForumModel extends AbstractModel
     }
 
 
+    /**
+     * @param int $forumId
+     * @return array
+     */
     public function getSubsForums(int $forumId): array
     {
         return $this->getSubforumsRecursively($forumId, 1);
     }
 
+    /**
+     * @param int $forumId
+     * @param int $depth
+     * @return array
+     */
     private function getSubforumsRecursively(int $forumId, int $depth): array
     {
         $toReturn = [];
@@ -157,6 +173,10 @@ class ForumModel extends AbstractModel
     }
 
 
+    /**
+     * @param int $forumId
+     * @return array
+     */
     public function getParentByForumId(int $forumId): array
     {
         $sql = "WITH RECURSIVE ForumHierarchy AS (
@@ -188,6 +208,11 @@ FROM ForumHierarchy ORDER BY forum_id ASC";
     }
 
     //TODO : Tenté d'améliorer ceci
+
+    /**
+     * @param int $catId
+     * @return array
+     */
     public function getChildForumByCatId(int $catId): array
     {
         $sql = "WITH RECURSIVE ForumHierarchy AS (
@@ -219,6 +244,10 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
         return $toReturn;
     }
 
+    /**
+     * @param string $slug
+     * @return \CMW\Entity\Forum\ForumEntity|null
+     */
     public function getForumBySlug(string $slug): ?ForumEntity
     {
         $sql = "SELECT forum_id FROM cmw_forums WHERE forum_slug = :forum_slug";
@@ -240,6 +269,10 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
         return $this->getForumById($res["forum_id"]);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function countTopicInForum(int $id): mixed
     {
         $sql = "WITH RECURSIVE ForumHierarchy AS (
@@ -268,6 +301,9 @@ INNER JOIN ForumHierarchy fh ON ft.forum_id = fh.forum_id;";
         return $res->fetch(0)['total_forum_topics'];
     }
 
+    /**
+     * @return int
+     */
     public function countAllTopicsInAllForum(): int
     {
         $sql = "SELECT COUNT(cmw_forums_topics.forum_topic_id) AS `count` FROM cmw_forums_topics";
@@ -279,6 +315,10 @@ INNER JOIN ForumHierarchy fh ON ft.forum_id = fh.forum_id;";
         return $res->fetch()['count'] ?? 0;
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function countMessagesInForum(int $id): mixed
     {
         $sql = "WITH RECURSIVE ForumHierarchy AS (
@@ -309,6 +349,9 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return $res->fetch(0)['total_responses'];
     }
 
+    /**
+     * @return int
+     */
     public function countAllMessagesInAllForum(): int
     {
         $sql = "SELECT COUNT('forum_response_id') AS `count` FROM cmw_forums_response";
@@ -320,6 +363,10 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return $res->fetch()['count'] ?? 0;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function hasSubForums(int $id): bool
     {
         $sql = "SELECT COUNT(forum_id) FROM cmw_forums WHERE forum_subforum_id = :forum_id";
@@ -334,6 +381,15 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return (bool)$res->fetch(0);
     }
 
+    /**
+     * @param string $name
+     * @param string $icon
+     * @param string $description
+     * @param int $isRestricted
+     * @param int $disallowTopics
+     * @param int $reattached_Id
+     * @return \CMW\Entity\Forum\ForumEntity|null
+     */
     public function createForum(string $name, string $icon, string $description, int $isRestricted, int $disallowTopics, int $reattached_Id): ?ForumEntity
     {
         $data = [
@@ -362,6 +418,11 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return null;
     }
 
+    /**
+     * @param int $roleId
+     * @param int $forumId
+     * @return void
+     */
     public function addForumGroupsAllowed(int $roleId, int $forumId): void
     {
         $sql = "INSERT INTO cmw_forums_groups_allowed (forums_role_id, forum_id)
@@ -371,6 +432,10 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         $req->execute(['role_id' => $roleId, 'forum_id' => $forumId]);
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function deleteForumGroupsAllowed(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_groups_allowed WHERE forum_id = :forum_id";
@@ -403,6 +468,11 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return $roles;
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @return void
+     */
     private function setForumSlug(int $id, string $name): void
     {
         $slug = $this->generateSlug($id, $name);
@@ -420,6 +490,11 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         $req->execute($data);
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @return string
+     */
     public function generateSlug(int $id, string $name): string
     {
         return Utils::normalizeForSlug($name) . "-$id";
@@ -428,6 +503,15 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
 
     /*=> CONSTRUCTORS */
 
+    /**
+     * @param string $name
+     * @param string $icon
+     * @param string $description
+     * @param int $isRestricted
+     * @param int $disallowTopics
+     * @param int $reattached_Id
+     * @return \CMW\Entity\Forum\ForumEntity|null
+     */
     public function createSubForum(string $name, string $icon, string $description, int $isRestricted, int $disallowTopics, int $reattached_Id): ?ForumEntity
     {
         $data = [
@@ -456,6 +540,15 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return null;
     }
 
+    /**
+     * @param int $id
+     * @param string $name
+     * @param string $icon
+     * @param string $description
+     * @param int $isRestricted
+     * @param int $disallowTopics
+     * @return \CMW\Entity\Forum\ForumEntity|null
+     */
     public function editForum(int $id, string $name, string $icon, string $description, int $isRestricted, int $disallowTopics): ?ForumEntity
     {
         $data = [
@@ -480,6 +573,10 @@ LEFT JOIN cmw_forums_response r ON t.forum_topic_id = r.forum_topic_id;";
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function deleteForum(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums WHERE forum_id = :forum_id";

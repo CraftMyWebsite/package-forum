@@ -63,6 +63,10 @@ class ForumReportedModel extends AbstractModel
         return $toReturn;
     }
 
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumReportedTopicEntity|null
+     */
     public function getReportedTopicById(int $id): ?ForumReportedTopicEntity
     {
         $sql = "SELECT * FROM cmw_forums_topic_reported WHERE forums_reported_topic_id = :forums_reported_topic_id";
@@ -88,6 +92,11 @@ class ForumReportedModel extends AbstractModel
             $res["forum_reported_updated"]
         );
     }
+
+    /**
+     * @param int $id
+     * @return \CMW\Entity\Forum\ForumReportedResponseEntity|null
+     */
     public function getReportedResponseById(int $id): ?ForumReportedResponseEntity
     {
         $sql = "SELECT * FROM cmw_forums_response_reported WHERE forums_reported_response_id = :forums_reported_response_id";
@@ -114,6 +123,12 @@ class ForumReportedModel extends AbstractModel
         );
     }
 
+    /**
+     * @param int $userId
+     * @param int $topicId
+     * @param int $reason
+     * @return \CMW\Entity\Forum\ForumReportedTopicEntity|null
+     */
     public function creatTopicReport(int $userId, int $topicId, int $reason): ?ForumReportedTopicEntity
     {
 
@@ -136,6 +151,12 @@ class ForumReportedModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $userId
+     * @param int $responseId
+     * @param int $reason
+     * @return \CMW\Entity\Forum\ForumReportedResponseEntity|null
+     */
     public function creatResponseReport(int $userId, int $responseId, int $reason): ?ForumReportedResponseEntity
     {
 
@@ -158,6 +179,10 @@ class ForumReportedModel extends AbstractModel
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function removeReportTopic(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_topic_reported WHERE `forums_reported_topic_id` = :id";
@@ -169,6 +194,10 @@ class ForumReportedModel extends AbstractModel
         return $req->rowCount() === 1;
     }
 
+    /**
+     * @param int $id
+     * @return bool
+     */
     public function removeReportResponse(int $id): bool
     {
         $sql = "DELETE FROM cmw_forums_response_reported WHERE `forums_reported_response_id` = :id";

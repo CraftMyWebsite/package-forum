@@ -16,13 +16,23 @@ use CMW\Model\Users\UsersModel;
  */
 class ForumPermissionRoleModel extends AbstractModel
 {
+    /**
+     * @var \CMW\Model\Forum\ForumPermissionModel
+     */
     private ForumPermissionModel $forumPermissionModel;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->forumPermissionModel = new ForumPermissionModel();
     }
 
+    /**
+     * @param $id
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity|null
+     */
     public function getRoleById($id): ?ForumPermissionRoleEntity
     {
 
@@ -153,6 +163,12 @@ class ForumPermissionRoleModel extends AbstractModel
         return $this->getRoleById($res["forums_role_id"]);
     }
 
+    /**
+     * @param string $name
+     * @param int $weight
+     * @param string $description
+     * @return \CMW\Entity\Forum\ForumPermissionRoleEntity|null
+     */
     public function addRole(string $name, int $weight, string $description): ?ForumPermissionRoleEntity
     {
         $data = array(
@@ -181,6 +197,10 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute(["role_id" =>$roleId, "role_name" =>$name, "role_description" =>$description, "role_weight" =>$weight]);
     }
 
+    /**
+     * @param int $roleId
+     * @return void
+     */
     public function removeRole(int $roleId): void
     {
         $data = array(
@@ -192,6 +212,11 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute($data);
     }
 
+    /**
+     * @param int $roleId
+     * @param int $permissionId
+     * @return void
+     */
     public function addRolePermissions(int $roleId, int $permissionId): void
     {
         $data = array(
@@ -204,6 +229,11 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute($data);
     }
 
+    /**
+     * @param int $roleId
+     * @param int $permissionId
+     * @return void
+     */
     public function removeRolePermissions(int $roleId, int $permissionId): void
     {
         $data = array(
@@ -277,6 +307,10 @@ class ForumPermissionRoleModel extends AbstractModel
         $req->execute();
     }
 
+    /**
+     * @param $newDefaultRole
+     * @return void
+     */
     public function updateDefaultRoleForAllUser($newDefaultRole): void
     {
         foreach (UsersModel::getInstance()->getUsers() as $user) {
@@ -290,6 +324,10 @@ class ForumPermissionRoleModel extends AbstractModel
         }
     }
 
+    /**
+     * @param int $userId
+     * @return void
+     */
     public function addUserForumDefaultRoleOnRegister(int $userId): void
     {
         $data = array(
@@ -305,6 +343,10 @@ class ForumPermissionRoleModel extends AbstractModel
 
     }
 
+    /**
+     * @param int $roleId
+     * @return bool
+     */
     public static function playerHasForumRole(int $roleId): bool
     {
         if (is_null(UsersModel::getCurrentUser()->getId())) {
