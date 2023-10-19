@@ -84,7 +84,6 @@ $description = LangManager::translate("forum.forum.list.description");
                                         </td>
                                     </tr>
                                     <!----LISTAGE SOUS-FORUM ---->
-                                    <!--TODO : Besoin d'être améliorer -->
                                     <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
                                         <tr>
                                             <td style="padding-left: <?= 1 + $subForum["depth"] * 2 ?>rem"

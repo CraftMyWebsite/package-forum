@@ -4,6 +4,7 @@ namespace CMW\Entity\Forum;
 
 use CMW\Entity\Users\userEntity;
 use CMW\Controller\Core\CoreController;
+use CMW\Manager\Env\EnvManager;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
@@ -239,47 +240,42 @@ class ForumTopicEntity
      */
     public function getLink(): string
     {
-        return Website::getProtocol()."://".$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']."/t/$this->topicSlug/p1";
+        $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/";
+        $catSlug = $this->getCat()->getSlug();
+        $forumSlug = $this->getForum()->getSlug();
+        return $baseUrl."c/$catSlug/f/$forumSlug/t/$this->topicSlug/p1";
     }
 
     /**
      * @return string
-     * @param $catSlug
-     * @param $forumSlug
      */
-    public function getPinnedLink($catSlug, $forumSlug): string
+    public function getPinnedLink(): string
     {
-        return "$catSlug/f/$forumSlug/t/$this->topicSlug/pinned";
+        return $this->getLink()."/pinned";
     }
 
     /**
      * @return string
-     * @param $catSlug
-     * @param $forumSlug
      */
-    public function getDisallowRepliesLink($catSlug, $forumSlug): string
+    public function getDisallowRepliesLink(): string
     {
-        return "$catSlug/f/$forumSlug/t/$this->topicSlug/disallowreplies";
+        return $this->getLink()."/disallowreplies";
     }
 
     /**
      * @return string
-     * @param $catSlug
-     * @param $forumSlug
      */
-    public function getIsImportantLink($catSlug, $forumSlug): string
+    public function getIsImportantLink(): string
     {
-        return "$catSlug/f/$forumSlug/t/$this->topicSlug/isimportant";
+        return $this->getLink()."/isimportant";
     }
 
     /**
      * @return string
-     * @param $catSlug
-     * @param $forumSlug
      */
-    public function trashLink($catSlug, $forumSlug): string
+    public function trashLink(): string
     {
-        return "$catSlug/f/$forumSlug/t/$this->topicSlug/trash";
+        return $this->getLink()."/trash";
     }
 
     /**
@@ -314,17 +310,17 @@ class ForumTopicEntity
 
     public function editTopicLink(): string
     {
-        return "p1/edit";
+        return $this->getLink()."/edit";
     }
 
     public function followTopicLink(): string
     {
-        return "p1/follow";
+        return $this->getLink()."/follow";
     }
 
     public function unfollowTopicLink(): string
     {
-        return "p1/unfollow";
+        return $this->getLink()."/unfollow";
     }
 
     /**
@@ -332,7 +328,7 @@ class ForumTopicEntity
      */
     public function getFeedbackAddTopicLink(int $feedbackId): string
     {
-        return "p1/react/$this->topicId/$feedbackId";
+        return $this->getLink()."/react/$this->topicId/$feedbackId";
     }
 
     /**
@@ -340,7 +336,7 @@ class ForumTopicEntity
      */
     public function getFeedbackDeleteTopicLink(int $feedbackId): string
     {
-        return "p1/un_react/$this->topicId/$feedbackId";
+        return $this->getLink()."/un_react/$this->topicId/$feedbackId";
     }
 
     /**
@@ -348,6 +344,6 @@ class ForumTopicEntity
      */
     public function getFeedbackChangeTopicLink(int $feedbackId): string
     {
-        return "p1/change_react/$this->topicId/$feedbackId";
+        return $this->getLink()."change_react/$this->topicId/$feedbackId";
     }
 }

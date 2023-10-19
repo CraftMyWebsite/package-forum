@@ -167,7 +167,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                         <h5 class="modal-title white" id="myModalLabel160">Visualisation du topic</h5>
                                     </div>
                                     <div class="modal-body">
-                                        <p><b>Était dans :</b> <a href="/forum/f/<?= $topic->getForum()->getSlug() ?>" target="_blank"><?= $topic->getForum()->getName() ?></a></p>
+                                        <p><b>Était dans :</b> <a href="<?= $topic->getForum()->getLink() ?>" target="_blank"><?= $topic->getForum()->getName() ?></a></p>
                                         <p><b>Titre : <?= $topic->getName() ?></b></p>
                                         <p><b>Messages : <?= $topic->getContent() ?></b></p>
                                         <p><b>Publié le :</b> <?= $topic->getCreated() ?></p>

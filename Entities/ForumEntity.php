@@ -4,8 +4,11 @@ namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Env\EnvManager;
+use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumResponseModel;
+use CMW\Utils\Website;
 
 class ForumEntity
 {
@@ -148,7 +151,9 @@ class ForumEntity
      */
     public function getLink(): string
     {
-        return "../f/$this->forumSlug";
+        $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/";
+        $catSlug = ForumCategoryModel::getInstance()->getCategoryByForumId($this->forumId)->getSlug();
+        return $baseUrl."c/$catSlug/f/$this->forumSlug";
     }
 
     public function getParent(): ForumEntity|ForumCategoryEntity

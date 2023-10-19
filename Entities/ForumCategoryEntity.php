@@ -8,6 +8,7 @@ use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Users\RolesModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Website;
 
 class ForumCategoryEntity
 {
@@ -76,7 +77,7 @@ class ForumCategoryEntity
      */
     public function getLink(): string
     {
-        return EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/c/".$this->categorySlug;
+        return Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/c/".$this->categorySlug;
     }
 
     /**

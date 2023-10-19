@@ -89,8 +89,8 @@ class PublicForumAdminController extends CoreController
      * DIRECT LINK :
      * */
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/pinned", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicPinned(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/pinned", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicPinned(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -126,8 +126,8 @@ class PublicForumAdminController extends CoreController
         }
     }
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/disallowreplies", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicDisallowReplies(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/disallowreplies", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicDisallowReplies(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -163,8 +163,8 @@ class PublicForumAdminController extends CoreController
         }
     }
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/isimportant", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsImportant(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/isimportant", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsImportant(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -200,8 +200,8 @@ class PublicForumAdminController extends CoreController
         }
     }
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/trash", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsTrash(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/trash", Link::GET, ['.*?'], "/forum")]
+    public function publicTopicIsTrash(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -226,7 +226,7 @@ class PublicForumAdminController extends CoreController
 
                 Flash::send("success", LangManager::translate("core.toaster.success"), "Topic mis à la poubelle !");
 
-                header("location: ../../");
+                Redirect::redirectPreviousRoute();
             }
         } else {
             Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");

@@ -62,7 +62,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                     corbeille</small><?php endif; ?>
                             </td>
                             <td class="text-center">
-                                <a target="_blank" href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/c/<?= $topic->getCat()->getSlug() ?>/f/<?= $topic->getForum()->getSlug() ?>/t/<?= $topic->getSlug() ?>/p1"><?= $topic->getForum()->getName() ?></a>
+                                <a target="_blank" href="<?= $topic->getLink() ?>"><?= $topic->getForum()->getName() ?></a>
                             </td>
                             <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px"
                                                          width="32px"
@@ -170,12 +170,10 @@ $description = LangManager::translate("forum.forum.list.description");
                                                     <select name="move" class="form-select">
                                                         <?php foreach ($categoryModel->getCategories() as $cat): ?>
                                                             <option disabled>──── <?= $cat->getName() ?> ────</option>
-                                                            <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObject): ?>
-                                                                <option
-                                                                    value="<?= $forumObject->getId() ?>" <?= ($forumObject->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObject->getName() ?></option>
-                                                                <?php foreach ($forumModel->getSubforumByForum($forumObject->getId()) as $subForumObject): ?>
-                                                                    <option value="<?= $subForumObject->getId() ?>">
-                                                                        ↪ <?= $subForumObject->getName() ?></option>
+                                                            <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObj): ?>
+                                                                <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObj->getName() ?></option>
+                                                                <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
+                                                                    <option value="<?= $subForum["subforum"]->getId() ?>" <?= ($subForum["subforum"]->getName() === $topic->getForum()->getName() ? "selected" : "") ?>> <?=str_repeat("      ", $subForum["depth"])?> ↪ <?= $subForum["subforum"]->getName() ?></option>
                                                                 <?php endforeach; ?>
                                                             <?php endforeach; ?>
                                                         <?php endforeach; ?>

@@ -86,10 +86,6 @@ $description = "desc";
                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                                             <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                                         </button>
-                                        <a href="report/unReportTopic/<?= $topicReported->getId() ?>"
-                                           class="btn btn-primary ml-1">
-                                            <span class="">Oui</span>
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -225,10 +221,6 @@ $description = "desc";
                                         <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
                                             <span class=""><?= LangManager::translate("core.btn.close") ?></span>
                                         </button>
-                                        <a href="report/unReportTopic/<?= $responsesReported->getId() ?>"
-                                           class="btn btn-primary ml-1">
-                                            <span class="">Oui</span>
-                                        </a>
                                     </div>
                                 </div>
                             </div>
