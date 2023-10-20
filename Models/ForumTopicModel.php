@@ -256,16 +256,16 @@ class ForumTopicModel extends AbstractModel
     /**
      * @return \CMW\Entity\Forum\ForumTopicEntity[]
      */
-    public function getTopicByForum(int $id): array
+    public function getTopicByForumAndOffset(int $id, int $offset, int $responsePerPage): array
     {
 
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id AND forum_topic_is_trash = 0
-                                             ORDER BY forum_topic_pinned DESC, forum_topic_important DESC, forum_topic_created DESC";
+                                             ORDER BY forum_topic_pinned DESC, forum_topic_important DESC, forum_topic_created DESC LIMIT :responsePerPage OFFSET :offset";
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_id" => $id))) {
+        if (!$res->execute(array("forum_id" => $id, "offset" => $offset, "responsePerPage" => $responsePerPage))) {
             return array();
         }
 

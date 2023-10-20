@@ -56,8 +56,8 @@ class PublicForumTopicController extends CoreController
 
 
 
-    #[Link("/c/:catSlug/f/:forumSlug/add", Link::GET, ['.*?'], "/forum")]
-    public function publicForumAddTopicView(Request $request, string $catSlug, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/add", Link::GET, ['.*?'], "/forum")]
+    public function publicForumAddTopicView(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
     {
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
@@ -96,8 +96,8 @@ class PublicForumTopicController extends CoreController
         $view->view();
     }
 
-    #[Link("/c/:catSlug/f/:forumSlug/add", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAddTopicPost(Request $request, string $catSlug, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/add", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAddTopicPost(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
     {
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
@@ -135,8 +135,7 @@ class PublicForumTopicController extends CoreController
         if (is_null($forum) || Utils::containsNullValue($name, $content)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Website::refresh();
-            return;
+            Redirect::redirectPreviousRoute();
         }
 
         $res = ForumTopicModel::getInstance()->createTopic($name, $content, $userId, $forum->getId(),
@@ -150,8 +149,7 @@ class PublicForumTopicController extends CoreController
         if (is_null($res)) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
-            Website::refresh();
-            return;
+            Redirect::redirectPreviousRoute();
         }
 
         // Add tags
@@ -174,7 +172,7 @@ class PublicForumTopicController extends CoreController
 
         ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()->getUserPicture()->getImage(), UsersModel::getCurrentUser()->getPseudo());
 
-        header("location: ../$forumSlug");
+        header("location: ".$forum->getLink());
     }
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page", Link::GET, ['.*?'], "/forum")]
     public function publicTopicView(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void

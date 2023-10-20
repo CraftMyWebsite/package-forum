@@ -153,7 +153,7 @@ class ForumEntity
     {
         $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/";
         $catSlug = ForumCategoryModel::getInstance()->getCategoryByForumId($this->forumId)->getSlug();
-        return $baseUrl."c/$catSlug/f/$this->forumSlug";
+        return $baseUrl."c/$catSlug/f/$this->forumSlug/fp1";
     }
 
     public function getParent(): ForumEntity|ForumCategoryEntity

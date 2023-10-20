@@ -119,7 +119,8 @@ VALUES ('IconNotRead', 'fa-solid fa-eye'),
        ('IconPin', 'fa-solid fa-thumbtack'),
        ('IconClosed', 'fa-solid fa-lock'),
        ('visitorCanViewForum', '0'),
-       ('responsePerPage', '10');
+       ('responsePerPage', '10'),
+       ('topicPerPage', '10');
 
 
 CREATE TABLE IF NOT EXISTS cmw_forums_topics_views

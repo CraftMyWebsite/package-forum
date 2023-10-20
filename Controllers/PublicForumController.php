@@ -29,8 +29,8 @@ use CMW\Utils\Website;
  */
 class PublicForumController extends CoreController
 {
-    #[Link("/c/:catSlug/f/:forumSlug", Link::GET, ['.*?'], "/forum")]
-    public function publicForumView(Request $request, string $catSlug, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage", Link::GET, ['.*?'], "/forum")]
+    public function publicForumView(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -50,6 +50,13 @@ class PublicForumController extends CoreController
             Redirect::redirect("forum");
         }
 
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("topicPerPage");
+        $offset = ($forumPage-1)*$responsePerPage;
+        $totalPage = strval(ceil( ForumModel::getInstance()->countTopicInForum($forum->getId())/$responsePerPage));
+        $topics = ForumTopicModel::getInstance()->getTopicByForumAndOffset($forum->getId(), $offset, $responsePerPage);
+        preg_match("/\/fp(\d+)/", $_SERVER['REQUEST_URI'], $matches);
+        $currentPage = $matches[1];
+
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
@@ -58,7 +65,7 @@ class PublicForumController extends CoreController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
+        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"forumModel" => $forumModel, "categoryModel" => $categoryModel,"topics" => $topics, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
         $view->view();
     }
 }

@@ -289,7 +289,7 @@ SELECT * FROM ForumHierarchy ORDER BY forum_id ASC";
 
 SELECT COUNT(DISTINCT ft.forum_topic_id) AS total_forum_topics
 FROM cmw_forums_topics ft
-INNER JOIN ForumHierarchy fh ON ft.forum_id = fh.forum_id;";
+INNER JOIN ForumHierarchy fh ON ft.forum_id = fh.forum_id WHERE ft.forum_topic_is_trash = 0;";
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);

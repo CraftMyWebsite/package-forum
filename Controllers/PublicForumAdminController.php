@@ -28,8 +28,8 @@ class PublicForumAdminController extends CoreController
     /*
      * POST METHOD
      * */
-    #[Link("/c/:catSlug/f/:forumSlug/adminedit", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAdminEditTopicPost(Request $request, string $catSlug, string $forumSlug): void
+    #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/adminedit", Link::POST, ['.*?'], "/forum")]
+    public function publicForumAdminEditTopicPost(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
     {
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
@@ -53,8 +53,7 @@ class PublicForumAdminController extends CoreController
             if (is_null($forum)) {
                 Flash::send("error", LangManager::translate("core.toaster.error"),
                     LangManager::translate("core.toaster.internalError"));
-                Website::refresh();
-                return;
+                Redirect::redirectPreviousRoute();
             }
 
             ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
@@ -76,9 +75,9 @@ class PublicForumAdminController extends CoreController
                 ForumTopicModel::getInstance()->addTag($tag, $topicId);
             }
 
-            //Flash::send("success", LangManager::translate("core.toaster.success"),LangManager::translate("forum.topic.add.success"));
+            Flash::send("success", LangManager::translate("core.toaster.success"),"Le topic viens d'être éditer");
 
-            header("location: ../$forumSlug");
+            Redirect::redirectPreviousRoute();
         } else {
             Flash::send(Alert::ERROR, "Erreur", "Vous n'êtes pas autoriser à faire ceci !");
             Redirect::redirect("forum");

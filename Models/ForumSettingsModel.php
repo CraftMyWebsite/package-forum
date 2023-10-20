@@ -73,10 +73,10 @@ class ForumSettingsModel extends AbstractModel
      * @param string $responsePerPage
      * @return void
      */
-    public function updateResponsePerPage(string $responsePerPage): void
+    public function updatePerPage(string $responsePerPage, string $topicPerPage): void
     {
         $db = DatabaseManager::getInstance();
-        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :responsePerPage WHERE forum_settings_name = 'responsePerPage'");
-        $req->execute(array("responsePerPage" => $responsePerPage));
+        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'responsePerPage' THEN :responsePerPage WHEN 'topicPerPage' THEN :topicPerPage ELSE forum_settings_value END WHERE forum_settings_name IN ('responsePerPage','topicPerPage')");
+        $req->execute(array("responsePerPage" => $responsePerPage, "topicPerPage" => $topicPerPage));
     }
 }

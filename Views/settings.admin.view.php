@@ -7,6 +7,7 @@ $title = "Paramètres";
 $description = "desc";
 
 /* @var CMW\Controller\Forum\ForumSettingsController $responsePerPage */
+/* @var CMW\Controller\Forum\ForumSettingsController $topicPerPage */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconNotRead */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
@@ -21,15 +22,18 @@ $description = "desc";
 
 <section class="row">
 
-    <div class="col-12 col-lg-2">
+    <div class="col-12 col-lg-3">
         <div class="card">
             <div class="card-header">
                 <h4>Général</h4>
             </div>
             <div class="card-body">
-                <form action="settings/responsePerPage" method="post">
+                <form action="settings/perPage" method="post">
                     <?php (new SecurityManager())->insertHiddenToken() ?>
-                        <h6>Nombre de réponses par page :</h6>
+                    <h6>Topics par page :</h6>
+                    <input type="text" class="form-control" name="topicPerPage" value="<?= $topicPerPage ?>"
+                           required>
+                        <h6 class="mt-4">Réponses par page :</h6>
                         <input type="text" class="form-control" name="responsePerPage" value="<?= $responsePerPage ?>"
                                required>
                     <div class="text-center mt-4">
@@ -186,7 +190,7 @@ $description = "desc";
     </div>
 
 
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-lg-4">
         <div class="card">
             <div class="card-header">
                 <h4>Prefix</h4>
