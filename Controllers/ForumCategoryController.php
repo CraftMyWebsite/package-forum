@@ -10,6 +10,7 @@ use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Flash\Flash;
 use CMW\Model\Forum\ForumPermissionRoleModel;
+use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Manager\Views\View;
 use CMW\Utils\Website;
@@ -40,11 +41,10 @@ class ForumCategoryController extends AbstractController
     public function adminAddCategoryPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
-        if (Utils::isValuesEmpty($_POST, "name", "description")) {
+        if (Utils::isValuesEmpty($_POST, "name")) {
             Flash::send("error", LangManager::translate("core.toaster.error"),
                 LangManager::translate("forum.category.toaster.error.empty_input"));
-            Website::refresh();
-            return;
+            Redirect::redirectPreviousRoute();
         }
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 

@@ -21,9 +21,18 @@ $description = LangManager::translate("forum.forum.list.description");
         <form class="card" method="post">
             <div class="card-body">
                 <?php (new SecurityManager())->insertHiddenToken() ?>
+                <h6>Nom<span style="color: red">*</span> :</h6>
+                <div class="form-group position-relative has-icon-left">
+                    <input type="text" class="form-control" name="name" required
+                           placeholder="Général">
+                    <div class="form-control-icon">
+                        <i class="fas fa-heading"></i>
+                    </div>
+                </div>
+
                 <h6>Icon :</h6>
                 <div class="form-group position-relative has-icon-left">
-                    <input type="text" class="form-control" name="icon" required
+                    <input type="text" class="form-control" name="icon"
                            placeholder="fas fa-users">
                     <div class="form-control-icon">
                         <i class="fas fa-icons"></i>
@@ -32,18 +41,10 @@ $description = LangManager::translate("forum.forum.list.description");
                         site de <a href="https://fontawesome.com/search?o=r&m=free"
                                    target="_blank">FontAwesome.com</a></small>
                 </div>
-                <h6>Nom :</h6>
-                <div class="form-group position-relative has-icon-left">
-                    <input type="text" class="form-control" name="name" required
-                           placeholder="Général">
-                    <div class="form-control-icon">
-                        <i class="fas fa-heading"></i>
-                    </div>
-                </div>
                 <h6>Déscription :</h6>
                 <div class="form-group position-relative has-icon-left">
                     <input type="text" class="form-control" name="description"
-                           required placeholder="Parlez de tout et de rien">
+                            placeholder="Parlez de tout et de rien">
                     <div class="form-control-icon">
                         <i class="fas fa-paragraph"></i>
                     </div>

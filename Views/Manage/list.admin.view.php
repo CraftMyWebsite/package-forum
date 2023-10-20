@@ -195,6 +195,15 @@ $description = LangManager::translate("forum.forum.list.description");
                                     <div class="modal-body">
                                         <form method="post" action="manage/edit/<?= $category->getId() ?>">
                                             <?php (new SecurityManager())->insertHiddenToken() ?>
+                                            <h6>Nom<span style="color: red">*</span> :</h6>
+                                            <div class="form-group position-relative has-icon-left">
+                                                <input type="text" class="form-control" name="name" required
+                                                       placeholder="Général"
+                                                       value="<?= $category->getName() ?>">
+                                                <div class="form-control-icon">
+                                                    <i class="fas fa-heading"></i>
+                                                </div>
+                                            </div>
                                             <h6>Icon :</h6>
                                             <div class="form-group position-relative has-icon-left">
                                                 <input type="text" class="form-control" name="icon" required
@@ -206,15 +215,6 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <small class="form-text">Retrouvez la liste des icones sur le
                                                     site de <a href="https://fontawesome.com/search?o=r&m=free"
                                                                target="_blank">FontAwesome.com</a></small>
-                                            </div>
-                                            <h6>Nom :</h6>
-                                            <div class="form-group position-relative has-icon-left">
-                                                <input type="text" class="form-control" name="name" required
-                                                       placeholder="Général"
-                                                       value="<?= $category->getName() ?>">
-                                                <div class="form-control-icon">
-                                                    <i class="fas fa-heading"></i>
-                                                </div>
                                             </div>
                                             <h6>Déscription :</h6>
                                             <div class="form-group position-relative has-icon-left">
@@ -320,9 +320,16 @@ $description = LangManager::translate("forum.forum.list.description");
             <div class="modal-body">
                 <form method="post" action="manage/add">
                     <?php (new SecurityManager())->insertHiddenToken() ?>
+                    <h6>Nom<span style="color: red">*</span> :</h6>
+                    <div class="form-group position-relative has-icon-left">
+                        <input type="text" class="form-control" name="name" required placeholder="Communauté">
+                        <div class="form-control-icon">
+                            <i class="fas fa-heading"></i>
+                        </div>
+                    </div>
                     <h6>Icon :</h6>
                     <div class="form-group position-relative has-icon-left">
-                        <input type="text" class="form-control" name="icon" required placeholder="fas fa-users">
+                        <input type="text" class="form-control" name="icon" placeholder="fas fa-users">
                         <div class="form-control-icon">
                             <i class="fas fa-icons"></i>
                         </div>
@@ -330,16 +337,9 @@ $description = LangManager::translate("forum.forum.list.description");
                                 href="https://fontawesome.com/search?o=r&m=free"
                                 target="_blank">FontAwesome.com</a></small>
                     </div>
-                    <h6>Nom :</h6>
-                    <div class="form-group position-relative has-icon-left">
-                        <input type="text" class="form-control" name="name" required placeholder="Communauté">
-                        <div class="form-control-icon">
-                            <i class="fas fa-heading"></i>
-                        </div>
-                    </div>
                     <h6>Description :</h6>
                     <div class="form-group position-relative has-icon-left">
-                        <input type="text" class="form-control" name="description" required
+                        <input type="text" class="form-control" name="description"
                                placeholder="L'éspace communautaire">
                         <div class="form-control-icon">
                             <i class="fas fa-paragraph"></i>
