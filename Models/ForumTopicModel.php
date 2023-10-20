@@ -260,7 +260,7 @@ class ForumTopicModel extends AbstractModel
     {
 
         $sql = "SELECT forum_topic_id FROM cmw_forums_topics WHERE forum_id = :forum_id AND forum_topic_is_trash = 0
-                                             ORDER BY forum_topic_pinned DESC, forum_topic_important DESC ";
+                                             ORDER BY forum_topic_pinned DESC, forum_topic_important DESC, forum_topic_created DESC";
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
