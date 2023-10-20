@@ -102,4 +102,6 @@ class ForumPermissionController extends AbstractController
 17, 'user_response_remove_react'
 26, 'user_remove_response'
 27, 'user_edit_response'
+28, 'user_add_file'
+29, 'user_download_file'
 */

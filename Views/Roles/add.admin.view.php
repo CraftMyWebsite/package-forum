@@ -98,7 +98,7 @@ $description = "desc";
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="admin_bypass_forum_disallow_topics" name="admin_bypass_forum_disallow_topics">
-                            <label class="form-check-label" for="admin_bypass_forum_disallow_topics"><h6>Peuvent poster des topics dans les forums clos</h6></label>
+                            <label class="form-check-label" for="admin_bypass_forum_disallow_topics"><h6>Poster des topics dans les forums clos</h6></label>
                         </div>
                     </div>
                 </div>
@@ -147,12 +147,12 @@ $description = "desc";
                             <input class="form-check-input" type="checkbox" id="user_create_pool" name="user_create_pool">
                             <label class="form-check-label" for="user_create_pool"><h6>Créer des sondages</h6></label>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_edit_pool" name="user_edit_pool">
                             <label class="form-check-label" for="user_edit_pool"><h6>Éditer ses sondages</h6></label>
                         </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_react_topic" name="user_react_topic">
                             <label class="form-check-label" for="user_react_topic"><h6>Réagir à un topic</h6></label>
@@ -168,6 +168,14 @@ $description = "desc";
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_remove_topic" name="user_remove_topic">
                             <label class="form-check-label" for="user_remove_topic"><h6>Supprimé ses topics</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_add_file" name="user_add_file">
+                            <label class="form-check-label" for="user_add_file"><h6>Ajouter des fichiers</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_download_file" name="user_download_file">
+                            <label class="form-check-label" for="user_download_file"><h6>Télécharger des fichiers</h6></label>
                         </div>
                     </div>
                 </div>

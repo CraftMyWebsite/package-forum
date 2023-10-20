@@ -351,7 +351,9 @@ VALUES (1, NULL, 'operator'),
        (24, NULL, 'admin_move_topic'),
        (25, NULL, 'admin_bypass_forum_disallow_topics'),
        (26, NULL, 'user_remove_response'),
-       (27, NULL, 'user_edit_response');
+       (27, NULL, 'user_edit_response'),
+       (28, NULL, 'user_add_file'),
+       (29, NULL, 'user_download_file');
 
 
 INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`) VALUES ('1', '3'),('2', '2'), ('3', '2'), ('4', '2'), ('5', '2'), ('6', '2'), ('7', '2'), ('8', '2'), ('9', '2'), ('10', '2'), ('11', '2'), ('12', '2'), ('13', '2'), ('14', '2'), ('15', '2'), ('16', '2'), ('17', '2'), ('21', '2'), ('22', '2'), ('23', '2'),('2', '1'), ('3', '1'), ('4', '1'), ('5', '1'), ('11', '1'), ('12', '1'), ('13', '1'), ('14', '1'), ('15', '1'), ('16', '1'), ('17', '1');

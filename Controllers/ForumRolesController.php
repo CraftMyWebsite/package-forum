@@ -104,7 +104,9 @@ class ForumRolesController extends AbstractController
             $admin_move_topic,
             $admin_bypass_forum_disallow_topics,
             $user_remove_response,
-            $user_edit_response] = Utils::filterInput(
+            $user_edit_response,
+            $user_add_file,
+            $user_download_file] = Utils::filterInput(
             "operator",
             "user_view_forum",
             "user_view_topic",
@@ -131,7 +133,9 @@ class ForumRolesController extends AbstractController
             "admin_move_topic",
             "admin_bypass_forum_disallow_topics",
             "user_remove_response",
-            "user_edit_response");
+            "user_edit_response",
+            "user_add_file",
+            "user_download_file");
 
         $permissionsName = [
             $operator,
@@ -160,7 +164,9 @@ class ForumRolesController extends AbstractController
             $admin_move_topic,
             $admin_bypass_forum_disallow_topics,
             $user_remove_response,
-            $user_edit_response];
+            $user_edit_response,
+            $user_add_file,
+            $user_download_file];
 
         for ($i = 0; $i < count($permissionsName); $i++) {
             $checkbox = $permissionsName[$i];
@@ -212,7 +218,9 @@ class ForumRolesController extends AbstractController
         $admin_move_topic,
         $admin_bypass_forum_disallow_topics,
         $user_remove_response,
-        $user_edit_response] = Utils::filterInput(
+        $user_edit_response,
+        $user_add_file,
+        $user_download_file] = Utils::filterInput(
         "operator",
         "user_view_forum",
         "user_view_topic",
@@ -239,7 +247,9 @@ class ForumRolesController extends AbstractController
         "admin_move_topic",
         "admin_bypass_forum_disallow_topics",
         "user_remove_response",
-        "user_edit_response");
+        "user_edit_response",
+        "user_add_file",
+        "user_download_file");
 
         $permissionsName = [
             $operator,
@@ -268,7 +278,9 @@ class ForumRolesController extends AbstractController
             $admin_move_topic,
             $admin_bypass_forum_disallow_topics,
             $user_remove_response,
-            $user_edit_response];
+            $user_edit_response,
+            $user_add_file,
+            $user_download_file];
 
         for ($i = 0; $i < count($permissionsName); $i++) {
             $checkbox = $permissionsName[$i];

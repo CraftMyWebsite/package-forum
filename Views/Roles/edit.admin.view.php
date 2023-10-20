@@ -149,13 +149,12 @@ $roleModel = ForumPermissionRoleModel::getInstance();
                             <input class="form-check-input" type="checkbox" id="user_create_pool" name="user_create_pool" <?= $roleModel->roleHasPerm($role->getId(),6) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_create_pool"><h6>Créer des sondages</h6></label>
                         </div>
-
-                    </div>
-                    <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_edit_pool" name="user_edit_pool" <?= $roleModel->roleHasPerm($role->getId(),9) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_edit_pool"><h6>Éditer ses sondages</h6></label>
                         </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_react_topic" name="user_react_topic" <?= $roleModel->roleHasPerm($role->getId(),11) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_react_topic"><h6>Réagir à un topic</h6></label>
@@ -171,6 +170,14 @@ $roleModel = ForumPermissionRoleModel::getInstance();
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="user_remove_topic" name="user_remove_topic" <?= $roleModel->roleHasPerm($role->getId(),10) ? 'checked' : '' ?>>
                             <label class="form-check-label" for="user_remove_topic"><h6>Supprimé ses topics</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_add_file" name="user_add_file" <?= $roleModel->roleHasPerm($role->getId(),28) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_add_file"><h6>Ajouter des fichiers</h6></label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="user_download_file" name="user_download_file" <?= $roleModel->roleHasPerm($role->getId(),29) ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="user_download_file"><h6>Télécharger des fichiers</h6></label>
                         </div>
                     </div>
                 </div>
