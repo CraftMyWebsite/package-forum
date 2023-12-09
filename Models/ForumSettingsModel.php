@@ -79,4 +79,27 @@ class ForumSettingsModel extends AbstractModel
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'responsePerPage' THEN :responsePerPage WHEN 'topicPerPage' THEN :topicPerPage ELSE forum_settings_value END WHERE forum_settings_name IN ('responsePerPage','topicPerPage')");
         $req->execute(array("responsePerPage" => $responsePerPage, "topicPerPage" => $topicPerPage));
     }
+
+    /**
+     * @param string $needConnectUrl
+     * @param string $needConnectText
+     * @return void
+     */
+    public function updateNeedConnect(string $needConnectUrl, string $needConnectText): void
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'needConnectUrl' THEN :needConnectUrl WHEN 'needConnectText' THEN :needConnectText ELSE forum_settings_value END WHERE forum_settings_name IN ('needConnectUrl','needConnectText')");
+        $req->execute(array("needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText));
+    }
+
+    /**
+     * @param string $blinkResponse
+     * @return void
+     */
+    public function updateBlinkResponse(string $blinkResponse): void
+    {
+        $db = DatabaseManager::getInstance();
+        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :blinkResponse WHERE forum_settings_name = 'blinkResponse'");
+        $req->execute(array("blinkResponse" => $blinkResponse));
+    }
 }

@@ -28,6 +28,9 @@ class ForumSettingsController extends AbstractController {
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
+        $needConnectUrl = ForumSettingsModel::getInstance()->getOptionValue("needConnectUrl");
+        $needConnectText = ForumSettingsModel::getInstance()->getOptionValue("needConnectText");
+        $blinkResponse = ForumSettingsModel::getInstance()->getOptionValue("blinkResponse");
         $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
         $topicPerPage = ForumSettingsModel::getInstance()->getOptionValue("topicPerPage");
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
@@ -38,7 +41,8 @@ class ForumSettingsController extends AbstractController {
         $feedbackModel = ForumFeedbackModel::getInstance();
 
         View::createAdminView("Forum", "settings")
-            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
+            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
+            ->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/medium.js")
             ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
             ->view();
@@ -59,17 +63,23 @@ class ForumSettingsController extends AbstractController {
             Redirect::redirectPreviousRoute();
         }
 
-    #[NoReturn] #[Link("/settings/perPage", Link::POST, [], "/cmw-admin/forum")]
+    #[NoReturn] #[Link("/settings/general", Link::POST, [], "/cmw-admin/forum")]
     private function settingsResponsePerPagePost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
 
         $responsePerPage = filter_input(INPUT_POST, "responsePerPage");
         $topicPerPage = filter_input(INPUT_POST, "topicPerPage");
+        $needConnectText = filter_input(INPUT_POST, "needConnectText");
+
+        $needConnectUrl = isset($_POST['needConnectUrl']) ? 1 : 0;
+        $blinkResponse = isset($_POST['blinkResponse']) ? 1 : 0;
 
         ForumSettingsModel::getInstance()->updatePerPage($responsePerPage,$topicPerPage);
+        ForumSettingsModel::getInstance()->updateNeedConnect($needConnectUrl,$needConnectText);
+        ForumSettingsModel::getInstance()->updateBlinkResponse($blinkResponse);
 
-        Flash::send(Alert::SUCCESS, "Forum", "Nombre d'entité affiché par page mis à jour !");
+        Flash::send(Alert::SUCCESS, "Forum", "Paramètres mis à jour avec succès");
 
         Redirect::redirectPreviousRoute();
     }

@@ -120,7 +120,10 @@ VALUES ('IconNotRead', 'fa-solid fa-eye'),
        ('IconClosed', 'fa-solid fa-lock'),
        ('visitorCanViewForum', '0'),
        ('responsePerPage', '10'),
-       ('topicPerPage', '10');
+       ('topicPerPage', '10'),
+       ('needConnectUrl', '1'),
+       ('needConnectText', '<i>Vous devez être <a style=''color: #0d6efd'' href=''/login''>connecter</a> pour afficher ce contenue.</i>'),
+       ('blinkResponse', '1');
 
 
 CREATE TABLE IF NOT EXISTS cmw_forums_topics_views

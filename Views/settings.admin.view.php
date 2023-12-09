@@ -6,6 +6,9 @@ use CMW\Manager\Security\SecurityManager;
 $title = "Paramètres";
 $description = "desc";
 
+/* @var CMW\Controller\Forum\ForumSettingsController $needConnectUrl */
+/* @var CMW\Controller\Forum\ForumSettingsController $needConnectText */
+/* @var CMW\Controller\Forum\ForumSettingsController $blinkResponse */
 /* @var CMW\Controller\Forum\ForumSettingsController $responsePerPage */
 /* @var CMW\Controller\Forum\ForumSettingsController $topicPerPage */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconNotRead */
@@ -20,32 +23,65 @@ $description = "desc";
     <h3><i class="fa-solid fa-sliders"></i> <span class="m-lg-auto">Paramètres</span></h3>
 </div>
 
-<section class="row">
 
-    <div class="col-12 col-lg-3">
+<section>
+    <form action="settings/general" method="post">
+        <?php (new SecurityManager())->insertHiddenToken() ?>
         <div class="card">
             <div class="card-header">
                 <h4>Général</h4>
             </div>
-            <div class="card-body">
-                <form action="settings/perPage" method="post">
-                    <?php (new SecurityManager())->insertHiddenToken() ?>
-                    <h6>Topics par page :</h6>
-                    <input type="text" class="form-control" name="topicPerPage" value="<?= $topicPerPage ?>"
-                           required>
-                        <h6 class="mt-4">Réponses par page :</h6>
-                        <input type="text" class="form-control" name="responsePerPage" value="<?= $responsePerPage ?>"
-                               required>
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary">
-                            <?= LangManager::translate("core.btn.save") ?>
-                        </button>
+            <div class="card-body row">
+                <div class="col-12 col-lg-3">
+                    <div class="card-in-card">
+                        <div class="card-body">
+                            <h6>Topics par page :</h6>
+                            <input type="number" class="form-control" name="topicPerPage" value="<?= $topicPerPage ?>"
+                                   required>
+                            <h6 class="mt-4">Réponses par page :</h6>
+                            <input type="number" class="form-control" name="responsePerPage"
+                                   value="<?= $responsePerPage ?>"
+                                   required>
+                        </div>
                     </div>
-                </form>
+                </div>
+                <div class="col-12 col-lg-5">
+                    <div class="card-in-card">
+                        <div class="card-body">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="needConnectUrl" name="needConnectUrl" <?= $needConnectUrl ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="needConnectUrl"><h6>Doit être connecté pour voir les URL</h6></label>
+                            </div>
+                            <label for="needConnectText">Texte pour les non connecté :</label>
+                            <textarea class="tinymce" id="needConnectText" name="needConnectText"><?= $needConnectText?></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="card-in-card">
+                        <div class="card-body">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="blinkResponse" name="blinkResponse" <?= $blinkResponse ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="blinkResponse"><h6>Effet clignotement sur les réponses <i data-bs-toggle="tooltip" title="Ceci rajoute un effet stylé !" class="fa-sharp fa-solid fa-circle-question"></i><h6></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <?= LangManager::translate("core.btn.save") ?>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-12 col-lg-4">
+    </form>
+</section>
+
+
+<section class="row">
+    <div class="col-12 col-lg-6">
         <div class="card">
             <div class="card-header">
                 <h4>Réactions</h4>
@@ -190,7 +226,7 @@ $description = "desc";
     </div>
 
 
-    <div class="col-12 col-lg-4">
+    <div class="col-12 col-lg-6">
         <div class="card">
             <div class="card-header">
                 <h4>Prefix</h4>
@@ -365,7 +401,7 @@ $description = "desc";
     </div>
 </section>
 
-<div class="">
+<section>
     <form action="settings/applyicons" method="post">
         <?php (new SecurityManager())->insertHiddenToken() ?>
         <div class="card">
@@ -421,7 +457,7 @@ $description = "desc";
             </div>
         </div>
     </form>
-</div>
+</section>
 
 <div class="position-absolute end-0">
     <a type="button" data-bs-toggle="modal"
