@@ -315,7 +315,7 @@ $description = LangManager::translate("forum.forum.list.description");
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title white"
-                    id="myModalLabel160"><?= LangManager::translate("wiki.title.add_category") ?></h5>
+                    id="myModalLabel160">Ajouter une catégorie</h5>
             </div>
             <div class="modal-body">
                 <form method="post" action="manage/add">
