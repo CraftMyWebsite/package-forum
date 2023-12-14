@@ -2,7 +2,6 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Users\UsersController;
-use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
@@ -10,7 +9,6 @@ use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
-use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumUserBlockedModel;

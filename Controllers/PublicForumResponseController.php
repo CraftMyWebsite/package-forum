@@ -2,7 +2,6 @@
 namespace CMW\Controller\Forum;
 
 use CMW\Controller\Core\CoreController;
-use CMW\Controller\Core\MailController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
@@ -19,8 +18,6 @@ use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Forum\ForumUserBlockedModel;
-use CMW\Model\Newsletter\NewsletterModel;
-use CMW\Model\Newsletter\NewsletterUserModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
