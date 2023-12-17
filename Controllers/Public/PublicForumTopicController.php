@@ -1,12 +1,13 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
 use CMW\Controller\Core\EditorController;
+use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
@@ -33,7 +34,7 @@ use JetBrains\PhpStorm\NoReturn;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class PublicForumTopicController extends CoreController
+class PublicForumTopicController extends AbstractController
 {
 
     #[Link("/search", Link::POST, ['.*?'], "/forum")]

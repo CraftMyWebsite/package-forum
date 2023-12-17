@@ -1,6 +1,6 @@
 <?php
 
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Core\MailController;
 use CMW\Controller\Users\UsersController;

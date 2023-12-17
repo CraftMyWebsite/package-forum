@@ -1,12 +1,14 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Controller\Forum\Admin\ForumFollowedController;
+use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Model\Core\MailModel;
@@ -31,7 +33,7 @@ use JetBrains\PhpStorm\NoReturn;
  * @author Zomb
  * @version 1.0
  */
-class PublicForumResponseController extends CoreController
+class PublicForumResponseController extends AbstractController
 {
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page", Link::POST, ['.*?'], "/forum")]
     public function publicTopicResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void

@@ -1,7 +1,8 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Controller\Forum\Admin\ForumPermissionController;
+use CMW\Manager\Package\AbstractController;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumSettingsModel;
@@ -14,7 +15,7 @@ use CMW\Manager\Views\View;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class PublicForumMainController extends CoreController
+class PublicForumMainController extends AbstractController
 {
     #[Link("/", Link::GET, [], "/forum")]
     public function publicBaseView(): void

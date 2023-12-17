@@ -1,11 +1,11 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -22,7 +22,7 @@ use CMW\Utils\Redirect;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class PublicForumTrashController extends CoreController
+class PublicForumTrashController extends AbstractController
 {
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/trash/:replyId/:reason", Link::GET, ['.*?' => 'topicSlug', '[0-9]+' => 'replyId'], "/forum")]
     public function publicTopicReplyDelete(Request $request, string $catSlug, string $forumSlug, string $topicSlug,int $page, int $replyId, int $reason): void

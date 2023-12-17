@@ -1,5 +1,5 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Users\UsersController;
 use CMW\Event\Users\RegisterEvent;

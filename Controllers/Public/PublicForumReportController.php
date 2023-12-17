@@ -1,7 +1,8 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
 
+use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;

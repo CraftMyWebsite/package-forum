@@ -1,9 +1,11 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
 use CMW\Controller\Core\CoreController;
+use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
@@ -19,7 +21,7 @@ use CMW\Utils\Redirect;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class PublicForumCatController extends CoreController
+class PublicForumCatController extends AbstractController
 {
     #[Link("/c/:catSlug", Link::GET, ['.*?'], "/forum")]
     public function publicCatView(Request $request, string $catSlug): void

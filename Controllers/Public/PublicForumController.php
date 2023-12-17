@@ -1,25 +1,19 @@
 <?php
-namespace CMW\Controller\Forum;
+namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
-use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
-use CMW\Model\Forum\ForumDiscordModel;
 use CMW\Model\Forum\ForumModel;
-use CMW\Model\Forum\ForumPermissionModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
-use CMW\Model\Forum\ForumUserBlockedModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
-use CMW\Utils\Utils;
-use CMW\Utils\Website;
 
 /**
  * Class: @PublicForumController
@@ -27,7 +21,7 @@ use CMW\Utils\Website;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class PublicForumController extends CoreController
+class PublicForumController extends AbstractController
 {
     #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage", Link::GET, ['.*?'], "/forum")]
     public function publicForumView(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
