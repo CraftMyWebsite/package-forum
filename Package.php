@@ -10,7 +10,7 @@ class Package implements IPackageConfig
 {
     public function name(): string
     {
-        return "Pages";
+        return "Forum";
     }
 
     public function version(): string
