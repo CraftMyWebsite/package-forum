@@ -48,7 +48,7 @@ class PublicForumReportController extends AbstractController {
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId", Link::GET, ['.*?'], "/forum")]
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId/p:page", Link::GET, ['.*?'], "/forum")]
     public function publicReportResponse(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");

@@ -155,6 +155,14 @@ class ForumResponseEntity
     }
 
     /**
+     * @return string
+     */
+    public function getReportLink(): string
+    {
+        return "p1/reportResponse/$this->responseId/p:1";
+    }
+
+    /**
      * @return int
      */
     public function getPageNumber(): int

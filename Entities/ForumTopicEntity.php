@@ -279,6 +279,14 @@ class ForumTopicEntity
     }
 
     /**
+     * @return string
+     */
+    public function reportLink(): string
+    {
+        return $this->getLink()."/reportTopic/$this->topicId/p:1";
+    }
+
+    /**
      * @return \CMW\Entity\Forum\ForumTopicTagEntity[]
      */
     public function getTags(): array
