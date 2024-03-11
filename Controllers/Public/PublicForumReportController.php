@@ -10,6 +10,7 @@ use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
+use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumReportedModel;
@@ -30,8 +31,8 @@ use CMW\Utils\Website;
  */
 class PublicForumReportController extends AbstractController {
 
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/reportTopic/:topicId/p:page", Link::GET, ['.*?'], "/forum")]
-    public function publicReportTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $topicId, int $page): void
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportTopic/:topicId", Link::GET, ['.*?'], "/forum")]
+    public function publicReportTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -48,7 +49,7 @@ class PublicForumReportController extends AbstractController {
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId/p:page", Link::GET, ['.*?'], "/forum")]
+    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId", Link::GET, ['.*?'], "/forum")]
     public function publicReportResponse(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");

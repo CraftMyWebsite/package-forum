@@ -283,7 +283,7 @@ class ForumTopicEntity
      */
     public function reportLink(): string
     {
-        return $this->getLink()."/reportTopic/$this->topicId/p:1";
+        return $this->getLink()."/reportTopic/$this->topicId/p1";
     }
 
     /**

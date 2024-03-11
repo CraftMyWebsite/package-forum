@@ -159,7 +159,7 @@ class ForumResponseEntity
      */
     public function getReportLink(): string
     {
-        return "p1/reportResponse/$this->responseId/p:1";
+        return "p1/reportResponse/$this->responseId";
     }
 
     /**
