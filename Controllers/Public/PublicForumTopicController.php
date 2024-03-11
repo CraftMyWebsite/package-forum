@@ -332,7 +332,7 @@ class PublicForumTopicController extends AbstractController
         Flash::send("success", LangManager::translate("core.toaster.success"),
             "Topic mis à jour");
 
-        header("location: ../../t/{$topic->getSlug()}");
+        header("location: ../../{$topic->getSlug()}/p1");
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
