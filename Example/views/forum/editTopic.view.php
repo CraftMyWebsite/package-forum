@@ -30,7 +30,7 @@ Website::setDescription("Éditez un topic");
     </nav>
 
 
-<?php if(UsersController::isUserLogged()): ?>
+
     <h4>Edit : <?= $topic->getName() ?></b></h4>
     <form action="" method="post">
         <?php (new SecurityManager())->insertHiddenToken() ?>
@@ -43,7 +43,3 @@ Website::setDescription("Éditez un topic");
         <textarea name="content" class="w-full tinymce"><?= $topic->getContent() ?></textarea>
         <button type="submit">Edit</button>
     </form>
-<?php else: ?>
-    <p>Login before</p>
-    <a href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>login">Login</a>
-<?php endif; ?>

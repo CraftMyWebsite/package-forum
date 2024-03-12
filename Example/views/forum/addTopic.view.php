@@ -35,20 +35,20 @@ Website::setDescription("Ajouter un sujet");
     </nav>
 
 
-<?php if(UsersController::isUserLogged()): ?>
+
     <section>
         <h4>Nouveau topic dans : <b><?= $forum->getName() ?></b></h4>
         <form action="" method="post">
             <?php (new SecurityManager())->insertHiddenToken() ?>
+            <!--ADMIN optional-->
             <?php if (UsersController::isAdminLogged() || ForumPermissionController::getInstance()->hasPermission("operator")) : ?>
-            <!--ADMIN-->
                 <input name="important" value="1" id="important" type="checkbox" >
                 <label for="important"><i class="<?= $iconImportant ?> text-orange-500 fa-sm"></i> Important</label>
                 <input name="pin" id="pin" type="checkbox" value="">
                 <label for="pin"><i class="<?= $iconPin ?> text-red-600 fa-sm"></i> Pin</label>
                 <input name="disallow_replies" value="1" id="closed" type="checkbox" >
                 <label for="closed" ><i class="<?= $iconClosed ?> text-yellow-300 fa-sm"></i> Closed</label>
-                <?php endif; ?>
+            <?php endif; ?>
             <!--PUBLIC-->
             <label for="title" >Title :</label>
             <input name="name" id="title" type="text" required>
@@ -61,8 +61,3 @@ Website::setDescription("Ajouter un sujet");
             <button type="submit" >POST</button>
         </form>
     </section>
-
-<?php else: ?>
-    <p>Login before</p>
-    <a href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>login">Login</a>
-<?php endif; ?>

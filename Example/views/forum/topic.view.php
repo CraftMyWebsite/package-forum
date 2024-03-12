@@ -101,6 +101,7 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
                     <a href="<?= $topic->followTopicLink() ?>">Follow</a>
                 <?php endif ?>
             <?php endif; ?>
+            <!--for a better user experience we advise you to use modals for report (view WIPE theme template) :-->
             <a href="<?= $topic->reportLink() ?>">Report</a>
         </div>
     </div>
@@ -180,6 +181,7 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
                 <span><?= $response->isTopicAuthor() ? "Topic author" : "" ?></span>
                 <!--optional (see end JS requierement):-->
                 <span onclick="copyURL('<?= Website::getProtocol() . "://" . $_SERVER['HTTP_HOST'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . "forum/c/" . $category->getSlug() . "/f/" . $forum->getSlug() . "/t/" . $response->getResponseTopic()->getSlug()."/p".$currentPage."/#" . $response->getId() ?>')">copy response ref</span>
+                <!--for a better user experience we advise you to use modals for report (view WIPE theme template) :-->
                 <a href="<?= $response->getReportLink() ?>">Report</a>
                 <span class="ml-2">#<?= $response->getResponsePosition() ?></span>
             </div>

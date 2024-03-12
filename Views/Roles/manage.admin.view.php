@@ -22,6 +22,32 @@ $description = "desc";
 
 <section class="row">
     <div class="col-12 col-lg-5">
+        <div class="card ">
+            <div class="card-header">
+                <h6>Paramètres</h6>
+            </div>
+            <div class="card-body">
+                <form action="roles/settings" method="post">
+                    <?php (new SecurityManager())->insertHiddenToken() ?>
+                    <div class="row">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" value="1" type="checkbox" id="visitorCanViewForum"
+                                   name="visitorCanViewForum" <?= $visitorCanViewForum ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="visitorCanViewForum">Accès en
+                                lecture pour les vitisteurs
+                                <i data-bs-toggle="tooltip"
+                                   title="Si cette option est active la permission de consulter le forum pour les rôle n'est plus active, cette option est prioritaire"
+                                   class="fa-sharp fa-solid fa-circle-question"></i></label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <?= LangManager::translate("core.btn.save") ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header">
                 <h4>Rôles</h4>
@@ -293,33 +319,3 @@ $description = "desc";
         </div>
     </div>
 </section>
-
-
-<div class="col-12 col-lg-6">
-    <div class="card ">
-        <div class="card-header">
-            <h6>Paramètres</h6>
-        </div>
-        <div class="card-body">
-            <form action="roles/settings" method="post">
-                <?php (new SecurityManager())->insertHiddenToken() ?>
-                <div class="row">
-                    <div class="form-check form-switch mt-2">
-                        <input class="form-check-input" value="1" type="checkbox" id="visitorCanViewForum"
-                               name="visitorCanViewForum" <?= $visitorCanViewForum ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="visitorCanViewForum">Accès en
-                            lecture pour les vitisteurs
-                            <i data-bs-toggle="tooltip"
-                               title="Si cette option est active la permission de consulter le forum pour les rôle n'est plus active, cette option est prioritaire"
-                               class="fa-sharp fa-solid fa-circle-question"></i></label>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">
-                        <?= LangManager::translate("core.btn.save") ?>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
