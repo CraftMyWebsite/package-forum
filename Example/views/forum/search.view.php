@@ -35,7 +35,7 @@ Website::setDescription("Recherchez un sujet dans le forum");
                 <?php foreach ($results as $result): ?>
 
                             <a href="<?= $result->getLink() ?>">
-                                <p><?php if ($result->getPrefixId()): ?><span style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $result->getPrefixName() ?></span> <?php endif; ?>
+                                <p><?php if ($result->getPrefixId()): ?><span style="color: <?= $result->getPrefixTextColor() ?>; background: <?= $result->getPrefixColor() ?>"><?= $result->getPrefixName() ?></span> <?php endif; ?>
                                         <?= mb_strimwidth($result->getName(), 0, 65, '...') ?>
                                         <?= $result->isImportant() ? "
                             <i class='<?= $iconImportant ?>'></i>
