@@ -116,4 +116,9 @@ class Package implements IPackageConfig
             ),
         ];
     }
+
+    public function requiredPackages(): array
+    {
+        return ["Core"];
+    }
 }
