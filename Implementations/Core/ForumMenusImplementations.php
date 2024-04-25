@@ -1,6 +1,6 @@
 <?php
 
-namespace CMW\Implementation\Forum;
+namespace CMW\Implementation\Forum\Core;
 
 use CMW\Interface\Core\IMenus;
 use CMW\Model\Forum\ForumModel;
