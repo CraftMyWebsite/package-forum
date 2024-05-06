@@ -36,14 +36,14 @@ return [
             "desc" => "Add forum to your forum",
             "card_title" => "Add a forum",
             "toaster" => [
-                "success" => "Forum added with success !"
+                "success" => "Forum added with success !",
             ],
         ],
         "delete" => [
             "success" => "Forum delete with success !",
         ],
         "name" => "Name of forum",
-        "description" => "Forum description"
+        "description" => "Forum description",
     ],
 
     "topic" => [
@@ -51,10 +51,10 @@ return [
             "success" => "Topic added with success !",
         ],
         "pinned" => [
-            "success" => "You pinned this topic with success !"
+            "success" => "You pinned this topic with success !",
         ],
         "unpinned" => [
-            "success" => "You unpinned this topic with success !"
+            "success" => "You unpinned this topic with success !",
         ],
         "replies" => [
             "success" => "Réponse ajoutée !",
@@ -68,7 +68,7 @@ return [
         "delete" => [
             "success" => "Reply delete with success !",
             "errors" => [
-                "no_access" => "You can't delete this reply !"
+                "no_access" => "You can't delete this reply !",
             ],
         ],
     ],
@@ -83,5 +83,17 @@ return [
     "btn" => [
         "add_category" => "Add a catégory",
         "add_forum" => "Add a forum",
+    ],
+
+    "permissions" => [
+        "forum" => [
+            "categories" => [
+                "list" => "Show categories",
+                "add" => "Add categories",
+                "delete" => "Delete categories",
+            ],
+            "add" => "Add",
+            "delete" => "Delete",
+        ],
     ],
 ];
