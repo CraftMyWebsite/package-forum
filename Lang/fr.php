@@ -6,9 +6,6 @@ return [
             "title" => "Catégories et forums",
             "text" => [
                 "alert" => "Merci de créer une catégorie pour commencer à utiliser le Forum",
-            ],
-            "buton" => [
-                "addCat" => "Ajouter une catégorie",
                 "commu" => "Communautée",
                 "icon" => "Retrouvez la liste des icones sur le site de ",
                 "desc" => "Description",
@@ -16,8 +13,15 @@ return [
                 "Cat" => "Catégorie privé",
                 "role" => "Rôle(s) autorisé(s) : ",
             ],
+            "buton" => [
+                "addCat" => "Ajouter une catégorie", 
+            ],
         ],
         "editForum" => [
+            "text" => [
+                "edit" => "Édition de ",
+
+            ],
 
         ],
     ],
