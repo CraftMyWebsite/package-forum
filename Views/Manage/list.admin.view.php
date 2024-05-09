@@ -14,7 +14,7 @@ $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
 ?>
 <div class="d-flex flex-wrap justify-content-between">
-    <h3><i class="fa-solid fa-book"></i> <span class="m-lg-auto">Catégories et forums</span></h3>
+    <h3><i class="fa-solid fa-book"></i> <span class="m-lg-auto"><?=LangManager::translate("forum.manage.list.title")?></span></h3>
 </div>
 
 <section>
@@ -295,11 +295,11 @@ $description = LangManager::translate("forum.forum.list.description");
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="alert alert-info">Merci de créer une catégorie pour commencer à utiliser le Forum</div>
+                    <div class="alert alert-info"><?= LangManager::translate("forum.manage.list.text.alert") ?></div>
                 <?php endif ?>
                 <div class="divider">
                     <a type="button" data-bs-toggle="modal" data-bs-target="#add-cat">
-                        <div class="divider-text"><i class="fa-solid fa-circle-plus"></i> Ajouter une catégorie</div>
+                        <div class="divider-text"><i class="fa-solid fa-circle-plus"></i> <?= LangManager::translate("forum.manage.list.buton.addCat") ?> </div>
                     </a>
                 </div>
             </div>
@@ -315,14 +315,14 @@ $description = LangManager::translate("forum.forum.list.description");
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title white"
-                    id="myModalLabel160">Ajouter une catégorie</h5>
+                    id="myModalLabel160"><?= LangManager::translate("forum.manage.list.buton.addCat") ?></h5>
             </div>
             <div class="modal-body">
                 <form method="post" action="manage/add">
                     <?php (new SecurityManager())->insertHiddenToken() ?>
                     <h6>Nom<span style="color: red">*</span> :</h6>
                     <div class="form-group position-relative has-icon-left">
-                        <input type="text" class="form-control" name="name" required placeholder="Communauté">
+                        <input type="text" class="form-control" name="name" required placeholder=<?= LangManager::translate("forum.manage.list.buton.commu") ?>>
                         <div class="form-control-icon">
                             <i class="fas fa-heading"></i>
                         </div>
@@ -333,14 +333,14 @@ $description = LangManager::translate("forum.forum.list.description");
                         <div class="form-control-icon">
                             <i class="fas fa-icons"></i>
                         </div>
-                        <small class="form-text">Retrouvez la liste des icones sur le site de <a
+                        <small class="form-text"> <?= LangManager::translate("forum.manage.list.buton.icon") ?><a
                                 href="https://fontawesome.com/search?o=r&m=free"
                                 target="_blank">FontAwesome.com</a></small>
                     </div>
                     <h6>Description :</h6>
                     <div class="form-group position-relative has-icon-left">
-                        <input type="text" class="form-control" name="description"
-                               placeholder="L'éspace communautaire">
+                        <input type="text" class="form-control" name="<?= LangManager::translate("forum.manage.list.buton.desc") ?>"
+                               placeholder="<?= LangManager::translate("forum.manage.list.buton.esp_desc") ?>">
                         <div class="form-control-icon">
                             <i class="fas fa-paragraph"></i>
                         </div>
@@ -348,10 +348,10 @@ $description = LangManager::translate("forum.forum.list.description");
                     <div class="form-check form-switch mt-2">
                         <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle"
                                name="allowedGroupsToggle">
-                        <label class="form-check-label" for="allowedGroupsToggle"><h6>Catégorie privé</h6></label>
+                        <label class="form-check-label" for="allowedGroupsToggle"><h6><?= LangManager::translate("forum.manage.list.buton.Cat") ?></h6></label>
                     </div>
                     <div style="display: none" class="mt-2 listAllowedGroups" id="allowedGroups">
-                        <h6>Rôle autorisé :</h6>
+                        <h6><?= LangManager::translate("forum.manage.list.buton.role") ?></h6>
                         <div class="form-group">
                             <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
                                 <?php foreach ($ForumRoles as $ForumRole): ?>
