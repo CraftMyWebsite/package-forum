@@ -20,10 +20,28 @@ return [
         "editForum" => [
             "text" => [
                 "edit" => "Édition de ",
-
+                "icon" => "Retrouvez la liste des icones sur le site de ",
+                "name" => "Nom :",
+                "desc" => "Description :",
+                "esp_desc" => "Parlez de tout et de rien",
+                "no_new_topics" => "Ne pas autoriser la création de nouveau topics",
+                "no_acess" => "Accès restreint",
+                "role" => "Rôle(s) autorisé(s) : ",
             ],
+                ],
+
+        "addSubForum" => [
+            "addSubForum" => "Ajout d'un sous forum dans",
+            "name" => "Nom :",
+            "icon" => "Retrouvez la liste des icones sur le site de ",
+            "desc" => "Description :",
+            "esp_desc" => "Parlez de tout et de rien",
+            "no_new_topics" => "Ne pas autoriser la création de nouveau topics",
+            "no_acess" => "Accès restreint",
+            "role" => "Rôle(s) autorisé(s) : ",
 
         ],
+
     ],
 
 ];
