@@ -63,7 +63,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                             <?php if ($forumObj->isRestricted()): ?><small style="color: #af1a1a">Restreint
                                                 <i data-bs-toggle="tooltip" title="<?php foreach ($forumModel->getAllowedRoles($forumObj->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
                                             <?php endif; ?>
-                                            <?php if ($forumObj->disallowTopics()): ?> - <i data-bs-toggle="tooltip" title="Ce forum n'autorise pas la création de nouveau topics" class="fa-sharp fa-solid fa-lock"></i></small> <?php endif; ?>
+                                            <?php if ($forumObj->disallowTopics()): ?> - <i data-bs-toggle="tooltip" title=<?=LangManager::translate("forum.manage.list.text.noNewTopics")?> class="fa-sharp fa-solid fa-lock"></i></small> <?php endif; ?>
                                             -
                                             <i><small><?= mb_strimwidth($forumObj->getDescription(), 0, 45, '...') ?></small></i>
                                         </td>
@@ -94,7 +94,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <?php if ($subForum["subforum"]->isRestricted()): ?><small style="color: #af1a1a">Restreint
                                                     <i data-bs-toggle="tooltip" title="<?php foreach ($forumModel->getAllowedRoles($subForum["subforum"]->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>" class="fa-sharp fa-solid fa-circle-info"></i></small>
                                                 <?php endif; ?>
-                                                <?php if ($subForum["subforum"]->disallowTopics()): ?> - <i data-bs-toggle="tooltip" title="Ce forum n'autorise pas la création de nouveau topics" class="fa-sharp fa-solid fa-lock"></i></small> <?php endif; ?>
+                                                <?php if ($subForum["subforum"]->disallowTopics()): ?> - <i data-bs-toggle="tooltip" title=<?=LangManager::translate("forum.manage.list.text.noNewTopics")?> </i></small> <?php endif; ?>
                                                 -
                                                 <i><small><?= mb_strimwidth($subForum["subforum"]->getDescription(), 0, 45, '...') ?></small></i>
                                             </td>
@@ -123,11 +123,10 @@ $description = LangManager::translate("forum.forum.list.description");
                                                  role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-danger">
-                                                        <h5 class="modal-title white" id="myModalLabel160">Supression de
-                                                            : <?= $subForum["subforum"]->getName() ?></h5>
+                                                        <h5 class="modal-title white" id="myModalLabel160"><?=LangManager::translate("forum.manage.list.modal.delete")?> <?= $subForum["subforum"]->getName() ?></h5>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Cette suppression est définitive et entraine la suppression de ces sous-forum et des topics qui lui sont lié
+                                                        <?=LangManager::translate("forum.manage.list.modal.definitiveDelete")?>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-light-secondary"
@@ -155,11 +154,10 @@ $description = LangManager::translate("forum.forum.list.description");
                                              role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header bg-danger">
-                                                    <h5 class="modal-title white" id="myModalLabel160">Supression de
-                                                        : <?= $forumObj->getName() ?></h5>
+                                                    <h5 class="modal-title white" id="myModalLabel160"><?=LangManager::translate("forum.manage.list.modal.delete")?> <?= $forumObj->getName() ?></h5>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Cette suppression est définitive et entraine la suppression de ces sous-forum et des topics qui leurs sont lié
+                                                    <?=LangManager::translate("forum.manage.list.modal.definitiveDelete")?>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-light-secondary"
@@ -189,8 +187,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                  role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary">
-                                        <h5 class="modal-title white" id="myModalLabel160">Édition
-                                            de <?= $category->getName() ?></h5>
+                                        <h5 class="modal-title white" id="myModalLabel160"><?=LangManager::translate("forum.manage.list.modal.edit")?> <?= $category->getName() ?></h5>
                                     </div>
                                     <div class="modal-body">
                                         <form method="post" action="manage/edit/<?= $category->getId() ?>">
@@ -212,14 +209,13 @@ $description = LangManager::translate("forum.forum.list.description");
                                                 <div class="form-control-icon">
                                                     <i class="fas fa-icons"></i>
                                                 </div>
-                                                <small class="form-text">Retrouvez la liste des icones sur le
-                                                    site de <a href="https://fontawesome.com/search?o=r&m=free"
+                                                <small class="form-text"><?=LangManager::translate("forum.manage.list.modal.icon")?> <a href="https://fontawesome.com/search?o=r&m=free"
                                                                target="_blank">FontAwesome.com</a></small>
                                             </div>
                                             <h6>Déscription :</h6>
                                             <div class="form-group position-relative has-icon-left">
                                                 <input type="text" class="form-control" name="description"
-                                                       required placeholder="Parlez de tout et de rien"
+                                                       required placeholder="<?=LangManager::translate("forum.manage.list.modal.espDesc")?>"
                                                        value="<?= $category->getDescription() ?>">
                                                 <div class="form-control-icon">
                                                     <i class="fas fa-paragraph"></i>
@@ -270,11 +266,10 @@ $description = LangManager::translate("forum.forum.list.description");
                                  role="document">
                                 <div class="modal-content">
                                     <div class="modal-header bg-danger">
-                                        <h5 class="modal-title white" id="myModalLabel160">Supression de
-                                            : <?= $category->getName() ?></h5>
+                                        <h5 class="modal-title white" id="myModalLabel160"><?=LangManager::translate("forum.manage.list.modal.delete")?> <?= $category->getName() ?></h5>
                                     </div>
                                     <div class="modal-body">
-                                        Cette supression est définitive
+                                        <?=LangManager::translate("forum.manage.list.modal.deleteCat")?>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-light-secondary"
@@ -337,10 +332,10 @@ $description = LangManager::translate("forum.forum.list.description");
                                 href="https://fontawesome.com/search?o=r&m=free"
                                 target="_blank">FontAwesome.com</a></small>
                     </div>
-                    <h6>Description :</h6>
+                    <h6><?= LangManager::translate("forum.manage.list.text.desc") ?></h6>
                     <div class="form-group position-relative has-icon-left">
                         <input type="text" class="form-control" name="<?= LangManager::translate("forum.manage.list.text.desc") ?>"
-                               placeholder="<?= LangManager::translate("forum.manage.list.text.esp_desc") ?>">
+                               placeholder="<?= LangManager::translate("forum.manage.list.text.espDesc") ?>">
                         <div class="form-control-icon">
                             <i class="fas fa-paragraph"></i>
                         </div>

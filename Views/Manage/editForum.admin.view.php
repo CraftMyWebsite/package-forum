@@ -43,18 +43,18 @@ $description = LangManager::translate("forum.forum.list.description");
                 <h6><?=LangManager::translate("forum.manage.editForum.text.desc")?></h6>
                 <div class="form-group position-relative has-icon-left">
                     <input type="text" value="<?= $forum->getDescription() ?>" class="form-control" name="description"
-                           required placeholder="<?=LangManager::translate("forum.manage.editForum.text.esp_desc")?>">
+                           required placeholder="<?=LangManager::translate("forum.manage.editForum.text.espDesc")?>">
                     <div class="form-control-icon">
                         <i class="fas fa-paragraph"></i>
                     </div>
                 </div>
                 <div class="form-check form-switch mt-4">
                     <input <?= $forum->disallowTopics() ? 'checked' : '' ?> class="form-check-input " type="checkbox" id="disallowTopics" name="disallowTopics">
-                    <label class="form-check-label" for="disallowTopics"><h6><?=LangManager::translate("forum.manage.editForum.text.no_new_topics")?></h6></label>
+                    <label class="form-check-label" for="disallowTopics"><h6><?=LangManager::translate("forum.manage.editForum.text.noNewTopics")?></h6></label>
                 </div>
                 <div class="form-check form-switch mt-4">
                     <input <?= $forum->isRestricted() ? 'checked' : '' ?> class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
-                    <label class="form-check-label" for="allowedGroupsToggle"><h6><?=LangManager::translate("forum.manage.editForum.text.no_acess")?></h6></label>
+                    <label class="form-check-label" for="allowedGroupsToggle"><h6><?=LangManager::translate("forum.manage.editForum.text.noAcess")?></h6></label>
                 </div>
                 <div class="mt-2" id="listAllowedGroups">
                     <h6><?=LangManager::translate("forum.manage.editForum.text.role")?></h6>

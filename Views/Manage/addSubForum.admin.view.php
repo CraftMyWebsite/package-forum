@@ -42,18 +42,18 @@ $description = LangManager::translate("forum.forum.list.description");
                 <h6><?=LangManager::translate("forum.manage.addSubForum.desc")?></h6>
                 <div class="form-group position-relative has-icon-left">
                     <input type="text" class="form-control" name="description"
-                            placeholder="<?=LangManager::translate("forum.manage.addSubForum.esp_desc")?>">
+                            placeholder="<?=LangManager::translate("forum.manage.addSubForum.espDesc")?>">
                     <div class="form-control-icon">
                         <i class="fas fa-paragraph"></i>
                     </div>
                 </div>
                 <div class="form-check form-switch mt-4">
                     <input class="form-check-input " type="checkbox" id="disallowTopics" name="disallowTopics">
-                    <label class="form-check-label" for="disallowTopics"><h6><?=LangManager::translate("forum.manage.addSubForum.no_new_topics")?></h6></label>
+                    <label class="form-check-label" for="disallowTopics"><h6><?=LangManager::translate("forum.manage.addSubForum.noNewTopics")?></h6></label>
                 </div>
                 <div class="form-check form-switch mt-4">
                     <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
-                    <label class="form-check-label" for="allowedGroupsToggle"><h6><?=LangManager::translate("forum.manage.addSubForum.no_acess")?></h6></label>
+                    <label class="form-check-label" for="allowedGroupsToggle"><h6><?=LangManager::translate("forum.manage.addSubForum.noAcess")?></h6></label>
                 </div>
                 <div class="mt-2" id="listAllowedGroups">
                     <h6><?=LangManager::translate("forum.manage.addSubForum.role")?></h6>
