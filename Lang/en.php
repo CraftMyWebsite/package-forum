@@ -1,99 +1,67 @@
 <?php
 
 return [
-    "category" => [
-        "add" => [
-            "title" => "Forum | Category | Add",
-            "description" => "Add a new category to your site",
-            "card_title" => "Add a category",
-        ],
+    "manage" => [
         "list" => [
-            "title" => "Forum | Category",
-            "description" => "Manage your forum categories",
-            "card_title" => "List of all your categories",
-        ],
-        "delete" => [
-            "success" => "Category delete with success !",
-        ],
-        "name" => "Category name",
-        "description" => "Category Description",
-        "toaster" => [
-            "success" => "Category added with success !",
-            "error" => [
-                "empty_input" => "Empty input !",
+            "title" => "Catégories et forums",
+            "text" => [
+                "alert" => "Please create a category to start using the Forum",
+                "commu" => "Community",
+                "icon" => "Find the list of icons on ",
+                "desc" => "Description :",
+                "espDesc" => "community space",
+                "Cat" => "Private category",
+                "role" => "Authorized role(s): ",
+                "noNewTopics" => "This forum does not allow the creation of new topics",
+            ],
+            "buton" => [
+                "addCat" => "Add a category",
+            ],
+            "modal" => [ 
+                "delete" => "Removal of:",
+                "definitiveDelete" => "This deletion is permanent and results in the deletion of sub-forums and related topics",
+                "edit" => "Edition of:",
+                "icon" => "Find the list of icons on the website ",
+                "espDesc" => "Talk about everything and nothing",
+                "deleteCat" => "Permanent deletion of this category as well as related forums/sub-forums and topics"
+
             ],
         ],
-    ],
-
-    "forum" => [
-        "list" => [
-            "title" => "Forum | Forum",
-            "desc" => "erate the forums of your forum",
-            "card_title" => "List of all your forums",
-        ],
-        "add" => [
-            "title" => "Forum | Add",
-            "desc" => "Add forum to your forum",
-            "card_title" => "Add a forum",
-            "toaster" => [
-                "success" => "Forum added with success !",
+        "editForum" => [
+            "text" => [
+                "edit" => "Edition of ",
+                "icon" => "Find the list of icons on ",
+                "name" => "Name :",
+                "desc" => "Description :",
+                "espDesc" => "Talk about everything and nothing",
+                "noNewTopics" => "Do not allow the creation of new topics",
+                "noAcess" => "Restricted Aera",
+                "role" => "Authorized role(s): ",
             ],
-        ],
-        "delete" => [
-            "success" => "Forum delete with success !",
-        ],
-        "name" => "Name of forum",
-        "description" => "Forum description",
-    ],
+                ],
 
-    "topic" => [
-        "add" => [
-            "success" => "Topic added with success !",
-        ],
-        "pinned" => [
-            "success" => "You pinned this topic with success !",
-        ],
-        "unpinned" => [
-            "success" => "You unpinned this topic with success !",
-        ],
-        "replies" => [
-            "success" => "Réponse ajoutée !",
-            "errors" => [
-                "disallow_replies" => "Replies are disabled for this topic !",
-            ],
-        ],
-    ],
+        "addSubForum" => [
+            "addSubForum" => "Adding a sub forum in",
+            "name" => "Name :",
+            "icon" => "Find the list of icons on  ",
+            "desc" => "Description :",
+            "espDesc" => "Talk about everything and nothing",
+            "noNewTopics" => "Do not allow the creation of new topics",
+            "noAcess" => "Restricted Aera",
+            "role" => "Authorized role(s): ",
 
-    "reply" => [
-        "delete" => [
-            "success" => "Reply delete with success !",
-            "errors" => [
-                "no_access" => "You can't delete this reply !",
-            ],
+        ],
+
+        "addForum" => [
+            "addForum" => "Added a forum in:",
+            "name" => "Name",
+            "icon" => "Find the list of icons on ",
+            "desc" => "Description :",
+            "espDesc" => "Talk about everything and nothing",
+            "noNewTopics" => "Do not allow the creation of new topics",
+            "noAcess" => "Restricted Aera",
+            "role" => "Authorized role(s): ",
         ],
     ],
 
-    "id" => "ID",
-    "name" => "Name",
-    "description" => "Description",
-    "action" => "Action",
-    "parent" => "Parent",
-    "categories" => "Catégories",
-
-    "btn" => [
-        "add_category" => "Add a catégory",
-        "add_forum" => "Add a forum",
-    ],
-
-    "permissions" => [
-        "forum" => [
-            "categories" => [
-                "list" => "Show categories",
-                "add" => "Add categories",
-                "delete" => "Delete categories",
-            ],
-            "add" => "Add",
-            "delete" => "Delete",
-        ],
-    ],
 ];

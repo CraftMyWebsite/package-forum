@@ -13,7 +13,7 @@ $description = LangManager::translate("forum.forum.list.description");
 
 <div class="d-flex flex-wrap justify-content-between">
     <h3><i class="fa-solid fa-book"></i> <span
-            class="m-lg-auto">Ajout d'un sous forum dans <?= $forum->getName() ?></span></h3>
+            class="m-lg-auto"><?=LangManager::translate("forum.manage.addSubForum.addSubForum")?> <?= $forum->getName() ?></span></h3>
 </div>
 
 <section class="row">
@@ -21,7 +21,7 @@ $description = LangManager::translate("forum.forum.list.description");
         <form class="card" method="post">
             <div class="card-body">
                 <?php (new SecurityManager())->insertHiddenToken() ?>
-                <h6>Nom<span style="color: red">*</span> :</h6>
+                <h6><?=LangManager::translate("forum.manage.addSubForum.name")?><span style="color: red">*</span> :</h6>
                 <div class="form-group position-relative has-icon-left">
                     <input type="text" class="form-control" name="name" required
                            placeholder="Général">
@@ -36,28 +36,27 @@ $description = LangManager::translate("forum.forum.list.description");
                     <div class="form-control-icon">
                         <i class="fas fa-icons"></i>
                     </div>
-                    <small class="form-text">Retrouvez la liste des icones sur le
-                        site de <a href="https://fontawesome.com/search?o=r&m=free"
+                    <small class="form-text"><?=LangManager::translate("forum.manage.addSubForum.icon")?> <a href="https://fontawesome.com/search?o=r&m=free"
                                    target="_blank">FontAwesome.com</a></small>
                 </div>
-                <h6>Déscription :</h6>
+                <h6><?=LangManager::translate("forum.manage.addSubForum.desc")?></h6>
                 <div class="form-group position-relative has-icon-left">
                     <input type="text" class="form-control" name="description"
-                            placeholder="Parlez de tout et de rien">
+                            placeholder="<?=LangManager::translate("forum.manage.addSubForum.espDesc")?>">
                     <div class="form-control-icon">
                         <i class="fas fa-paragraph"></i>
                     </div>
                 </div>
                 <div class="form-check form-switch mt-4">
                     <input class="form-check-input " type="checkbox" id="disallowTopics" name="disallowTopics">
-                    <label class="form-check-label" for="disallowTopics"><h6>N'autorise pas la création de nouveau topics</h6></label>
+                    <label class="form-check-label" for="disallowTopics"><h6><?=LangManager::translate("forum.manage.addSubForum.noNewTopics")?></h6></label>
                 </div>
                 <div class="form-check form-switch mt-4">
                     <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
-                    <label class="form-check-label" for="allowedGroupsToggle"><h6>Accès restreint</h6></label>
+                    <label class="form-check-label" for="allowedGroupsToggle"><h6><?=LangManager::translate("forum.manage.addSubForum.noAcess")?></h6></label>
                 </div>
                 <div class="mt-2" id="listAllowedGroups">
-                    <h6>Rôle autorisé :</h6>
+                    <h6><?=LangManager::translate("forum.manage.addSubForum.role")?></h6>
                     <div class="form-group">
                         <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
                             <?php foreach ($ForumRoles as $ForumRole): ?>

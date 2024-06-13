@@ -1,99 +1,67 @@
 <?php
 
 return [
-    "category" => [
-        "add" => [
-            "title" => "Forum | Catégorie | Ajouter",
-            "description" => "Ajouter une nouvelle catégorie sur votre site",
-            "card_title" => "Ajouter une catégorie",
-        ],
+    "manage" => [
         "list" => [
-            "title" => "Forum | Catégorie",
-            "description" => "Gérez les catégories de votre forum",
-            "card_title" => "Liste de toutes vos catégories",
-        ],
-        "delete" => [
-            "success" => "Catégorie supprimée avec succès !",
-        ],
-        "name" => "Nom de la catégorie",
-        "description" => "Description de la catégorie",
-        "toaster" => [
-            "success" => "Catégorie ajoutée avec succès !",
-            "error" => [
-                "empty_input" => "Un champ est manquant !",
+            "title" => "Catégories et forums",
+            "text" => [
+                "alert" => "Merci de créer une catégorie pour commencer à utiliser le Forum",
+                "commu" => "Communautée",
+                "icon" => "Retrouvez la liste des icones sur le site de ",
+                "desc" => "Description :",
+                "espDesc" => "espace communautaire",
+                "Cat" => "Catégorie privé",
+                "role" => "Rôle(s) autorisé(s) : ",
+                "noNewTopics" => "Ce forum n'autorise pas la création de nouveau topics",
+            ],
+            "buton" => [
+                "addCat" => "Ajouter une catégorie",
+            ],
+            "modal" => [ 
+                "delete" => "Suppression de :",
+                "definitiveDelete" => "Cette suppression est définitive et entraine la suppression des sous-forum et des topics liés",
+                "edit" => "Edition de :",
+                "icon" => "Retrouvez la liste des icones sur le site de ",
+                "espDesc" => "Parlez de tout et de rien",
+                "deleteCat" => "Suppression definitive de cette catégorie ainsi des forums/sous-forum et topics liés"
+
             ],
         ],
-    ],
-
-    "forum" => [
-        "list" => [
-            "title" => "Forum | Forum",
-            "desc" => "Gérez les forums de votre forum",
-            "card_title" => "Liste de tous vos forums",
-        ],
-        "add" => [
-            "title" => "Forum | Ajout",
-            "desc" => "Ajoutez des forums à votre forum",
-            "card_title" => "Ajouter un forum",
-            "toaster" => [
-                "success" => "Forum ajouté avec succès !",
+        "editForum" => [
+            "text" => [
+                "edit" => "Édition de ",
+                "icon" => "Retrouvez la liste des icones sur le site de ",
+                "name" => "Nom :",
+                "desc" => "Description :",
+                "espDesc" => "Parlez de tout et de rien",
+                "noNewTopics" => "Ne pas autoriser la création de nouveau topics",
+                "noAcess" => "Accès restreint",
+                "role" => "Rôle(s) autorisé(s) : ",
             ],
-        ],
-        "delete" => [
-            "success" => "Forum supprimé avec succès !",
-        ],
-        "name" => "Nom du forum",
-        "description" => "Description du forum",
-    ],
+                ],
 
-    "topic" => [
-        "add" => [
-            "success" => "Topic ajouté avec succès !",
-        ],
-        "pinned" => [
-            "success" => "Vous avez épinglé ce topic avec succès !",
-        ],
-        "unpinned" => [
-            "success" => "Vous avez désépinglé ce topic avec succès !",
-        ],
-        "replies" => [
-            "success" => "Réponse ajoutée !",
-            "errors" => [
-                "disallow_replies" => "Les réponses sont désactivées sur ce topic !",
-            ],
-        ],
-    ],
+        "addSubForum" => [
+            "addSubForum" => "Ajout d'un sous forum dans",
+            "name" => "Nom :",
+            "icon" => "Retrouvez la liste des icones sur le site de ",
+            "desc" => "Description :",
+            "espDesc" => "Parlez de tout et de rien",
+            "noNewTopics" => "Ne pas autoriser la création de nouveau topics",
+            "noAcess" => "Accès restreint",
+            "role" => "Rôle(s) autorisé(s) : ",
 
-    "reply" => [
-        "delete" => [
-            "success" => "Réponse supprimée avec succès !",
-            "errors" => [
-                "no_access" => "Vous ne pouvez pas supprimer cette réponse !",
-            ],
+        ],
+
+        "addForum" => [
+            "addForum" => "Ajout d'un forum dans :",
+            "name" => "Nom",
+            "icon" => "Retrouvez la liste des icones sur le site de ",
+            "desc" => "Description :",
+            "espDesc" => "Parlez de tout et de rien",
+            "noNewTopics" => "Ne pas autoriser la création de nouveau topics",
+            "noAcess" => "Accès restreint",
+            "role" => "Rôle(s) autorisé(s) : ",
         ],
     ],
 
-    "id" => "ID",
-    "name" => "Nom",
-    "description" => "Description",
-    "action" => "Action",
-    "parent" => "Parent",
-    "categories" => "Catégories",
-
-    "btn" => [
-        "add_category" => "Ajouter une catégorie",
-        "add_forum" => "Ajouter un forum",
-    ],
-
-    "permissions" => [
-        "forum" => [
-            "categories" => [
-                "list" => "Afficher les catégories",
-                "add" => "Ajouter une catégorie",
-                "delete" => "Supprimer une catégorie",
-            ],
-            "add" => "Ajouter",
-            "delete" => "Supprimer",
-        ],
-    ],
 ];
