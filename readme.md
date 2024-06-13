@@ -1,4 +1,4 @@
-# Package FAQ pour [CraftMyWebsite](https://craftmywebsite.fr)
+# Package FORUM pour [CraftMyWebsite](https://craftmywebsite.fr)
 
 Créez votre forum complet et facile d'utilisation !
 
