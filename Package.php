@@ -121,4 +121,10 @@ class Package implements IPackageConfig
     {
         return ["Core"];
     }
+
+    public function uninstall(): bool
+    {
+        //Return true, we don't need other operations for uninstall.
+        return true;
+    }
 }
