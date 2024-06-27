@@ -28,7 +28,7 @@ class ForumRolesController extends AbstractController
     #[Link("/roles", Link::GET, [], "/cmw-admin/forum")]
     public function forumRoleView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
         $roles = ForumPermissionRoleModel::getInstance()->getRole();
@@ -47,7 +47,7 @@ class ForumRolesController extends AbstractController
     #[Link("/roles/add", Link::GET, [], "/cmw-admin/forum")]
     public function forumRoleAddView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.add");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         View::createAdminView("Forum", "Roles/add")
             ->view();
@@ -56,7 +56,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/delete/:roleId", Link::GET, [], "/cmw-admin/forum")]
     public function deleteRole(Request $request, int $roleId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.role.remove");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         ForumPermissionRoleModel::getInstance()->removeRole($roleId);
 
@@ -68,7 +68,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/add", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleAddPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         /*Role*/
         [$name, $weight, $description] = Utils::filterInput("name", "weight", "description");
@@ -183,7 +183,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/edit/:role_id", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleEditPost(Request $request, int $roleId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         /*Role*/
         [$name, $weight, $description] = Utils::filterInput("name", "weight", "description");
@@ -299,7 +299,7 @@ class ForumRolesController extends AbstractController
     #[Link("/roles/edit/:role_id", Link::GET, [], "/cmw-admin/forum")]
     public function forumRoleEditView(Request $request, int $role_id): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.add");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         $role = ForumPermissionRoleModel::getInstance()->getRoleById($role_id);
 
@@ -311,7 +311,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/settings", Link::POST, [], "/cmw-admin/forum")]
     private function forumRoleSettings(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         [$visitorCanViewForum] = Utils::filterInput("visitorCanViewForum");
 
@@ -323,7 +323,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/user_role/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
     private function forumUserRoleSettings(Request $request, int $userId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         [$roleId] = Utils::filterInput("role_id");
 
@@ -335,7 +335,7 @@ class ForumRolesController extends AbstractController
     #[Link("/roles/set_default/:id/:question", Link::GET, ["id" => "[0-9]+"], "/cmw-admin/forum")]
     #[NoReturn] private function forumRolesSetDefault(Request $request, int $id, string $question): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         ForumPermissionRoleModel::getInstance()->changeDefaultRole($id, $question);
 
@@ -348,7 +348,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/block/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
     private function forumBlockUser(Request $request, int $userId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         [$reason] = Utils::filterInput("reason");
 
@@ -360,7 +360,7 @@ class ForumRolesController extends AbstractController
     #[NoReturn] #[Link("/roles/unblock/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
     private function forumUnblockUser(Request $request, int $userId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles.edit");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
         [$reason] = Utils::filterInput("reason");
 

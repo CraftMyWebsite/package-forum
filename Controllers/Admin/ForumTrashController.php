@@ -24,7 +24,7 @@ class ForumTrashController extends AbstractController
     #[Link("/trash", Link::GET, [], "/cmw-admin/forum")]
     public function adminListTrashView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
         View::createAdminView("Forum", "trash")
             ->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => ForumCategoryModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "topicModel" => ForumTopicModel::getInstance()])
@@ -37,6 +37,7 @@ class ForumTrashController extends AbstractController
     #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
     public function publicReplyDelete(Request $request, int $replyId): void
     {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
         if (ForumResponseModel::getInstance()->deleteResponse($replyId)) {
 
@@ -50,6 +51,8 @@ class ForumTrashController extends AbstractController
     #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicReplyRestore(Request $request, int $replyId, int $topicId): void
     {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
+
         if (ForumTopicModel::getInstance()->isTrashedTopic($topicId) == 1) {
             Flash::send("error", LangManager::translate("core.toaster.error"), "Le topic de cette réponse est actuellement en corbeille !");
             header("location: ../..");
@@ -64,6 +67,7 @@ class ForumTrashController extends AbstractController
     #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicTopicDelete(Request $request, int $topicId): void
     {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
         if (ForumTopicModel::getInstance()->deleteTopic($topicId)) {
 
@@ -76,6 +80,7 @@ class ForumTrashController extends AbstractController
     #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
     public function publicTopicRestore(Request $request, int $topicId): void
     {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
         if (ForumTopicModel::getInstance()->restoreTopic($topicId)) {
 

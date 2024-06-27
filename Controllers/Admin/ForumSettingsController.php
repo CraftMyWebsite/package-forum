@@ -26,7 +26,7 @@ class ForumSettingsController extends AbstractController {
     #[Link("/settings", Link::GET, [], "/cmw-admin/forum")]
     public function adminSettingsView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         $needConnectUrl = ForumSettingsModel::getInstance()->getOptionValue("needConnectUrl");
         $needConnectText = ForumSettingsModel::getInstance()->getOptionValue("needConnectText");
@@ -52,7 +52,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/applyicons", Link::POST, [], "/cmw-admin/forum")]
     private function settingsIconsPost(): void
         {
-            UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+            UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
             $iconNotRead = filter_input(INPUT_POST, "icon_notRead");
             $iconImportant = filter_input(INPUT_POST, "icon_important");
@@ -67,7 +67,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/general", Link::POST, [], "/cmw-admin/forum")]
     private function settingsResponsePerPagePost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         $responsePerPage = filter_input(INPUT_POST, "responsePerPage");
         $topicPerPage = filter_input(INPUT_POST, "topicPerPage");
@@ -88,7 +88,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/addprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddPrefixPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         [$name, $color, $textColor, $description] = Utils::filterInput("prefixName", "prefixColor", "prefixTextColor", "prefixDescription");
 
@@ -100,7 +100,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/editprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsEditPrefixPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         [$id, $name, $color, $textColor, $description] = Utils::filterInput("prefixId", "prefixName", "prefixColor", "prefixTextColor", "prefixDescription");
 
@@ -112,7 +112,7 @@ class ForumSettingsController extends AbstractController {
     #[Link("/settings/deleteprefix/:prefixId", Link::GET, [], "/cmw-admin/forum")]
     public function settingsDeletePrefix(Request $request, string $prefixId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         if (ForumPrefixModel::getInstance()->deletePrefix($prefixId)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
@@ -125,7 +125,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/addreaction", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddReactionPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         [$name] = Utils::filterInput("name");
         $image = $_FILES['image'];
 
@@ -137,7 +137,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/editreaction", Link::POST, [], "/cmw-admin/forum")]
     private function settingsEditReactionPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         [$name, $id] = Utils::filterInput("name", "id");
         $image = $_FILES['image'];
 
@@ -149,7 +149,7 @@ class ForumSettingsController extends AbstractController {
     #[Link("/settings/deletereaction/:reactionId", Link::GET, [], "/cmw-admin/forum")]
     private function settingsDeleteReaction(Request $request, int $reactionId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         if (ForumFeedbackModel::getInstance()->removeFeedback($reactionId)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),

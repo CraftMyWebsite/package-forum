@@ -45,33 +45,33 @@ class Package implements IPackageConfig
                 subMenus: [
                     new PackageSubMenuType(
                         title: 'Catégories et forums',
-                        permission: 'forum.categories.list',
+                        permission: 'forum.categories',
                         url: 'forum/manage',
                     ),
                     new PackageSubMenuType(
                         title: 'Topics',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.topics',
                         url: 'forum/topics',
                     ),
                     new PackageSubMenuType(
                         title: 'Signalement',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.report',
                         url: 'forum/report',
                     ),
                     new PackageSubMenuType(
+                        title: 'Corbeille',
+                        permission: 'forum.trash',
+                        url: 'forum/trash',
+                    ),
+                    new PackageSubMenuType(
                         title: 'Rôles et utilisateurs',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.roles',
                         url: 'forum/roles',
                     ),
                     new PackageSubMenuType(
                         title: 'Paramètres',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.settings',
                         url: 'forum/settings',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Corbeille',
-                        permission: 'forum.delete',
-                        url: 'forum/trash',
                     ),
                 ]
             ),
@@ -84,33 +84,33 @@ class Package implements IPackageConfig
                 subMenus: [
                     new PackageSubMenuType(
                         title: 'Categories and forums',
-                        permission: 'forum.categories.list',
+                        permission: 'forum.categories',
                         url: 'forum/manage',
                     ),
                     new PackageSubMenuType(
                         title: 'Topics',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.topics',
                         url: 'forum/topics',
                     ),
                     new PackageSubMenuType(
                         title: 'Reports',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.report',
                         url: 'forum/report',
                     ),
                     new PackageSubMenuType(
+                        title: 'Trash',
+                        permission: 'forum.trash',
+                        url: 'forum/trash',
+                    ),
+                    new PackageSubMenuType(
                         title: 'Roles and users',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.roles',
                         url: 'forum/roles',
                     ),
                     new PackageSubMenuType(
                         title: 'Settings',
-                        permission: 'forum.categories.list', //TODO PERMS
+                        permission: 'forum.settings',
                         url: 'forum/settings',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Trash',
-                        permission: 'forum.delete',
-                        url: 'forum/trash',
                     ),
                 ]
             ),

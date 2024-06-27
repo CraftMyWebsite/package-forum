@@ -156,7 +156,7 @@ class ForumTopicEntity
     public function getTrashReason(): string
     {
         if ($this->topicTrashReason == 0) {
-            return "Staff";
+            return "Supprimer par un staff";
         }
     }
 

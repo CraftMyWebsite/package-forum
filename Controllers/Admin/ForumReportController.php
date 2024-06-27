@@ -25,7 +25,7 @@ class ForumReportController extends AbstractController {
     #[Link("/report", Link::GET, [], "/cmw-admin/forum")]
     public function adminReportView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
         $reportModel = ForumReportedModel::getInstance();
 
@@ -40,7 +40,7 @@ class ForumReportController extends AbstractController {
     #[NoReturn] #[Link("/report/unReportTopic/:topicId", Link::GET, ['.*?'], "/cmw-admin/forum")]
     public function adminUnReportTopic(Request $request, int $topicId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
         ForumReportedModel::getInstance()->removeReportTopic($topicId);
 
@@ -52,7 +52,7 @@ class ForumReportController extends AbstractController {
     #[NoReturn] #[Link("/report/unReportResponse/:responseId", Link::GET, ['.*?'], "/cmw-admin/forum")]
     public function adminUnReportResponse(Request $request, int $responseId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
         ForumReportedModel::getInstance()->removeReportResponse($responseId);
 
@@ -64,7 +64,7 @@ class ForumReportController extends AbstractController {
     #[NoReturn] #[Link("/report/removeTopic/:topicId", Link::GET, ['.*?'], "/cmw-admin/forum")]
     public function adminRemoveTopic(Request $request, int $topicId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
         ForumTopicModel::getInstance()->deleteTopic($topicId);
 
@@ -76,7 +76,7 @@ class ForumReportController extends AbstractController {
     #[NoReturn] #[Link("/report/removeResponse/:responseId", Link::GET, ['.*?'], "/cmw-admin/forum")]
     public function adminRemoveResponse(Request $request, int $responseId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
         ForumResponseModel::getInstance()->deleteResponse($responseId);
 

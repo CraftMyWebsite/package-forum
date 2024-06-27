@@ -65,10 +65,10 @@ class ForumResponseEntity
             return "Topic en corbeille";
         }
         if ($this->responseTrashReason == 1) {
-            return "Auteur";
+            return "Suppression par l'auteur";
         }
         if ($this->responseTrashReason == 2) {
-            return "Staff";
+            return "Supprimer par un staff";
         }
     }
 

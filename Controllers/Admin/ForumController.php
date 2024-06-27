@@ -27,7 +27,7 @@ class ForumController extends AbstractController
     #[Link("/manage/addForum/:catId", Link::GET, [], "/cmw-admin/forum")]
     public function adminAddForum(Request $request, int $catId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
         $category = ForumCategoryModel::getInstance()->getCategoryById($catId);
         $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
@@ -40,7 +40,7 @@ class ForumController extends AbstractController
     #[Link("/manage/addForum/:catId", Link::POST, [], "/cmw-admin/forum")]
     public function adminAddForumPost(Request $request, int $catId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
@@ -64,7 +64,7 @@ class ForumController extends AbstractController
     #[Link("/manage/addSubForum/:forumId", Link::GET, [], "/cmw-admin/forum")]
     public function adminAddSubForum(Request $request, int $forumId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
         $forum = ForumModel::getInstance()->getForumById($forumId);
         $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
@@ -77,7 +77,7 @@ class ForumController extends AbstractController
     #[Link("/manage/addSubForum/:forumId", Link::POST, [], "/cmw-admin/forum")]
     public function adminAddSubForumPost(Request $request, int $forumId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
         [$name, $icon, $description] = Utils::filterInput("name", "icon", "description");
 
@@ -101,7 +101,7 @@ class ForumController extends AbstractController
     #[Link("/manage/editForum/:forumId", Link::GET, [], "/cmw-admin/forum")]
     public function adminEditForum(Request $request, int $forumId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.edit");
 
         $forum = ForumModel::getInstance()->getForumById($forumId);
         $forumModel = ForumModel::getInstance();
@@ -115,7 +115,7 @@ class ForumController extends AbstractController
     #[Link("/manage/editForum/:forumId", Link::POST, [], "/cmw-admin/forum")]
     public function adminEditForumPost(Request $request, int $forumId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.add");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.edit");
 
         $isRestricted = empty($_POST['allowedGroupsToggle']) ? 0 : 1;
         $disallowTopics = empty($_POST['disallowTopics']) ? 0 : 1;
@@ -144,7 +144,7 @@ class ForumController extends AbstractController
     #[Link("/manage/deleteForum/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
     public function adminDeleteForum(Request $request, int $id): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.delete");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
         $forum = forumModel::getInstance()->getForumById($id);
 

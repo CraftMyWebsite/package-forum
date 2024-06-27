@@ -26,7 +26,7 @@ class ForumTopicController extends AbstractController
     #[Link("/topics", Link::GET, [], "/cmw-admin/forum")]
     public function adminTopicView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.topics");
 
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
@@ -49,6 +49,8 @@ class ForumTopicController extends AbstractController
     #[NoReturn] #[Link("/topics", Link::POST, ['.*?'], "/cmw-admin/forum")]
     public function adminEditTopicPost(): void
     {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.topics");
+
         [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
         ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);
