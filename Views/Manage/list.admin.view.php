@@ -25,7 +25,7 @@ $description = LangManager::translate("forum.forum.list.description");
     <div>
         <?php foreach ($categoryModel->getCategories() as $category): ?>
             <div class="card mb-6">
-                <div class="flex justify-between hover:bg-gray-100 dark:hover:bg-gray-800">
+                <div class="flex justify-between hover:bg-gray-100 dark:hover:bg-gray-800 text-lg">
                     <div>
                         <small><i class="text-secondary fa-solid fa-circle-dot"></i></small>
                         <?= $category->getFontAwesomeIcon() ?> <?= $category->getName() ?>
@@ -50,7 +50,7 @@ $description = LangManager::translate("forum.forum.list.description");
                     </div>
                 </div>
                 <?php foreach ($forumModel->getForumByCat($category->getId()) as $forumObj): ?>
-                    <div class="flex justify-between pl-6 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <div class="flex justify-between pl-6 hover:bg-gray-100 dark:hover:bg-gray-800 text-lg">
                         <div>
                             <small><i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i></small>
                             <?= $forumObj->getFontAwesomeIcon() ?>
@@ -83,7 +83,7 @@ $description = LangManager::translate("forum.forum.list.description");
                     </div>
                     <!----LISTAGE SOUS-FORUM ---->
                     <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
-                        <div class="flex justify-between hover:bg-gray-100 dark:hover:bg-gray-800"
+                        <div class="flex justify-between hover:bg-gray-100 dark:hover:bg-gray-800 text-lg"
                              style="padding-left: <?= 1 + $subForum["depth"] * 2 ?>rem">
                             <div>
                                 <i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i>

@@ -43,8 +43,9 @@ class ForumSettingsController extends AbstractController {
         View::createAdminView("Forum", "settings")
             ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
             ->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/medium.js")
-            ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
-            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
+            ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
+                "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
             ->view();
     }
 

@@ -38,8 +38,9 @@ class ForumRolesController extends AbstractController
 
         View::createAdminView("Forum", "Roles/manage")
             ->addVariableList(["visitorCanViewForum" => $visitorCanViewForum, "roles" => $roles, "userList" => $userList, "userRole" => $userRole, "userBlocked" => $userBlocked])
-            ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css", "Admin/Resources/Assets/Css/Pages/simple-datatables.css")
-            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js", "Admin/Resources/Assets/Js/Pages/simple-datatables.js")
+            ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
+                "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
             ->view();
     }
 
