@@ -34,14 +34,18 @@ class ForumSettingsController extends AbstractController {
         $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
         $topicPerPage = ForumSettingsModel::getInstance()->getOptionValue("topicPerPage");
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
         $prefixesModel = ForumPrefixModel::getInstance();
         $feedbackModel = ForumFeedbackModel::getInstance();
 
         View::createAdminView("Forum", "settings")
-            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
+            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
             ->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/medium.js")
             ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
@@ -55,11 +59,15 @@ class ForumSettingsController extends AbstractController {
             UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
             $iconNotRead = filter_input(INPUT_POST, "icon_notRead");
+            $iconNotReadColor = filter_input(INPUT_POST, "icon_notRead_color");
             $iconImportant = filter_input(INPUT_POST, "icon_important");
+            $iconImportantColor = filter_input(INPUT_POST, "icon_important_color");
             $iconPin = filter_input(INPUT_POST, "icon_pin");
+            $iconPinColor = filter_input(INPUT_POST, "icon_pin_color");
             $iconClosed = filter_input(INPUT_POST, "icon_closed");
+            $iconClosedColor = filter_input(INPUT_POST, "icon_closed_color");
 
-            ForumSettingsModel::getInstance()->updateIcons($iconNotRead,$iconImportant,$iconPin,$iconClosed);
+            ForumSettingsModel::getInstance()->updateIcons($iconNotRead,$iconImportant,$iconPin,$iconClosed,$iconNotReadColor,$iconImportantColor,$iconPinColor,$iconClosedColor);
 
             Redirect::redirectPreviousRoute();
         }

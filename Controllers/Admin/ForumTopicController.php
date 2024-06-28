@@ -33,13 +33,17 @@ class ForumTopicController extends AbstractController
         $topicModel = ForumTopicModel::getInstance();
         $responseModel = ForumResponseModel::getInstance();
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor =  ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
         $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
 
         View::createAdminView("Forum", "topics")
-            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles])
+            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
             ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
                 "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")

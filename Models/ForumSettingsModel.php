@@ -46,16 +46,20 @@ class ForumSettingsModel extends AbstractModel
 
     /**
      * @param string $iconNotRead
+     * @param string $iconNotReadColor
      * @param string $iconImportant
+     * @param string $iconImportantColor
      * @param string $iconPin
+     * @param string $iconPinColor
      * @param string $iconClosed
+     * @param string $iconClosedColor
      * @return void
      */
-    public function updateIcons(string $iconNotRead, string $iconImportant, string $iconPin, string $iconClosed): void
+    public function updateIcons(string $iconNotRead, string $iconImportant, string $iconPin, string $iconClosed, string $iconNotReadColor, string $iconImportantColor, string $iconPinColor, string $iconClosedColor): void
     {
         $db = DatabaseManager::getInstance();
-        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'IconNotRead' THEN :iconNotRead WHEN 'IconImportant' THEN :iconImportant WHEN 'IconPin' THEN :iconPin WHEN 'IconClosed' THEN :iconClosed ELSE forum_settings_value END WHERE forum_settings_name IN('IconNotRead','IconImportant','IconPin','IconClosed')");
-        $req->execute(array("iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed));
+        $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'IconNotRead' THEN :iconNotRead WHEN 'IconImportant' THEN :iconImportant WHEN 'IconPin' THEN :iconPin WHEN 'IconClosed' THEN :iconClosed WHEN 'IconNotReadColor' THEN :iconNotReadColor WHEN 'IconImportantColor' THEN :iconImportantColor WHEN 'IconPinColor' THEN :iconPinColor WHEN 'IconClosedColor' THEN :iconClosedColor ELSE forum_settings_value END WHERE forum_settings_name IN('IconNotRead','IconImportant','IconPin','IconClosed','IconNotReadColor','IconImportantColor','IconPinColor','IconClosedColor')");
+        $req->execute(array("iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor));
     }
 
     /**

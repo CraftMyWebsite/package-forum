@@ -14,6 +14,10 @@ use CMW\Manager\Security\SecurityManager;
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconNotReadColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconImportantColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconPinColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconClosedColor */
 /* @var \CMW\Entity\Forum\ForumPermissionRoleEntity[] $ForumRoles */
 
 $title = LangManager::translate("forum.forum.list.title");
@@ -39,13 +43,13 @@ $description = LangManager::translate("forum.forum.list.description");
             <tr>
                 <td>
                     <?= $topic->isImportant() ? "
-                            <i class='<?= $iconImportant ?> fa-sm text-orange-500'></i>                           
+                            <i style='color: $iconImportantColor'  class='$iconImportant fa-sm'></i>                           
                             " : "" ?>
                     <?= $topic->isPinned() ? "
-                            <i class='<?= $iconPin ?> fa-sm text-red-600 ml-2'></i>                         
+                            <i style='color: $iconPinColor' class='$iconPin fa-sm'></i>                         
                              " : "" ?>
                     <?= $topic->isDisallowReplies() ? "
-                            <i  class='<?= $iconClosed ?> fa-sm text-yellow-300 ml-2'></i>
+                            <i style='color: $iconClosedColor' class='$iconClosed fa-sm'></i>
                              " : "" ?>
                     <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2"
                                                               style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
@@ -85,7 +89,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             <div class="lg:flex justify-between">
                                 <div>
                                     <label class="toggle">
-                                        <p class="toggle-label"><i class="<?= $iconImportant ?>"></i> Important</p>
+                                        <p class="toggle-label"><i style='color: <?=  $iconImportantColor ?>' class="<?= $iconImportant ?>"></i> Important</p>
                                         <input type="checkbox" class="toggle-input" name="important"
                                                id="important<?= $topic->getId() ?>" <?= $topic->isImportant() ? 'checked' : '' ?>>
                                         <div class="toggle-slider"></div>
@@ -93,7 +97,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <p class="toggle-label"><i class="<?= $iconPin ?>"></i> Épinglé</p>
+                                        <p class="toggle-label"><i style='color: <?=  $iconPinColor ?>' class="<?= $iconPin ?>"></i> Épinglé</p>
                                         <input type="checkbox" class="toggle-input" name="pin"
                                                id="pin<?= $topic->getId() ?>" <?= $topic->isPinned() ? 'checked' : '' ?>>
                                         <div class="toggle-slider"></div>
@@ -101,7 +105,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <p class="toggle-label"><i class="<?= $iconClosed ?>"></i> Fermer</p>
+                                        <p class="toggle-label"><i style='color: <?=  $iconClosedColor ?>' class="<?= $iconClosed ?>"></i> Fermer</p>
                                         <input type="checkbox" class="toggle-input" name="disallow_replies"
                                                id="closed<?= $topic->getId() ?>" <?= $topic->isDisallowReplies() ? 'checked' : '' ?>>
                                         <div class="toggle-slider"></div>

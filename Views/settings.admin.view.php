@@ -15,6 +15,10 @@ $description = "desc";
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconNotReadColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconImportantColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconPinColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconClosedColor */
 /* @var CMW\Model\Forum\ForumPrefixModel $prefixesModel */
 /* @var CMW\Model\Forum\ForumFeedbackModel $feedbackModel */
 ?>
@@ -73,30 +77,34 @@ $description = "desc";
                 <div>
                     <h6>Non lu :</h6>
                     <div class="text-center mb-2">
-                        <i style="font-size : 3rem;" class="<?= $iconNotRead ?>"></i>
+                        <i style="font-size : 3rem; color: <?= $iconNotReadColor ?>" class="<?= $iconNotRead ?>"></i>
                     </div>
                     <div class="icon-picker" data-id="icon_notRead" data-name="icon_notRead" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconNotRead ?>"></div>
+                    <input type="color" class="w-full" id="icon_notRead_color" name="icon_notRead_color" value="<?= $iconNotReadColor ?>" required>
                 </div>
                 <div>
                     <h6>Important :</h6>
                     <div class="text-center mb-2">
-                        <i style="font-size : 3rem;" class="<?= $iconImportant ?>"></i>
+                        <i style="font-size : 3rem; color: <?= $iconImportantColor ?>" class="<?= $iconImportant ?>"></i>
                     </div>
                     <div class="icon-picker" data-id="icon_important" data-name="icon_important" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconImportant ?>"></div>
+                    <input type="color" class="w-full" id="icon_important_color" name="icon_important_color" value="<?= $iconImportantColor ?>" required>
                 </div>
                 <div>
                     <h6>Épinglé :</h6>
                     <div class="text-center mb-2">
-                        <i style="font-size : 3rem;" class="<?= $iconPin ?>"></i>
+                        <i style="font-size : 3rem; color: <?= $iconPinColor ?>" class="<?= $iconPin ?>"></i>
                     </div>
                     <div class="icon-picker" data-id="icon_pin" data-name="icon_pin" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconPin ?>"></div>
+                    <input type="color" class="w-full" id="icon_pin_color" name="icon_pin_color" value="<?= $iconPinColor ?>" required>
                 </div>
                 <div>
                     <h6>Clos :</h6>
                     <div class="text-center mb-2">
-                        <i style="font-size : 3rem;" class="<?= $iconClosed ?>"></i>
+                        <i style="font-size : 3rem; color: <?= $iconClosedColor ?>" class="<?= $iconClosed ?>"></i>
                     </div>
                     <div class="icon-picker" data-id="icon_closed" data-name="icon_closed" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconClosed ?>"></div>
+                    <input type="color" class="w-full" id="icon_closed_color" name="icon_closed_color" value="<?= $iconClosedColor ?>" required>
                 </div>
             </div>
                 <div class="mt-4">
