@@ -45,12 +45,16 @@ class PublicForumTopicController extends AbstractController
         $results = ForumTopicModel::getInstance()->getTopicByResearch($for);
         $forumModel = forumModel::getInstance();
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
 
         $view = new View("Forum", "search");
-        $view->addVariableList(["forumModel" => $forumModel, "results" => $results, "for" => $for, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "responseModel" => ForumResponseModel::getInstance()]);
+        $view->addVariableList(["forumModel" => $forumModel, "results" => $results, "for" => $for, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed ,  "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor, "responseModel" => ForumResponseModel::getInstance()]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
@@ -86,12 +90,16 @@ class PublicForumTopicController extends AbstractController
         }
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
 
         $view = new View("Forum", "addTopic");
-        $view->addVariableList(["forumModel" => $forumModel, "forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
+        $view->addVariableList(["forumModel" => $forumModel, "forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category ,  "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "App/Package/Forum/Views/Assets/Js/tinyConfig.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
@@ -211,9 +219,13 @@ class PublicForumTopicController extends AbstractController
         $currentUser = usersModel::getInstance()::getCurrentUser();
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
         $feedbackModel = ForumFeedbackModel::getInstance();
 
         if (!$isViewed) {
@@ -224,7 +236,7 @@ class PublicForumTopicController extends AbstractController
         $blinkResponse = ForumSettingsModel::getInstance()->getOptionValue("blinkResponse");
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"responses" => $responses,"forumModel" => $forumModel,"currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category]);
+        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"responses" => $responses,"forumModel" => $forumModel,"currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category , "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
         if ($needConnectUrl) {
             $view->addPhpAfter("App/Package/Forum/Views/Assets/Php/needConnect.php");
         }

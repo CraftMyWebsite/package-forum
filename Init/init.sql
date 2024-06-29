@@ -115,9 +115,13 @@ CREATE TABLE IF NOT EXISTS cmw_forums_response
 
 INSERT INTO `cmw_forums_settings` (`forum_settings_name`, `forum_settings_value`)
 VALUES ('IconNotRead', 'fa-solid fa-eye'),
+       ('IconNotReadColor', '#2986d8'),
        ('IconImportant', 'fa-solid fa-triangle-exclamation'),
+       ('IconImportantColor', '#f88920'),
        ('IconPin', 'fa-solid fa-thumbtack'),
+       ('IconPinColor', '#e60a0a'),
        ('IconClosed', 'fa-solid fa-lock'),
+       ('IconClosedColor', '#f4b515'),
        ('visitorCanViewForum', '0'),
        ('responsePerPage', '10'),
        ('topicPerPage', '10'),

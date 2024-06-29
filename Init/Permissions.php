@@ -12,24 +12,45 @@ class Permissions implements IPermissionInit
     {
         return [
             new PermissionInitType(
-                code: 'forum.categories.list',
-                description: LangManager::translate('forum.permissions.forum.categories.list'),
+                code: 'forum.categories',
+                description: "Catégories et Forums",
             ),
             new PermissionInitType(
                 code: 'forum.categories.add',
-                description: LangManager::translate('forum.permissions.forum.categories.add'),
+                description: "Ajouter",
+            ),
+            new PermissionInitType(
+                code: 'forum.categories.edit',
+                description: "Éditer",
             ),
             new PermissionInitType(
                 code: 'forum.categories.delete',
-                description: LangManager::translate('forum.permissions.forum.categories.delete'),
+                description: "Supprimer",
             ),
+            /*TOPICS*/
             new PermissionInitType(
-                code: 'forum.add',
-                description: LangManager::translate('forum.permissions.forum.add'),
+                code: 'forum.topics',
+                description: "Gérer les topics",
             ),
+            /*REPORT*/
             new PermissionInitType(
-                code: 'forum.delete',
-                description: LangManager::translate('forum.permissions.forum.delete'),
+                code: 'forum.report',
+                description: "Gérer les signalements",
+            ),
+            /*ROLES*/
+            new PermissionInitType(
+                code: 'forum.roles',
+                description: "Gérer les rôles",
+            ),
+            /*SETTINGS*/
+            new PermissionInitType(
+                code: 'forum.settings',
+                description: "Gérer les paramètres",
+            ),
+            /*TRASH*/
+            new PermissionInitType(
+                code: 'forum.trash',
+                description: "Gérer la corbeille",
             ),
         ];
     }

@@ -26,7 +26,7 @@ class ForumCategoryController extends AbstractController
     #[Link("/manage", Link::GET, [], "/cmw-admin/forum")]
     public function adminListCategoryView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories");
 
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
@@ -67,7 +67,7 @@ class ForumCategoryController extends AbstractController
     #[Link("/manage/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum")]
     public function adminEditCategory(Request $request, int $id): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.edit");
 
         if (Utils::isValuesEmpty($_POST, "name", "description")) {
             Flash::send("error", LangManager::translate("core.toaster.error"),

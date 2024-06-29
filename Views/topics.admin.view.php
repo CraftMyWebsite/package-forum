@@ -14,189 +14,145 @@ use CMW\Manager\Security\SecurityManager;
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconNotReadColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconImportantColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconPinColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconClosedColor */
 /* @var \CMW\Entity\Forum\ForumPermissionRoleEntity[] $ForumRoles */
 
 $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
 ?>
-<div class="d-flex flex-wrap justify-content-between">
-    <h3><i class="fa-solid fa-book"></i> <span class="m-lg-auto">Gestion des topics</span></h3>
-</div>
+<h3><i class="fa-solid fa-book"></i> Gestion des topics</h3>
 
-<section>
-    <div>
-        <div class="card">
-            <div class="card-header">
-                <h4>Topics</h4>
-            </div>
-            <div class="card-body">
-                <table class="table" id="table1">
-                    <thead>
-                    <tr>
-                        <th class="text-center">Nom</th>
-                        <th class="text-center">Forum</th>
-                        <th class="text-center">Auteur</th>
-                        <th class="text-center">Date</th>
-                        <th class="text-center">Messages</th>
-                        <th class="text-center">Affichages</th>
-                        <th class="text-center"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($topicModel->getTopic() as $topic) : ?>
-                        <tr>
-                            <td>
-                                <?= $topic->isImportant() ? "
-                            <i class='<?= $iconImportant ?> fa-sm text-orange-500'></i>                           
+<div class="table-container table-container-striped">
+    <table class="table" data-load-per-page="10" id="table1" >
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Forum</th>
+            <th>Auteur</th>
+            <th>Date</th>
+            <th>Messages</th>
+            <th>Affichages</th>
+            <th class="text-center"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($topicModel->getTopic() as $topic) : ?>
+            <tr>
+                <td>
+                    <?= $topic->isImportant() ? "
+                            <i style='color: $iconImportantColor'  class='$iconImportant fa-sm'></i>                           
                             " : "" ?>
-                                <?= $topic->isPinned() ? "
-                            <i class='<?= $iconPin ?> fa-sm text-red-600 ml-2'></i>                         
+                    <?= $topic->isPinned() ? "
+                            <i style='color: $iconPinColor' class='$iconPin fa-sm'></i>                         
                              " : "" ?>
-                                <?= $topic->isDisallowReplies() ? "
-                            <i  class='<?= $iconClosed ?> fa-sm text-yellow-300 ml-2'></i>
+                    <?= $topic->isDisallowReplies() ? "
+                            <i style='color: $iconClosedColor' class='$iconClosed fa-sm'></i>
                              " : "" ?>
-                                <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2"
-                                                                          style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
-                                <?= mb_strimwidth($topic->getName(), 0, 65, '...') ?>
-                                <?php if ($topic->getIsTrash()) : ?><small style="color: #d00d0d">En
-                                    corbeille</small><?php endif; ?>
-                            </td>
-                            <td class="text-center">
-                                <a target="_blank" href="<?= $topic->getLink() ?>"><?= $topic->getForum()->getName() ?></a>
-                            </td>
-                            <td class="text-center"><img style="object-fit: fill; max-height: 32px; max-width: 32px"
-                                                         width="32px"
-                                                         height="32px"
-                                                         src="<?= $topic->getUser()->getUserPicture()->getImage() ?>"
-                                                         alt="..."><?= $topic->getUser()->getPseudo() ?></td>
-                            <td class="text-center"><?= $topic->getCreated() ?></td>
-                            <td class="text-center"><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>
-                            <td class="text-center"><?= $topic->countViews() ?></td>
-                            <td>
-                                <a type="button" data-bs-toggle="modal"
-                                   data-bs-target="#edit-prefix-<?= $topic->getId() ?>">
-                                    <i class="text-success fa-solid fa-screwdriver-wrench me-2"></i>
-                                </a>
-                                <a type="button" data-bs-toggle="modal"
-                                   data-bs-target="#edit-prefix-">
-                                    <i class="text-primary fas fa-eye me-2"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <!--
-                        ----MODAL EDITION----
-                        -->
-                        <div class="modal fade text-left" id="edit-prefix-<?= $topic->getId() ?>" tabindex="-1"
-                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary">
-                                        <h5 class="modal-title white" id="myModalLabel160">Gestion
-                                            de <?= $topic->getName() ?></h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="modal-<?= $topic->getId() ?>" method="post">
-                                            <?php (new SecurityManager())->insertHiddenToken() ?>
-                                            <input type="text" name="topicId" hidden value="<?= $topic->getId() ?>">
-
-                                            <div class="d-inline-block me-2 mb-1">
-                                                <div class="form-check">
-                                                    <div class="checkbox">
-                                                        <input name="important" type="checkbox"
-                                                               id="important<?= $topic->getId() ?>"
-                                                               class="form-check-input" <?= $topic->isImportant() ? 'checked' : '' ?>>
-                                                        <label for="important<?= $topic->getId() ?>"><i
-                                                                class="<?= $iconImportant ?> text-yellow-300 fa-sm"></i>
-                                                            Important</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="d-inline-block me-2 mb-1">
-                                                <div class="form-check">
-                                                    <div class="checkbox">
-                                                        <input name="pin" type="checkbox"
-                                                               id="pin<?= $topic->getId() ?>"
-                                                               class="form-check-input" <?= $topic->isPinned() ? 'checked' : '' ?>>
-                                                        <label for="pin<?= $topic->getId() ?>"><i
-                                                                class="<?= $iconPin ?> text-red-600 fa-sm"></i> Épinglé</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block me-2 mb-1">
-                                                <div class="form-check">
-                                                    <div class="checkbox">
-                                                        <input name="disallow_replies" type="checkbox"
-                                                               id="closed<?= $topic->getId() ?>"
-                                                               class="form-check-input" <?= $topic->isDisallowReplies() ? 'checked' : '' ?>>
-                                                        <label for="closed<?= $topic->getId() ?>"><i
-                                                                class="<?= $iconClosed ?> text-yellow-300 fa-sm"></i>
-                                                            Fermer</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Titre du topic :</h6>
-                                                    <input type="text" class="form-control" name="name"
-                                                           placeholder="Titre du topic" value="<?= $topic->getName() ?>"
-                                                           required>
-                                                </div>
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Tags du topic :</h6>
-                                                    <input type="text" class="form-control" name="tags"
-                                                           value="<?php foreach ($topic->getTags() as $tag) {
-                                                               echo "" . $tag->getContent() . ",";
-                                                           } ?>" required>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Prefix :</h6>
-                                                    <select name="prefix" class="form-select">
-                                                        <option value="">Aucun</option>
-                                                        <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix) : ?>
-                                                            <option value="<?= $prefix->getId() ?>"
-                                                                <?= ($topic->getPrefixName() === $prefix->getName() ? "selected" : "") ?>>
-                                                                <?= $prefix->getName() ?>
-                                                            </option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Déplacer vers :</h6>
-                                                    <select name="move" class="form-select">
-                                                        <?php foreach ($categoryModel->getCategories() as $cat): ?>
-                                                            <option disabled>──── <?= $cat->getName() ?> ────</option>
-                                                            <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObj): ?>
-                                                                <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObj->getName() ?></option>
-                                                                <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
-                                                                    <option value="<?= $subForum["subforum"]->getId() ?>" <?= ($subForum["subforum"]->getName() === $topic->getForum()->getName() ? "selected" : "") ?>> <?=str_repeat("      ", $subForum["depth"])?> ↪ <?= $subForum["subforum"]->getName() ?></option>
-                                                                <?php endforeach; ?>
-                                                            <?php endforeach; ?>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                                        </button>
-                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.save") ?></span>
-                                        </button>
-                                        </form>
-                                    </div>
+                    <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2"
+                                                              style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
+                    <?= mb_strimwidth($topic->getName(), 0, 30, '...') ?>
+                    <?php if ($topic->getIsTrash()) : ?><small style="color: #d00d0d">En
+                        corbeille</small><?php endif; ?>
+                </td>
+                <td>
+                    <a target="_blank" class="link" href="<?= $topic->getLink() ?>"><?= $topic->getForum()->getName() ?></a>
+                </td>
+                <td class="flex items-center gap-2">
+                    <img class="avatar-rounded w-6 h-6" src="<?= $topic->getUser()->getUserPicture()->getImage() ?>"
+                                                         alt="user picture">
+                    <?= $topic->getUser()->getPseudo() ?></td>
+                <td><?= $topic->getCreated() ?></td>
+                <td><?= $responseModel->countResponseInTopic($topic->getId()) ?></td>
+                <td><?= $topic->countViews() ?></td>
+                <td class="text-center">
+                    <a type="button" data-modal-toggle="modal-edit-prefix-<?= $topic->getId() ?>">
+                        <i class="text-success fa-solid fa-screwdriver-wrench"></i>
+                    </a>
+                </td>
+            </tr>
+            <!--
+            ----MODAL EDITION----
+            -->
+            <div id="modal-edit-prefix-<?= $topic->getId() ?>" class="modal-container">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h6>Gestion de <?= $topic->getName() ?></h6>
+                        <button type="button" data-modal-hide="modal-edit-prefix-<?= $topic->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <form id="modal-<?= $topic->getId() ?>" method="post">
+                        <?php (new SecurityManager())->insertHiddenToken() ?>
+                        <input type="text" name="topicId" hidden value="<?= $topic->getId() ?>">
+                        <div class="modal-body">
+                            <div class="lg:flex justify-between">
+                                <div>
+                                    <label class="toggle">
+                                        <p class="toggle-label"><i style='color: <?=  $iconImportantColor ?>' class="<?= $iconImportant ?>"></i> Important</p>
+                                        <input type="checkbox" class="toggle-input" name="important"
+                                               id="important<?= $topic->getId() ?>" <?= $topic->isImportant() ? 'checked' : '' ?>>
+                                        <div class="toggle-slider"></div>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="toggle">
+                                        <p class="toggle-label"><i style='color: <?=  $iconPinColor ?>' class="<?= $iconPin ?>"></i> Épinglé</p>
+                                        <input type="checkbox" class="toggle-input" name="pin"
+                                               id="pin<?= $topic->getId() ?>" <?= $topic->isPinned() ? 'checked' : '' ?>>
+                                        <div class="toggle-slider"></div>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="toggle">
+                                        <p class="toggle-label"><i style='color: <?=  $iconClosedColor ?>' class="<?= $iconClosed ?>"></i> Fermer</p>
+                                        <input type="checkbox" class="toggle-input" name="disallow_replies"
+                                               id="closed<?= $topic->getId() ?>" <?= $topic->isDisallowReplies() ? 'checked' : '' ?>>
+                                        <div class="toggle-slider"></div>
+                                    </label>
                                 </div>
                             </div>
+                            <label for="name">Titre du topic :</label>
+                            <input type="text" id="name" class="input" name="name"
+                                   placeholder="Titre du topic" value="<?= $topic->getName() ?>"
+                                   required>
+                            <label for="default-input">Tags du topic :</label>
+                            <input type="text" id="default-input" class="input" name="tags"
+                                   value="<?php foreach ($topic->getTags() as $tag) {
+                                       echo "" . $tag->getContent() . ",";
+                                   } ?>">
+                            <label for="prefix">Prefix :</label>
+                            <select id="prefix" name="prefix" class="form-select">
+                                <option value="">Aucun</option>
+                                <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix) : ?>
+                                    <option value="<?= $prefix->getId() ?>"
+                                        <?= ($topic->getPrefixName() === $prefix->getName() ? "selected" : "") ?>>
+                                        <?= $prefix->getName() ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <label for="move">Déplacer vers :</label>
+                            <select id="move" name="move" class="form-select">
+                                <?php foreach ($categoryModel->getCategories() as $cat): ?>
+                                    <option disabled>──── <?= $cat->getName() ?> ────</option>
+                                    <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObj): ?>
+                                        <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObj->getName() ?></option>
+                                        <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
+                                            <option value="<?= $subForum["subforum"]->getId() ?>" <?= ($subForum["subforum"]->getName() === $topic->getForum()->getName() ? "selected" : "") ?>> <?=str_repeat("      ", $subForum["depth"])?> ↪ <?= $subForum["subforum"]->getName() ?></option>
+                                        <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn-primary">
+                                <?= LangManager::translate("core.btn.save") ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

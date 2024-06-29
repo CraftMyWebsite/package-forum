@@ -11,70 +11,59 @@ $title = LangManager::translate("forum.forum.list.title");
 $description = LangManager::translate("forum.forum.list.description");
 ?>
 
-<div class="d-flex flex-wrap justify-content-between">
-    <h3><i class="fa-solid fa-book"></i> <span
-            class="m-lg-auto"><?=LangManager::translate("forum.manage.addSubForum.addSubForum")?> <?= $forum->getName() ?></span></h3>
-</div>
+<h3><i class="fa-solid fa-book"></i> <?=LangManager::translate("forum.manage.addSubForum.addSubForum")?> <?= $forum->getName() ?></h3>
 
-<section class="row">
-    <div class="col-12 col-lg-6 mx-auto">
-        <form class="card" method="post">
-            <div class="card-body">
-                <?php (new SecurityManager())->insertHiddenToken() ?>
-                <h6><?=LangManager::translate("forum.manage.addSubForum.name")?><span style="color: red">*</span> :</h6>
-                <div class="form-group position-relative has-icon-left">
-                    <input type="text" class="form-control" name="name" required
+<div class="center-flex">
+    <div class="flex-content-lg">
+        <form class="card space-y-4" method="post">
+            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <div>
+                <label for="name"><?=LangManager::translate("forum.manage.addForum.name")?><span style="color: red">*</span> :</label>
+                <div class="input-group">
+                    <i class="fa-solid fa-heading"></i>
+                    <input type="text" id="name" name="name" required
                            placeholder="Général">
-                    <div class="form-control-icon">
-                        <i class="fas fa-heading"></i>
-                    </div>
-                </div>
-                <h6>Icon :</h6>
-                <div class="form-group position-relative has-icon-left">
-                    <input type="text" class="form-control" name="icon"
-                           placeholder="fas fa-users">
-                    <div class="form-control-icon">
-                        <i class="fas fa-icons"></i>
-                    </div>
-                    <small class="form-text"><?=LangManager::translate("forum.manage.addSubForum.icon")?> <a href="https://fontawesome.com/search?o=r&m=free"
-                                   target="_blank">FontAwesome.com</a></small>
-                </div>
-                <h6><?=LangManager::translate("forum.manage.addSubForum.desc")?></h6>
-                <div class="form-group position-relative has-icon-left">
-                    <input type="text" class="form-control" name="description"
-                            placeholder="<?=LangManager::translate("forum.manage.addSubForum.espDesc")?>">
-                    <div class="form-control-icon">
-                        <i class="fas fa-paragraph"></i>
-                    </div>
-                </div>
-                <div class="form-check form-switch mt-4">
-                    <input class="form-check-input " type="checkbox" id="disallowTopics" name="disallowTopics">
-                    <label class="form-check-label" for="disallowTopics"><h6><?=LangManager::translate("forum.manage.addSubForum.noNewTopics")?></h6></label>
-                </div>
-                <div class="form-check form-switch mt-4">
-                    <input class="form-check-input allowedGroups" type="checkbox" id="allowedGroupsToggle" name="allowedGroupsToggle">
-                    <label class="form-check-label" for="allowedGroupsToggle"><h6><?=LangManager::translate("forum.manage.addSubForum.noAcess")?></h6></label>
-                </div>
-                <div class="mt-2" id="listAllowedGroups">
-                    <h6><?=LangManager::translate("forum.manage.addSubForum.role")?></h6>
-                    <div class="form-group">
-                        <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
-                            <?php foreach ($ForumRoles as $ForumRole): ?>
-                                <option
-                                    value="<?= $ForumRole->getId() ?>"><?= $ForumRole->getName() ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
                 </div>
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bx bx-check"></i>
-                    <span class=""><?= LangManager::translate("core.btn.add") ?></span>
-                </button>
+            <div class="icon-picker" data-id="icon" data-name="icon" data-label="Icon :" data-placeholder="Sélectionner un icon" data-value=""></div>
+            <div>
+                <label for="description"><?=LangManager::translate("forum.manage.addForum.desc")?></label>
+                <div class="input-group">
+                    <i class="fa-solid fa-paragraph"></i>
+                    <input type="text" id="description" name="description"
+                           placeholder=<?=LangManager::translate("forum.manage.addForum.espDesc")?>>
+                </div>
             </div>
+            <div>
+                <label class="toggle">
+                    <p class="toggle-label"><?=LangManager::translate("forum.manage.addForum.noNewTopics")?></p>
+                    <input type="checkbox" class="toggle-input" id="disallowTopics" name="disallowTopics">
+                    <div class="toggle-slider"></div>
+                </label>
+            </div>
+            <div>
+                <label class="toggle">
+                    <p class="toggle-label"><?=LangManager::translate("forum.manage.addForum.noAcess")?></p>
+                    <input type="checkbox" class="toggle-input allowedGroups" id="allowedGroupsToggle" name="allowedGroupsToggle">
+                    <div class="toggle-slider"></div>
+                </label>
+            </div>
+            <div id="listAllowedGroups">
+                <label><?=LangManager::translate("forum.manage.addForum.role")?></label>
+                <div class="form-group">
+                    <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
+                        <?php foreach ($ForumRoles as $ForumRole): ?>
+                            <option
+                                value="<?= $ForumRole->getId() ?>"><?= $ForumRole->getName() ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary btn-center">
+                <?= LangManager::translate("core.btn.add") ?>
+            </button>
         </form>
     </div>
-</section>
+</div>
 
 <script src="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'App/Package/Forum/Views/Assets/Js/allowedGroups.js' ?>"></script>

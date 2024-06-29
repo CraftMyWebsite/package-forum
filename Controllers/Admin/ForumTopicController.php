@@ -26,28 +26,35 @@ class ForumTopicController extends AbstractController
     #[Link("/topics", Link::GET, [], "/cmw-admin/forum")]
     public function adminTopicView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.topics");
 
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
         $topicModel = ForumTopicModel::getInstance();
         $responseModel = ForumResponseModel::getInstance();
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor =  ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
         $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
 
         View::createAdminView("Forum", "topics")
-            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles])
-            ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
-            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
+            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
+            ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
+                "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
             ->view();
     }
 
     #[NoReturn] #[Link("/topics", Link::POST, ['.*?'], "/cmw-admin/forum")]
     public function adminEditTopicPost(): void
     {
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.topics");
+
         [$topicId, $name, $disallowReplies, $important, $pin, $tags, $prefix, $move] = Utils::filterInput('topicId', 'name', 'disallow_replies', 'important', 'pin', 'tags', 'prefix', 'move');
 
         ForumTopicModel::getInstance()->adminEditTopic($topicId, $name, (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1), $prefix, $move);

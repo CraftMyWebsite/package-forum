@@ -15,503 +15,358 @@ $description = "desc";
 /* @var CMW\Controller\Forum\ForumSettingsController $iconImportant */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconNotReadColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconImportantColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconPinColor */
+/* @var CMW\Controller\Forum\ForumSettingsController $iconClosedColor */
 /* @var CMW\Model\Forum\ForumPrefixModel $prefixesModel */
 /* @var CMW\Model\Forum\ForumFeedbackModel $feedbackModel */
 ?>
 
-<div class="d-flex flex-wrap justify-content-between">
-    <h3><i class="fa-solid fa-sliders"></i> <span class="m-lg-auto">Paramètres</span></h3>
-</div>
+<h3><i class="fa-solid fa-sliders"></i> Paramètres</h3>
 
-
-<section>
-    <form action="settings/general" method="post">
-        <?php (new SecurityManager())->insertHiddenToken() ?>
-        <div class="card">
-            <div class="card-header">
-                <h4>Général</h4>
-            </div>
-            <div class="card-body row">
-                <div class="col-12 col-lg-3">
-                    <div class="card-in-card">
-                        <div class="card-body">
-                            <h6>Topics par page :</h6>
-                            <input type="number" class="form-control" name="topicPerPage" value="<?= $topicPerPage ?>"
-                                   required>
-                            <h6 class="mt-4">Réponses par page :</h6>
-                            <input type="number" class="form-control" name="responsePerPage"
-                                   value="<?= $responsePerPage ?>"
-                                   required>
-                        </div>
-                    </div>
+<div class="grid-2">
+    <div class="card">
+        <h6>Général</h6>
+        <form action="settings/general" method="post">
+            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <div class="grid-2">
+                <div>
+                    <label for="topicPerPage">Topics par page :</label>
+                    <input type="number" class="input" id="topicPerPage" name="topicPerPage" value="<?= $topicPerPage ?>"
+                           required>
                 </div>
-                <div class="col-12 col-lg-5">
-                    <div class="card-in-card">
-                        <div class="card-body">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="needConnectUrl" name="needConnectUrl" <?= $needConnectUrl ? 'checked' : '' ?>>
-                                <label class="form-check-label" for="needConnectUrl"><h6>Doit être connecté pour voir les URL</h6></label>
-                            </div>
-                            <label for="needConnectText">Texte pour les non connecté :</label>
-                            <textarea class="tinymce" id="needConnectText" name="needConnectText"><?= $needConnectText?></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-lg-4">
-                    <div class="card-in-card">
-                        <div class="card-body">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="blinkResponse" name="blinkResponse" <?= $blinkResponse ? 'checked' : '' ?>>
-                                <label class="form-check-label" for="blinkResponse"><h6>Effet clignotement sur les réponses <i data-bs-toggle="tooltip" title="Ceci rajoute un effet stylé !" class="fa-sharp fa-solid fa-circle-question"></i><h6></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <?= LangManager::translate("core.btn.save") ?>
-                    </button>
+                <div>
+                    <label for="responsePerPage">Réponses par page :</label>
+                    <input type="number" class="input" id="responsePerPage" name="responsePerPage"
+                           value="<?= $responsePerPage ?>"
+                           required>
                 </div>
             </div>
-        </div>
-    </form>
-</section>
-
-
-<section class="row">
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h4>Réactions</h4>
-            </div>
-            <div class="position-absolute end-0">
-                <a type="button" data-bs-toggle="modal"
-                   data-bs-target="#add-reaction"
-                   class="text-bg-primary rounded-2 py-1 px-2"><?= LangManager::translate("core.btn.add") ?></a>
-            </div>
-            <!--
-            ----MODAL AJOUT ----
-            -->
-            <div class="modal fade text-left" id="add-reaction" tabindex="-1"
-                 role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary">
-                            <h5 class="modal-title white" id="myModalLabel160">Nouvelle réaction</h5>
-                        </div>
-                        <div class="modal-body">
-                            <form id="sendImage" action="settings/addreaction" method="post"
-                                  enctype="multipart/form-data">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
-                                <div class="mb-2">
-                                    <h6>Nom :</h6>
-                                    <input type="text" class="form-control" name="name">
-                                </div>
-                                <h6>Image :</h6>
-                                <input required class="mt-2 form-control form-control-sm" type="file" id="image"
-                                       name="image"
-                                       accept=".png,.jpg,.jpeg,.webp,.svg,.gif">
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                            </button>
-                            <button form="sendImage" type="submit" class="btn btn-primary" data-bs-dismiss="modal">
-                                <span class=""><?= LangManager::translate("core.btn.add") ?></span>
-                            </button>
-
-                        </div>
-                    </div>
+            <div class="grid-2 mt-4 mb-4">
+                <div>
+                    <label class="toggle">
+                        <p class="toggle-label">Doit être connecté pour voir les URL</p>
+                        <input type="checkbox" class="toggle-input" id="needConnectUrl" name="needConnectUrl" <?= $needConnectUrl ? 'checked' : '' ?>>
+                        <div class="toggle-slider"></div>
+                    </label>
+                </div>
+                <div>
+                    <label class="toggle">
+                        <p class="toggle-label">Effet clignotement sur les réponses</p>
+                        <input type="checkbox" class="toggle-input" id="blinkResponse" name="blinkResponse" <?= $blinkResponse ? 'checked' : '' ?>>
+                        <div class="toggle-slider"></div>
+                    </label>
                 </div>
             </div>
-            <div class="card-body">
-                <table class="table" id="table1">
-                    <thead>
-                    <tr>
-                        <th class="text-center">Image</th>
-                        <th class="text-center">Nom</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody class="text-center">
-                    <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
-                        <tr>
-                            <td><img alt="..." width="32px" src="<?= $feedback->getImage() ?>"></td>
-                            <td><?= $feedback->getName() ?></td>
-                            <td>
-                                <a type="button" data-bs-toggle="modal"
-                                   data-bs-target="#edit-prefix-<?= $feedback->getId() ?>">
-                                    <i class="text-primary fas fa-edit me-2"></i>
-                                </a>
-                                <a type="button" data-bs-toggle="modal"
-                                   data-bs-target="#delete-prefix-<?= $feedback->getId() ?>">
-                                    <i class="text-danger fas fa-trash-alt me-2"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <!--
-                        ----MODAL EDITION----
-                        -->
-                        <div class="modal fade text-left" id="edit-prefix-<?= $feedback->getId() ?>" tabindex="-1"
-                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary">
-                                        <h5 class="modal-title white" id="myModalLabel160">Édition
-                                            de <?= $feedback->getName() ?></h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="settings/editreaction" method="post"
-                                              enctype="multipart/form-data">
-                                            <?php (new SecurityManager())->insertHiddenToken() ?>
-                                            <div class="mb-2">
-                                                <h6>Nom :</h6>
-                                                <input type="text" class="form-control" name="name"
-                                                       value="<?= $feedback->getName() ?>">
-                                            </div>
-                                            <input name="id" hidden value="<?= $feedback->getId() ?>">
-                                            <h6>Image :</h6>
-                                            <input type="file" class="form-control" name="image" required>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                                        </button>
-                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.save") ?></span>
-                                        </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--
-                        ----MODAL SUPRESSION----
-                        -->
-                        <div class="modal fade text-left" id="delete-prefix-<?= $feedback->getId() ?>" tabindex="-1"
-                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger">
-                                        <h5 class="modal-title white" id="myModalLabel160">Supression
-                                            de <?= $feedback->getName() ?></h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        Supprimer cette réaction supprimera aussi tout les like donner avec cette
-                                        réaction !
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                                        </button>
-                                        <a href="settings/deletereaction/<?= $feedback->getId() ?>"
-                                           class="btn btn-danger ml-1">
-                                            <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-
+            <label for="needConnectText">Texte pour les non connecté :</label>
+            <textarea class="tinymce" id="needConnectText" name="needConnectText" data-tiny-height="100"><?= $needConnectText?></textarea>
+            <div class="mt-4">
+                <button type="submit" class="btn-center btn-primary">
+                    <?= LangManager::translate("core.btn.save") ?>
+                </button>
             </div>
-        </div>
+        </form>
     </div>
 
-
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h4>Prefix</h4>
-            </div>
-            <div class="position-absolute end-0">
-                <a type="button" data-bs-toggle="modal"
-                   data-bs-target="#add-prefix"
-                   class="text-bg-primary rounded-2 py-1 px-2"><?= LangManager::translate("core.btn.add") ?></a>
-            </div>
-            <!--
-            ----MODAL AJOUT ----
-            -->
-            <div class="modal fade text-left" id="add-prefix" tabindex="-1"
-                 role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary">
-                            <h5 class="modal-title white" id="myModalLabel160">Nouveau prefix</h5>
-                        </div>
-                        <div class="modal-body">
-                            <form action="settings/addprefix" method="post">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
-                                <div class="row">
-                                    <div class="col-12 col-lg-6 mt-2">
-                                        <h6>Nom :</h6>
-                                        <input type="text" class="form-control" name="prefixName" placeholder="Annonce"
-                                               required>
-                                    </div>
-                                    <div class="col-12 col-lg-6 mt-2">
-                                        <h6>Description :</h6>
-                                        <input type="text" class="form-control" name="prefixDescription" required>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-lg-6 mt-2">
-                                        <h6>Couleur du texte :</h6>
-                                        <input type="color" class="form-control" name="prefixTextColor" required>
-                                    </div>
-                                    <div class="col-12 col-lg-6 mt-2">
-                                        <h6>Couleur du fond :</h6>
-                                        <input type="color" class="form-control" name="prefixColor" required>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                            </button>
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
-                                <span class=""><?= LangManager::translate("core.btn.add") ?></span>
-                            </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <table class="table" id="table2">
-                    <thead>
-                    <tr>
-                        <th class="text-center">Nom</th>
-                        <th class="text-center">Description</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody class="text-center">
-                    <?php foreach ($prefixesModel->getPrefixes() as $prefix) : ?>
-                        <tr>
-                            <td><span class="px-2 rounded-2"
-                                      style="color: <?= $prefix->getTextColor() ?>; background: <?= $prefix->getColor() ?>"><?= $prefix->getName() ?></span>
-                            </td>
-                            <td><?= $prefix->getDescription() ?></td>
-                            <td>
-                                <a type="button" data-bs-toggle="modal"
-                                   data-bs-target="#edit-prefix-<?= $prefix->getId() ?>">
-                                    <i class="text-primary fas fa-edit me-2"></i>
-                                </a>
-                                <a type="button" data-bs-toggle="modal"
-                                   data-bs-target="#delete-prefix-<?= $prefix->getId() ?>">
-                                    <i class="text-danger fas fa-trash-alt me-2"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <!--
-                        ----MODAL EDITION----
-                        -->
-                        <div class="modal fade text-left" id="edit-prefix-<?= $prefix->getId() ?>" tabindex="-1"
-                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary">
-                                        <h5 class="modal-title white" id="myModalLabel160">Édition
-                                            de <?= $prefix->getName() ?></h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="settings/editprefix" method="post">
-                                            <?php (new SecurityManager())->insertHiddenToken() ?>
-                                            <input name="prefixId" hidden value="<?= $prefix->getId() ?>">
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Nom :</h6>
-                                                    <input type="text" class="form-control" name="prefixName"
-                                                           value="<?= $prefix->getName() ?>" placeholder="Annonce"
-                                                           required>
-                                                </div>
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Description :</h6>
-                                                    <input type="text" class="form-control" name="prefixDescription"
-                                                           value="<?= $prefix->getDescription() ?>" required>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Couleur du texte :</h6>
-                                                    <input type="color" class="form-control" name="prefixTextColor"
-                                                           value="<?= $prefix->getTextColor() ?>" required>
-                                                </div>
-
-                                                <div class="col-12 col-lg-6 mt-2">
-                                                    <h6>Couleur du fond :</h6>
-                                                    <input type="color" class="form-control" name="prefixColor"
-                                                           value="<?= $prefix->getColor() ?>" required>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                                        </button>
-                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.save") ?></span>
-                                        </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--
-                        ----MODAL SUPRESSION----
-                        -->
-                        <div class="modal fade text-left" id="delete-prefix-<?= $prefix->getId() ?>" tabindex="-1"
-                             role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger">
-                                        <h5 class="modal-title white" id="myModalLabel160">Supression
-                                            de <?= $prefix->getName() ?></h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        Supprimer ce préfixe l'enlèvera également de tout les topics auquel il est lié.
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                                            <span class=""><?= LangManager::translate("core.btn.close") ?></span>
-                                        </button>
-                                        <a href="settings/deleteprefix/<?= $prefix->getId() ?>"
-                                           class="btn btn-danger ml-1">
-                                            <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<section>
     <form action="settings/applyicons" method="post">
         <?php (new SecurityManager())->insertHiddenToken() ?>
         <div class="card">
-            <div class="card-header">
-                <h4>Icônes :</h4>
+            <h6>Icônes :</h6>
+            <div class="grid-2">
+                <div>
+                    <h6>Non lu :</h6>
+                    <div class="text-center mb-2">
+                        <i style="font-size : 3rem; color: <?= $iconNotReadColor ?>" class="<?= $iconNotRead ?>"></i>
+                    </div>
+                    <div class="icon-picker" data-id="icon_notRead" data-name="icon_notRead" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconNotRead ?>"></div>
+                    <input type="color" class="w-full" id="icon_notRead_color" name="icon_notRead_color" value="<?= $iconNotReadColor ?>" required>
+                </div>
+                <div>
+                    <h6>Important :</h6>
+                    <div class="text-center mb-2">
+                        <i style="font-size : 3rem; color: <?= $iconImportantColor ?>" class="<?= $iconImportant ?>"></i>
+                    </div>
+                    <div class="icon-picker" data-id="icon_important" data-name="icon_important" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconImportant ?>"></div>
+                    <input type="color" class="w-full" id="icon_important_color" name="icon_important_color" value="<?= $iconImportantColor ?>" required>
+                </div>
+                <div>
+                    <h6>Épinglé :</h6>
+                    <div class="text-center mb-2">
+                        <i style="font-size : 3rem; color: <?= $iconPinColor ?>" class="<?= $iconPin ?>"></i>
+                    </div>
+                    <div class="icon-picker" data-id="icon_pin" data-name="icon_pin" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconPin ?>"></div>
+                    <input type="color" class="w-full" id="icon_pin_color" name="icon_pin_color" value="<?= $iconPinColor ?>" required>
+                </div>
+                <div>
+                    <h6>Clos :</h6>
+                    <div class="text-center mb-2">
+                        <i style="font-size : 3rem; color: <?= $iconClosedColor ?>" class="<?= $iconClosed ?>"></i>
+                    </div>
+                    <div class="icon-picker" data-id="icon_closed" data-name="icon_closed" data-label="" data-placeholder="Sélectionner un icon" data-value="<?= $iconClosed ?>"></div>
+                    <input type="color" class="w-full" id="icon_closed_color" name="icon_closed_color" value="<?= $iconClosedColor ?>" required>
+                </div>
             </div>
-            <div class="card-body row">
-                <div class="col-12 col-lg-3 mb-4">
-                    <div class="card-in-card me-2 p-3">
-                        <h6>Non lu :</h6>
-                        <div class="text-center mb-2">
-                            <i style="font-size : 3rem;" class="<?= $iconNotRead ?>"></i>
-                        </div>
-                        <input type="text" class="form-control" name="icon_notRead" value="<?= $iconNotRead ?>"
-                               required>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3 mb-4">
-                    <div class="card-in-card me-2 p-3">
-                        <h6>Important :</h6>
-                        <div class="text-center mb-2">
-                            <i style="font-size : 3rem;" class="<?= $iconImportant ?>"></i>
-                        </div>
-                        <input type="text" class="form-control" name="icon_important" value="<?= $iconImportant ?>"
-                               required>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3 mb-4">
-                    <div class="card-in-card me-2 p-3">
-                        <h6>Épinglé :</h6>
-                        <div class="text-center mb-2">
-                            <i style="font-size : 3rem;" class="<?= $iconPin ?>"></i>
-                        </div>
-                        <input type="text" class="form-control" name="icon_pin" value="<?= $iconPin ?>" required>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-3 mb-4">
-                    <div class="card-in-card me-2 p-3">
-                        <h6>Clos :</h6>
-                        <div class="text-center mb-2">
-                            <i style="font-size : 3rem;" class="<?= $iconClosed ?>"></i>
-                        </div>
-                        <input type="text" class="form-control" name="icon_closed" value="<?= $iconClosed ?>"
-                               required>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary">
+                <div class="mt-4">
+                    <button type="submit" class="btn-center btn-primary">
                         <?= LangManager::translate("core.btn.save") ?>
                     </button>
                 </div>
             </div>
-        </div>
     </form>
-</section>
-
-<div class="position-absolute end-0">
-    <a type="button" data-bs-toggle="modal"
-       data-bs-target="#add-discord"
-       class="text-bg-primary rounded-2 py-1 px-2"><?= LangManager::translate("core.btn.add") ?></a>
 </div>
+
+<div class="grid-2 mt-4">
+    <div class="card">
+        <div class="lg:flex justify-between">
+            <h6>Réactions</h6>
+            <button type="button" data-modal-toggle="modal-add-reaction" class="btn-primary"><?= LangManager::translate("core.btn.add") ?></button>
+        </div>
+        <div class="table-container">
+            <table class="table" id="table1">
+                <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th class="text-center">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
+                    <tr>
+                        <td class="text-center mx-auto"><img alt="..." width="32px" src="<?= $feedback->getImage() ?>"></td>
+                        <td><?= $feedback->getName() ?></td>
+                        <td class="text-center space-x-2">
+                            <button type="button" data-modal-toggle="modal-edit-feedback-<?= $feedback->getId() ?>">
+                                <i class="text-info fas fa-edit"></i>
+                            </button>
+                            <button type="button" data-modal-toggle="modal-delete-feedback-<?= $feedback->getId() ?>">
+                                <i class="text-danger fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <!--
+                    ----MODAL EDITION----
+                    -->
+                    <div id="modal-edit-feedback-<?= $feedback->getId() ?>" class="modal-container">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h6>Édition de <?= $feedback->getName() ?></h6>
+                                <button type="button" data-modal-hide="modal-edit-feedback-<?= $feedback->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <form action="settings/editreaction" method="post"
+                                  enctype="multipart/form-data">
+                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <div class="modal-body">
+                                    <input name="id" hidden value="<?= $feedback->getId() ?>">
+                                    <label for="name">Nom :</label>
+                                    <input type="text" class="input" id="name" name="name"
+                                           value="<?= $feedback->getName() ?>">
+                                    <input type="file" class="" name="image" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn-primary">
+                                        <span class=""><?= LangManager::translate("core.btn.save") ?></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--
+                    ----MODAL SUPRESSION----
+                    -->
+                    <div id="modal-delete-feedback-<?= $feedback->getId() ?>" class="modal-container">
+                        <div class="modal">
+                            <div class="modal-header-danger">
+                                <h6>Supression
+                                    de <?= $feedback->getName() ?></h6>
+                                <button type="button" data-modal-hide="modal-delete-feedback-<?= $feedback->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                Supprimer cette réaction supprimera aussi tout les like donner avec cette
+                                réaction !
+                            </div>
+                            <div class="modal-footer">
+                                <a href="settings/deletereaction/<?= $feedback->getId() ?>"
+                                   class="btn-danger">
+                                    <?= LangManager::translate("core.btn.delete") ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="lg:flex justify-between">
+            <h6>Prefix</h6>
+            <button type="button" data-modal-toggle="modal-add-prefix" class="btn-primary"><?= LangManager::translate("core.btn.add") ?></button>
+        </div>
+
+        <div class="table-container">
+            <table class="table" id="table2">
+                <thead>
+                <tr>
+                    <th class="text-center">Nom</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Action</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <?php foreach ($prefixesModel->getPrefixes() as $prefix) : ?>
+                    <tr>
+                        <td><span class="px-2 rounded-2"
+                                  style="color: <?= $prefix->getTextColor() ?>; background: <?= $prefix->getColor() ?>"><?= $prefix->getName() ?></span>
+                        </td>
+                        <td><?= $prefix->getDescription() ?></td>
+                        <td class="space-x-2">
+                            <button type="button" data-modal-toggle="modal-edit-prefix-<?= $prefix->getId() ?>">
+                                <i class="text-info fas fa-edit"></i>
+                            </button>
+                            <button type="button" data-modal-toggle="modal-delete-prefix-<?= $prefix->getId() ?>">
+                                <i class="text-danger fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <!--
+                    ----MODAL EDITION----
+                    -->
+                    <div id="modal-edit-prefix-<?= $prefix->getId() ?>" class="modal-container">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h6>Édition de <?= $prefix->getName() ?></h6>
+                                <button type="button" data-modal-hide="modal-edit-prefix-<?= $prefix->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <form action="settings/editprefix" method="post">
+                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <div class="modal-body">
+                                    <input name="prefixId" hidden value="<?= $prefix->getId() ?>">
+                                    <div class="grid-2">
+                                        <div>
+                                            <label>Nom :</label>
+                                            <input type="text" class="input" name="prefixName"
+                                                   value="<?= $prefix->getName() ?>" placeholder="Annonce"
+                                                   required>
+                                        </div>
+                                        <div>
+                                            <label>Description :</label>
+                                            <input type="text" class="input" name="prefixDescription"
+                                                   value="<?= $prefix->getDescription() ?>" required>
+                                        </div>
+                                        <div>
+                                            <label>Couleur du texte :</label>
+                                            <input type="color" class="w-full" name="prefixTextColor"
+                                                   value="<?= $prefix->getTextColor() ?>" required>
+                                        </div>
+                                        <div>
+                                            <label>Couleur du fond :</label>
+                                            <input type="color" class="w-full" name="prefixColor"
+                                                   value="<?= $prefix->getColor() ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn-primary">
+                                        <?= LangManager::translate("core.btn.save") ?>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--
+                    ----MODAL SUPRESSION----
+                    -->
+                    <div id="modal-delete-prefix-<?= $prefix->getId() ?>" class="modal-container">
+                        <div class="modal">
+                            <div class="modal-header-danger">
+                                <h6>Supression
+                                    de <?= $prefix->getName() ?></h6>
+                                <button type="button" data-modal-hide="modal-delete-prefix-<?= $prefix->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                Supprimer ce préfixe l'enlèvera également de tout les topics auquel il est lié.
+                            </div>
+                            <div class="modal-footer">
+                                <a href="settings/deleteprefix/<?= $prefix->getId() ?>"
+                                   class="btn-danger">
+                                    <?= LangManager::translate("core.btn.delete") ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <!--
-----MODAL AJOUT ----
--->
-<div class="modal fade text-left" id="add-discord" tabindex="-1"
-     role="dialog" aria-labelledby="myModalLabel160" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title white" id="myModalLabel160">Nouveau prefix</h5>
-            </div>
+            ----MODAL AJOUT PREFIX ----
+            -->
+<div id="modal-add-prefix" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <h6>Nouveau prefix</h6>
+            <button type="button" data-modal-hide="modal-add-prefix"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form action="settings/addprefix" method="post">
+            <?php (new SecurityManager())->insertHiddenToken() ?>
             <div class="modal-body">
-                <form action="settings/addprefix" method="post">
-                    <?php (new SecurityManager())->insertHiddenToken() ?>
-                    <div class="row">
-                        <div class="col-12 col-lg-4 mt-2">
-                            <h6>Description :</h6>
-                            <input type="text" class="form-control" name="prefixName" placeholder="Annonce"
-                                   required>
-                        </div>
-                        <div class="col-12 col-lg-4 mt-2">
-                            <h6>URL du Webhook :</h6>
-                            <input type="text" class="form-control" name="prefixDescription" required>
-                        </div>
-                        <div class="col-12 col-lg-4 mt-2">
-                            <h6>Couleur du message :</h6>
-                            <input type="color" class="form-control" name="prefixTextColor" required>
-                        </div>
+                <div class="grid-2">
+                    <div>
+                        <label for="prefixName">Nom :</label>
+                        <input type="text" class="input" id="prefixName" name="prefixName" placeholder="Annonce"
+                               required>
                     </div>
-                    <div class="row">
-                        <div class="col-12 col-lg-6 mt-2">
-                            <h6>Action :</h6>
-                            <select class="form-select">
-                                <option>Un nouveau Forum dans une catégorie</option>
-                                <option>Un topic est poster dans un Forum</option>
-                                <option>Une réponse est poster dans un Topic</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label for="prefixDescription">Description :</label>
+                        <input type="text" class="input" id="prefixDescription" name="prefixDescription" required>
                     </div>
+                    <div>
+                        <label for="prefixTextColor">Couleur du texte :</label>
+                        <input type="color" class="w-full" id="prefixTextColor" name="prefixTextColor" required>
+                    </div>
+                    <div>
+                        <label for="prefixColor">Couleur du fond :</label>
+                        <input type="color" class="w-full" id="prefixColor" name="prefixColor" value="white" required>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
-                    <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                <button type="submit" class="btn-primary">
+                    <?= LangManager::translate("core.btn.add") ?>
                 </button>
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--
+            ----MODAL AJOUT REACT ----
+            -->
+<div id="modal-add-reaction" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <h6>Nouvelle réaction</h6>
+            <button type="button" data-modal-hide="modal-add-reaction"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="sendImage" action="settings/addreaction" method="post"
+              enctype="multipart/form-data">
+            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <div class="modal-body">
+                <label for="name">Nom :</label>
+                <input type="text" class="input" id="name" name="name">
+                <div class="drop-img-area" data-input-name="image"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn-primary">
                     <span class=""><?= LangManager::translate("core.btn.add") ?></span>
                 </button>
-                </form>
             </div>
-        </div>
+        </form>
     </div>
 </div>

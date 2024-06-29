@@ -54,12 +54,16 @@ class PublicForumController extends AbstractController
         $forumModel = forumModel::getInstance();
         $categoryModel = ForumCategoryModel::getInstance();
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"forumModel" => $forumModel, "categoryModel" => $categoryModel,"topics" => $topics, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category]);
+        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"forumModel" => $forumModel, "categoryModel" => $categoryModel,"topics" => $topics, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category , "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
         $view->view();
     }
 }

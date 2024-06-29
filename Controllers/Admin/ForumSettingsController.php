@@ -26,7 +26,7 @@ class ForumSettingsController extends AbstractController {
     #[Link("/settings", Link::GET, [], "/cmw-admin/forum")]
     public function adminSettingsView(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         $needConnectUrl = ForumSettingsModel::getInstance()->getOptionValue("needConnectUrl");
         $needConnectText = ForumSettingsModel::getInstance()->getOptionValue("needConnectText");
@@ -34,31 +34,40 @@ class ForumSettingsController extends AbstractController {
         $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
         $topicPerPage = ForumSettingsModel::getInstance()->getOptionValue("topicPerPage");
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
+        $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
+        $iconPinColor = ForumSettingsModel::getInstance()->getOptionValue("IconPinColor");
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue("IconClosed");
+        $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
         $prefixesModel = ForumPrefixModel::getInstance();
         $feedbackModel = ForumFeedbackModel::getInstance();
 
         View::createAdminView("Forum", "settings")
-            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed])
+            ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
             ->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/medium.js")
-            ->addStyle("Admin/Resources/Vendors/Simple-datatables/style.css","Admin/Resources/Assets/Css/Pages/simple-datatables.css")
-            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js","Admin/Resources/Assets/Js/Pages/simple-datatables.js")
+            ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
+                "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
             ->view();
     }
 
     #[NoReturn] #[Link("/settings/applyicons", Link::POST, [], "/cmw-admin/forum")]
     private function settingsIconsPost(): void
         {
-            UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+            UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
             $iconNotRead = filter_input(INPUT_POST, "icon_notRead");
+            $iconNotReadColor = filter_input(INPUT_POST, "icon_notRead_color");
             $iconImportant = filter_input(INPUT_POST, "icon_important");
+            $iconImportantColor = filter_input(INPUT_POST, "icon_important_color");
             $iconPin = filter_input(INPUT_POST, "icon_pin");
+            $iconPinColor = filter_input(INPUT_POST, "icon_pin_color");
             $iconClosed = filter_input(INPUT_POST, "icon_closed");
+            $iconClosedColor = filter_input(INPUT_POST, "icon_closed_color");
 
-            ForumSettingsModel::getInstance()->updateIcons($iconNotRead,$iconImportant,$iconPin,$iconClosed);
+            ForumSettingsModel::getInstance()->updateIcons($iconNotRead,$iconImportant,$iconPin,$iconClosed,$iconNotReadColor,$iconImportantColor,$iconPinColor,$iconClosedColor);
 
             Redirect::redirectPreviousRoute();
         }
@@ -66,7 +75,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/general", Link::POST, [], "/cmw-admin/forum")]
     private function settingsResponsePerPagePost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         $responsePerPage = filter_input(INPUT_POST, "responsePerPage");
         $topicPerPage = filter_input(INPUT_POST, "topicPerPage");
@@ -87,7 +96,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/addprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddPrefixPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         [$name, $color, $textColor, $description] = Utils::filterInput("prefixName", "prefixColor", "prefixTextColor", "prefixDescription");
 
@@ -99,7 +108,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/editprefix", Link::POST, [], "/cmw-admin/forum")]
     private function settingsEditPrefixPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
         [$id, $name, $color, $textColor, $description] = Utils::filterInput("prefixId", "prefixName", "prefixColor", "prefixTextColor", "prefixDescription");
 
@@ -111,7 +120,7 @@ class ForumSettingsController extends AbstractController {
     #[Link("/settings/deleteprefix/:prefixId", Link::GET, [], "/cmw-admin/forum")]
     public function settingsDeletePrefix(Request $request, string $prefixId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         if (ForumPrefixModel::getInstance()->deletePrefix($prefixId)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
@@ -124,7 +133,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/addreaction", Link::POST, [], "/cmw-admin/forum")]
     private function settingsAddReactionPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         [$name] = Utils::filterInput("name");
         $image = $_FILES['image'];
 
@@ -136,7 +145,7 @@ class ForumSettingsController extends AbstractController {
     #[NoReturn] #[Link("/settings/editreaction", Link::POST, [], "/cmw-admin/forum")]
     private function settingsEditReactionPost(): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         [$name, $id] = Utils::filterInput("name", "id");
         $image = $_FILES['image'];
 
@@ -148,7 +157,7 @@ class ForumSettingsController extends AbstractController {
     #[Link("/settings/deletereaction/:reactionId", Link::GET, [], "/cmw-admin/forum")]
     private function settingsDeleteReaction(Request $request, int $reactionId): void
     {
-        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.list");
+        UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         if (ForumFeedbackModel::getInstance()->removeFeedback($reactionId)) {
 
             Flash::send("success", LangManager::translate("core.toaster.success"),
