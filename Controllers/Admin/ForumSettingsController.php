@@ -48,7 +48,7 @@ class ForumSettingsController extends AbstractController {
             ->addVariableList(["prefixesModel" => $prefixesModel, "feedbackModel" => $feedbackModel, "blinkResponse" => $blinkResponse,"needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText, "topicPerPage" => $topicPerPage, "responsePerPage" => $responsePerPage, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
             ->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "Admin/Resources/Vendors/Tinymce/Config/medium.js")
             ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
-            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/simple-datatables.js",
                 "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
             ->view();
     }

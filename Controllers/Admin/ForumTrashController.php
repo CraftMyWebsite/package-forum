@@ -29,7 +29,7 @@ class ForumTrashController extends AbstractController
         View::createAdminView("Forum", "trash")
             ->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => ForumCategoryModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "topicModel" => ForumTopicModel::getInstance()])
             ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
-            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/Umd/simple-datatables.js",
+            ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/simple-datatables.js",
                 "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
             ->view();
     }
