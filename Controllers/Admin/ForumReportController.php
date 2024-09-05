@@ -6,7 +6,7 @@ use CMW\Controller\Users\UsersController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
+
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumReportedModel;
@@ -23,7 +23,7 @@ use JetBrains\PhpStorm\NoReturn;
  */
 class ForumReportController extends AbstractController {
     #[Link("/report", Link::GET, [], "/cmw-admin/forum")]
-    public function adminReportView(): void
+    private function adminReportView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
@@ -38,7 +38,7 @@ class ForumReportController extends AbstractController {
     }
 
     #[NoReturn] #[Link("/report/unReportTopic/:topicId", Link::GET, ['.*?'], "/cmw-admin/forum")]
-    public function adminUnReportTopic(Request $request, int $topicId): void
+    private function adminUnReportTopic(int $topicId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
@@ -50,7 +50,7 @@ class ForumReportController extends AbstractController {
     }
 
     #[NoReturn] #[Link("/report/unReportResponse/:responseId", Link::GET, ['.*?'], "/cmw-admin/forum")]
-    public function adminUnReportResponse(Request $request, int $responseId): void
+    private function adminUnReportResponse(int $responseId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
@@ -62,7 +62,7 @@ class ForumReportController extends AbstractController {
     }
 
     #[NoReturn] #[Link("/report/removeTopic/:topicId", Link::GET, ['.*?'], "/cmw-admin/forum")]
-    public function adminRemoveTopic(Request $request, int $topicId): void
+    private function adminRemoveTopic(int $topicId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 
@@ -74,7 +74,7 @@ class ForumReportController extends AbstractController {
     }
 
     #[NoReturn] #[Link("/report/removeResponse/:responseId", Link::GET, ['.*?'], "/cmw-admin/forum")]
-    public function adminRemoveResponse(Request $request, int $responseId): void
+    private function adminRemoveResponse(int $responseId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.report");
 

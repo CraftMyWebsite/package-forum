@@ -1,11 +1,11 @@
 <?php
+
 namespace CMW\Controller\Forum\Public;
 
 use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -24,7 +24,7 @@ use CMW\Utils\Redirect;
 class PublicForumController extends AbstractController
 {
     #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage", Link::GET, ['.*?'], "/forum")]
-    public function publicForumView(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
+    private function publicForumView(string $catSlug, string $forumSlug, int $forumPage): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -33,7 +33,16 @@ class PublicForumController extends AbstractController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
@@ -45,8 +54,8 @@ class PublicForumController extends AbstractController
         }
 
         $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("topicPerPage");
-        $offset = ($forumPage-1)*$responsePerPage;
-        $totalPage = strval(ceil( ForumModel::getInstance()->countTopicInForum($forum->getId())/$responsePerPage));
+        $offset = ($forumPage - 1) * $responsePerPage;
+        $totalPage = (string)ceil(ForumModel::getInstance()->countTopicInForum($forum->getId()) / $responsePerPage);
         $topics = ForumTopicModel::getInstance()->getTopicByForumAndOffset($forum->getId(), $offset, $responsePerPage);
         preg_match("/\/fp(\d+)/", $_SERVER['REQUEST_URI'], $matches);
         $currentPage = $matches[1];
@@ -63,7 +72,7 @@ class PublicForumController extends AbstractController
         $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
 
         $view = new View("Forum", "forum");
-        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"forumModel" => $forumModel, "categoryModel" => $categoryModel,"topics" => $topics, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category , "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
+        $view->addVariableList(["currentPage" => $currentPage, "totalPage" => $totalPage, "forumModel" => $forumModel, "categoryModel" => $categoryModel, "topics" => $topics, "forum" => $forum, "topicModel" => ForumTopicModel::getInstance(), "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
         $view->view();
     }
 }

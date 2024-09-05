@@ -1,11 +1,12 @@
 <?php
+
 namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Package\AbstractController;
+use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
-use CMW\Manager\Router\Link;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumResponseModel;
@@ -24,7 +25,7 @@ use JetBrains\PhpStorm\NoReturn;
 class ForumTopicController extends AbstractController
 {
     #[Link("/topics", Link::GET, [], "/cmw-admin/forum")]
-    public function adminTopicView(): void
+    private function adminTopicView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.topics");
 
@@ -33,7 +34,7 @@ class ForumTopicController extends AbstractController
         $topicModel = ForumTopicModel::getInstance();
         $responseModel = ForumResponseModel::getInstance();
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue("IconNotRead");
-        $iconNotReadColor =  ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
+        $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue("IconNotReadColor");
         $iconImportant = ForumSettingsModel::getInstance()->getOptionValue("IconImportant");
         $iconImportantColor = ForumSettingsModel::getInstance()->getOptionValue("IconImportantColor");
         $iconPin = ForumSettingsModel::getInstance()->getOptionValue("IconPin");
@@ -43,7 +44,7 @@ class ForumTopicController extends AbstractController
         $ForumRoles = ForumPermissionRoleModel::getInstance()->getRole();
 
         View::createAdminView("Forum", "topics")
-            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel,"topicModel" => $topicModel, "responseModel" => $responseModel,"iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
+            ->addVariableList(["forumModel" => $forumModel, "categoryModel" => $categoryModel, "topicModel" => $topicModel, "responseModel" => $responseModel, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "ForumRoles" => $ForumRoles, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor])
             ->addStyle("Admin/Resources/Assets/Css/simple-datatables.css")
             ->addScriptAfter("Admin/Resources/Vendors/Simple-datatables/simple-datatables.js",
                 "Admin/Resources/Vendors/Simple-datatables/config-datatables.js")
@@ -51,7 +52,7 @@ class ForumTopicController extends AbstractController
     }
 
     #[NoReturn] #[Link("/topics", Link::POST, ['.*?'], "/cmw-admin/forum")]
-    public function adminEditTopicPost(): void
+    private function adminEditTopicPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.topics");
 

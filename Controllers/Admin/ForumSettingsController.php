@@ -6,7 +6,7 @@ use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
+
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumFeedbackModel;
@@ -24,7 +24,7 @@ use JetBrains\PhpStorm\NoReturn;
  */
 class ForumSettingsController extends AbstractController {
     #[Link("/settings", Link::GET, [], "/cmw-admin/forum")]
-    public function adminSettingsView(): void
+    private function adminSettingsView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
 
@@ -118,7 +118,7 @@ class ForumSettingsController extends AbstractController {
     }
 
     #[Link("/settings/deleteprefix/:prefixId", Link::GET, [], "/cmw-admin/forum")]
-    public function settingsDeletePrefix(Request $request, string $prefixId): void
+    private function settingsDeletePrefix(string $prefixId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         if (ForumPrefixModel::getInstance()->deletePrefix($prefixId)) {
@@ -155,7 +155,7 @@ class ForumSettingsController extends AbstractController {
     }
 
     #[Link("/settings/deletereaction/:reactionId", Link::GET, [], "/cmw-admin/forum")]
-    private function settingsDeleteReaction(Request $request, int $reactionId): void
+    private function settingsDeleteReaction(int $reactionId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.settings");
         if (ForumFeedbackModel::getInstance()->removeFeedback($reactionId)) {

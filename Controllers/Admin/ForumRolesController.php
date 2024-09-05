@@ -1,4 +1,5 @@
 <?php
+
 namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Users\UsersController;
@@ -6,7 +7,6 @@ use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumPermissionRoleModel;
@@ -26,7 +26,7 @@ use JetBrains\PhpStorm\NoReturn;
 class ForumRolesController extends AbstractController
 {
     #[Link("/roles", Link::GET, [], "/cmw-admin/forum")]
-    public function forumRoleView(): void
+    private function forumRoleView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -45,7 +45,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[Link("/roles/add", Link::GET, [], "/cmw-admin/forum")]
-    public function forumRoleAddView(): void
+    private function forumRoleAddView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -54,7 +54,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[NoReturn] #[Link("/roles/delete/:roleId", Link::GET, [], "/cmw-admin/forum")]
-    public function deleteRole(Request $request, int $roleId): void
+    private function deleteRole(int $roleId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -74,6 +74,11 @@ class ForumRolesController extends AbstractController
         [$name, $weight, $description] = Utils::filterInput("name", "weight", "description");
 
         $role = ForumPermissionRoleModel::getInstance()->addRole($name, $weight, $description);
+
+        if (!$role) {
+            Flash::send(Alert::ERROR, "Forum", "Le rôle n'a pas pu être ajouté !");
+            Redirect::redirectPreviousRoute();
+        }
 
         /*Permissions*/
         $roleId = $role->getId();
@@ -167,8 +172,8 @@ class ForumRolesController extends AbstractController
             $user_add_file,
             $user_download_file];
 
-        for ($i = 0; $i < count($permissionsName); $i++) {
-            $checkbox = $permissionsName[$i];
+        foreach ($permissionsName as $i => $iValue) {
+            $checkbox = $iValue;
             $_permissionRoleInstance = ForumPermissionRoleModel::getInstance();
             if ($checkbox !== null) {
                 $_permissionRoleInstance->addRolePermissions($roleId, $i + 1);
@@ -181,7 +186,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[NoReturn] #[Link("/roles/edit/:role_id", Link::POST, [], "/cmw-admin/forum")]
-    private function forumRoleEditPost(Request $request, int $roleId): void
+    private function forumRoleEditPost(int $roleId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -192,63 +197,63 @@ class ForumRolesController extends AbstractController
 
         /*Permissions*/
         [$operator,
-        $user_view_forum,
-        $user_view_topic,
-        $user_create_topic,
-        $user_create_topic_tag,
-        $user_create_pool,
-        $user_edit_topic,
-        $user_edit_tag,
-        $user_edit_pool,
-        $user_remove_topic,
-        $user_react_topic,
-        $user_change_react_topic,
-        $user_remove_react_topic,
-        $user_response_topic,
-        $user_response_react,
-        $user_response_change_react,
-        $user_response_remove_react,
-        $admin_change_topic_name,
-        $admin_change_topic_tag,
-        $admin_change_topic_prefix,
-        $admin_set_important,
-        $admin_set_pin,
-        $admin_set_closed,
-        $admin_move_topic,
-        $admin_bypass_forum_disallow_topics,
-        $user_remove_response,
-        $user_edit_response,
-        $user_add_file,
-        $user_download_file] = Utils::filterInput(
-        "operator",
-        "user_view_forum",
-        "user_view_topic",
-        "user_create_topic",
-        "user_create_topic_tag",
-        "user_create_pool",
-        "user_edit_topic",
-        "user_edit_tag",
-        "user_edit_pool",
-        "user_remove_topic",
-        "user_react_topic",
-        "user_change_react_topic",
-        "user_remove_react_topic",
-        "user_response_topic",
-        "user_response_react",
-        "user_response_change_react",
-        "user_response_remove_react",
-        "admin_change_topic_name",
-        "admin_change_topic_tag",
-        "admin_change_topic_prefix",
-        "admin_set_important",
-        "admin_set_pin",
-        "admin_set_closed",
-        "admin_move_topic",
-        "admin_bypass_forum_disallow_topics",
-        "user_remove_response",
-        "user_edit_response",
-        "user_add_file",
-        "user_download_file");
+            $user_view_forum,
+            $user_view_topic,
+            $user_create_topic,
+            $user_create_topic_tag,
+            $user_create_pool,
+            $user_edit_topic,
+            $user_edit_tag,
+            $user_edit_pool,
+            $user_remove_topic,
+            $user_react_topic,
+            $user_change_react_topic,
+            $user_remove_react_topic,
+            $user_response_topic,
+            $user_response_react,
+            $user_response_change_react,
+            $user_response_remove_react,
+            $admin_change_topic_name,
+            $admin_change_topic_tag,
+            $admin_change_topic_prefix,
+            $admin_set_important,
+            $admin_set_pin,
+            $admin_set_closed,
+            $admin_move_topic,
+            $admin_bypass_forum_disallow_topics,
+            $user_remove_response,
+            $user_edit_response,
+            $user_add_file,
+            $user_download_file] = Utils::filterInput(
+            "operator",
+            "user_view_forum",
+            "user_view_topic",
+            "user_create_topic",
+            "user_create_topic_tag",
+            "user_create_pool",
+            "user_edit_topic",
+            "user_edit_tag",
+            "user_edit_pool",
+            "user_remove_topic",
+            "user_react_topic",
+            "user_change_react_topic",
+            "user_remove_react_topic",
+            "user_response_topic",
+            "user_response_react",
+            "user_response_change_react",
+            "user_response_remove_react",
+            "admin_change_topic_name",
+            "admin_change_topic_tag",
+            "admin_change_topic_prefix",
+            "admin_set_important",
+            "admin_set_pin",
+            "admin_set_closed",
+            "admin_move_topic",
+            "admin_bypass_forum_disallow_topics",
+            "user_remove_response",
+            "user_edit_response",
+            "user_add_file",
+            "user_download_file");
 
         $permissionsName = [
             $operator,
@@ -281,13 +286,13 @@ class ForumRolesController extends AbstractController
             $user_add_file,
             $user_download_file];
 
-        for ($i = 0; $i < count($permissionsName); $i++) {
-            $checkbox = $permissionsName[$i];
+        foreach ($permissionsName as $i => $iValue) {
+            $checkbox = $iValue;
             $_permissionRoleInstance = ForumPermissionRoleModel::getInstance();
             if ($_permissionRoleInstance->roleHasPerm($roleId, $i + 1) && $checkbox === null) {
                 $_permissionRoleInstance->removeRolePermissions($roleId, $i + 1);
             } elseif (!$_permissionRoleInstance->roleHasPerm($roleId, $i + 1) && $checkbox !== null) {
-                $_permissionRoleInstance->addRolePermissions($roleId,$i + 1);
+                $_permissionRoleInstance->addRolePermissions($roleId, $i + 1);
             }
         }
 
@@ -297,7 +302,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[Link("/roles/edit/:role_id", Link::GET, [], "/cmw-admin/forum")]
-    public function forumRoleEditView(Request $request, int $role_id): void
+    private function forumRoleEditView(int $role_id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -321,7 +326,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[NoReturn] #[Link("/roles/user_role/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
-    private function forumUserRoleSettings(Request $request, int $userId): void
+    private function forumUserRoleSettings(int $userId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -333,7 +338,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[Link("/roles/set_default/:id/:question", Link::GET, ["id" => "[0-9]+"], "/cmw-admin/forum")]
-    #[NoReturn] private function forumRolesSetDefault(Request $request, int $id, string $question): void
+    #[NoReturn] private function forumRolesSetDefault(int $id, string $question): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -346,7 +351,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[NoReturn] #[Link("/roles/block/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
-    private function forumBlockUser(Request $request, int $userId): void
+    private function forumBlockUser(int $userId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 
@@ -358,7 +363,7 @@ class ForumRolesController extends AbstractController
     }
 
     #[NoReturn] #[Link("/roles/unblock/:userId", Link::POST, ["userId" => "[0-9]+"], "/cmw-admin/forum")]
-    private function forumUnblockUser(Request $request, int $userId): void
+    private function forumUnblockUser(int $userId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.roles");
 

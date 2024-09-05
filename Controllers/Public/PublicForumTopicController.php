@@ -1,14 +1,13 @@
 <?php
+
 namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\EditorController;
 use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -38,7 +37,7 @@ class PublicForumTopicController extends AbstractController
 {
 
     #[Link("/search", Link::POST, ['.*?'], "/forum")]
-    public function publicForumResearch(): void
+    private function publicForumResearch(): void
     {
         [$for] = Utils::filterInput('for');
 
@@ -54,20 +53,29 @@ class PublicForumTopicController extends AbstractController
         $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
 
         $view = new View("Forum", "search");
-        $view->addVariableList(["forumModel" => $forumModel, "results" => $results, "for" => $for, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed ,  "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor, "responseModel" => ForumResponseModel::getInstance()]);
+        $view->addVariableList(["forumModel" => $forumModel, "results" => $results, "for" => $for, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor, "responseModel" => ForumResponseModel::getInstance()]);
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
 
-
     #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/add", Link::GET, ['.*?'], "/forum")]
-    public function publicForumAddTopicView(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
+    private function publicForumAddTopicView(string $catSlug, string $forumSlug, int $forumPage): void
     {
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
+
         $forumModel = forumModel::getInstance();
 
         if (!$category->isUserAllowed()) {
@@ -83,9 +91,9 @@ class PublicForumTopicController extends AbstractController
             Redirect::redirectPreviousRoute();
         }
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()->getId();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        $userId = UsersModel::getCurrentUser()?->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
 
@@ -99,19 +107,28 @@ class PublicForumTopicController extends AbstractController
         $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue("IconClosedColor");
 
         $view = new View("Forum", "addTopic");
-        $view->addVariableList(["forumModel" => $forumModel, "forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category ,  "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
+        $view->addVariableList(["forumModel" => $forumModel, "forum" => $forum, "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "category" => $category, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "App/Package/Forum/Views/Assets/Js/tinyConfig.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/add", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAddTopicPost(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
+    private function publicForumAddTopicPost(string $catSlug, string $forumSlug, int $forumPage): void
     {
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_create_topic");
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
@@ -125,10 +142,10 @@ class PublicForumTopicController extends AbstractController
             Flash::send(Alert::ERROR, "Forum", "Ce forum n'autorise pas la création de nouveau topics");
             Redirect::redirectPreviousRoute();
         }
-        $userId = UsersModel::getCurrentUser()->getId();
+        $userId = UsersModel::getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
 
@@ -150,13 +167,18 @@ class PublicForumTopicController extends AbstractController
         $res = ForumTopicModel::getInstance()->createTopic($name, $content, $userId, $forum->getId(),
             (is_null($disallowReplies) ? 0 : 1), (is_null($important) ? 0 : 1), (is_null($pin) ? 0 : 1));
 
+        if (!$res) {
+            Flash::send(Alert::ERROR, "Erreur", "Impossible de créer le topic.");
+            Redirect::redirectPreviousRoute();
+        }
+
         $followTopic = empty($_POST['followTopic']) ? 0 : 1;
         if ($followTopic === 1) {
             ForumFollowedModel::getInstance()->addFollower($res->getId(), $userId);
         }
 
         if (is_null($res)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
+            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             Redirect::redirectPreviousRoute();
         }
@@ -176,15 +198,16 @@ class PublicForumTopicController extends AbstractController
             ForumTopicModel::getInstance()->addTag($tag, $res->getId());
         }
 
-        Flash::send("success", LangManager::translate("core.toaster.success"),
+        Flash::send(Alert::ERROR, LangManager::translate("core.toaster.success"),
             LangManager::translate("forum.topic.add.success"));
 
-        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()->getUserPicture()->getImage(), UsersModel::getCurrentUser()->getPseudo());
+        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), "test", UsersModel::getCurrentUser()?->getUserPicture()?->getImage(), UsersModel::getCurrentUser()?->getPseudo());
 
-        header("location: ".$forum->getLink());
+        header("location: " . $forum->getLink());
     }
+
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicView(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicView(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -193,8 +216,22 @@ class PublicForumTopicController extends AbstractController
         }
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
+
+        if (!$topic) {
+            Redirect::errorPage(404);
+        }
+
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
@@ -206,8 +243,8 @@ class PublicForumTopicController extends AbstractController
         }
 
         $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
-        $offset = ($page-1)*$responsePerPage;
-        $totalPage = strval(ceil(ForumResponseModel::getInstance()->countResponseInTopic($topic->getId())/$responsePerPage));
+        $offset = ($page - 1) * $responsePerPage;
+        $totalPage = (string)ceil(ForumResponseModel::getInstance()->countResponseInTopic($topic->getId()) / $responsePerPage);
         preg_match("/\/p(\d+)/", $_SERVER['REQUEST_URI'], $matches);
         $currentPage = $matches[1];
 
@@ -236,34 +273,55 @@ class PublicForumTopicController extends AbstractController
         $blinkResponse = ForumSettingsModel::getInstance()->getOptionValue("blinkResponse");
 
         $view = new View("Forum", "topic");
-        $view->addVariableList(["currentPage" => $currentPage,"totalPage" => $totalPage,"responses" => $responses,"forumModel" => $forumModel,"currentUser" => $currentUser, "topic" => $topic, "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(), "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category , "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
+        $view->addVariableList(["currentPage" => $currentPage, "totalPage" => $totalPage, "responses" => $responses,
+            "forumModel" => $forumModel, "currentUser" => $currentUser, "topic" => $topic,
+            "feedbackModel" => $feedbackModel, "responseModel" => ForumResponseModel::getInstance(),
+            "iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin,
+            "iconClosed" => $iconClosed, "forum" => $forum, "category" => $category,
+            "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor,
+            "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor]);
         if ($needConnectUrl) {
             $view->addPhpAfter("App/Package/Forum/Views/Assets/Php/needConnect.php");
         }
         if ($blinkResponse) {
             $view->addPhpAfter("App/Package/Forum/Views/Assets/Php/blinkResponse.php");
         }
-        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "App/Package/Forum/Views/Assets/Js/tinyConfig.js");
-        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css", "Admin/Resources/Vendors/Prismjs/Style/" . EditorController::getCurrentStyle());
+        $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js",
+            "App/Package/Forum/Views/Assets/Js/tinyConfig.js");
+        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/edit", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicEdit(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicEdit(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de modifier ce topic.");
             Redirect::redirect('login');
         }
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()->getId();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        $userId = UsersModel::getCurrentUser()?->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(
+                Alert::ERROR, "
+                Forum",
+                "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason(),
+            );
             Redirect::redirectPreviousRoute();
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -275,31 +333,45 @@ class PublicForumTopicController extends AbstractController
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()) {
+        if (!$topic) {
+            Redirect::errorPage(404);
+        }
+
+        if (UsersModel::getCurrentUser()?->getId() !== $topic->getUser()->getId()) {
             Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
 
         $view = new View("Forum", "editTopic");
-        $view->addVariableList(["topic" => $topic,"category" => $category,"forum" => $forum]);
+        $view->addVariableList(["topic" => $topic, "category" => $category, "forum" => $forum]);
         $view->addScriptBefore("Admin/Resources/Vendors/Tinymce/tinymce.min.js", "App/Package/Forum/Views/Assets/Js/tinyConfig.js");
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/edit", Link::POST, ['.*?'], "/forum")]
-    public function publicTopicEditPost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicEditPost(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()->getId();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        $userId = UsersModel::getCurrentUser()?->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         [$topicId, $name, $content, $tags] = Utils::filterInput('topicId', 'name', 'content', 'tags');
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -311,13 +383,13 @@ class PublicForumTopicController extends AbstractController
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if (UsersModel::getCurrentUser()->getId() !== $topic->getUser()->getId()) {
+        if (UsersModel::getCurrentUser()?->getId() !== $topic?->getUser()->getId()) {
             Flash::send(Alert::ERROR, "Erreur", "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect("forum");
         }
 
         if (is_null($topic) || Utils::containsNullValue($name, $content)) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
+            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             Website::refresh();
             return;
@@ -341,14 +413,14 @@ class PublicForumTopicController extends AbstractController
             ForumTopicModel::getInstance()->addTag($tag, $topicId);
         }
 
-        Flash::send("success", LangManager::translate("core.toaster.success"),
+        Flash::send(Alert::ERROR, LangManager::translate("core.toaster.success"),
             "Topic mis à jour");
 
         header("location: ../../{$topic->getSlug()}/p1");
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicAddFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
+    private function publicTopicAddFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -356,7 +428,17 @@ class PublicForumTopicController extends AbstractController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -366,9 +448,9 @@ class PublicForumTopicController extends AbstractController
             Redirect::redirect("forum");
         }
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()->getId();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        $userId = UsersModel::getCurrentUser()?->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_react_topic");
@@ -380,7 +462,7 @@ class PublicForumTopicController extends AbstractController
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/un_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicDeleteFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
+    private function publicTopicDeleteFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -388,7 +470,17 @@ class PublicForumTopicController extends AbstractController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -400,9 +492,9 @@ class PublicForumTopicController extends AbstractController
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_remove_react_topic");
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()->getId();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        $userId = UsersModel::getCurrentUser()?->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         $user = usersModel::getInstance()::getCurrentUser();
@@ -412,7 +504,7 @@ class PublicForumTopicController extends AbstractController
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/change_react/:topicId/:feedbackId", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicChangeFeedback(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
+    private function publicTopicChangeFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
@@ -420,7 +512,17 @@ class PublicForumTopicController extends AbstractController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -432,9 +534,9 @@ class PublicForumTopicController extends AbstractController
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_change_react_topic");
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()->getId();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        $userId = UsersModel::getCurrentUser()?->getId();
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         $user = usersModel::getInstance()::getCurrentUser();

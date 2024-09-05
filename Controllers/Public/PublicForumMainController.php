@@ -1,13 +1,14 @@
 <?php
+
 namespace CMW\Controller\Forum\Public;
 
 use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Manager\Package\AbstractController;
+use CMW\Manager\Router\Link;
+use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumSettingsModel;
-use CMW\Manager\Router\Link;
-use CMW\Manager\Views\View;
 
 /**
  * Class: @PublicForumMainController
@@ -18,7 +19,7 @@ use CMW\Manager\Views\View;
 class PublicForumMainController extends AbstractController
 {
     #[Link("/", Link::GET, [], "/forum")]
-    public function publicBaseView(): void
+    private function publicBaseView(): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 

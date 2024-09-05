@@ -1,17 +1,17 @@
 <?php
+
 namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
+use CMW\Manager\Router\Link;
+use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
-use CMW\Manager\Views\View;
-use CMW\Manager\Router\Link;
-use CMW\Manager\Flash\Flash;
 
 /**
  * Class: @ForumTrashController
@@ -22,7 +22,7 @@ use CMW\Manager\Flash\Flash;
 class ForumTrashController extends AbstractController
 {
     #[Link("/trash", Link::GET, [], "/cmw-admin/forum")]
-    public function adminListTrashView(): void
+    private function adminListTrashView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
@@ -35,7 +35,7 @@ class ForumTrashController extends AbstractController
     }
 
     #[Link("/trash/deletereply/:replyId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicReplyDelete(Request $request, int $replyId): void
+    private function publicReplyDelete(int $replyId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
@@ -49,7 +49,7 @@ class ForumTrashController extends AbstractController
     }
 
     #[Link("/trash/restorereply/:replyId/:topicId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicReplyRestore(Request $request, int $replyId, int $topicId): void
+    private function publicReplyRestore(int $replyId, int $topicId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
@@ -61,11 +61,11 @@ class ForumTrashController extends AbstractController
                 Flash::send("success", LangManager::translate("core.toaster.success"), LangManager::translate("forum.reply.delete.success"));
                 header("location: ../..");
             }
-        }  
+        }
     }
 
     #[Link("/trash/deletetopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicTopicDelete(Request $request, int $topicId): void
+    private function publicTopicDelete(int $topicId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 
@@ -78,7 +78,7 @@ class ForumTrashController extends AbstractController
     }
 
     #[Link("/trash/restoretopic/:topicId", Link::GET, [], "/cmw-admin/forum")]
-    public function publicTopicRestore(Request $request, int $topicId): void
+    private function publicTopicRestore(int $topicId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.trash");
 

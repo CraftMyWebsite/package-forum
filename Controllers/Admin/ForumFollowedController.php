@@ -8,7 +8,7 @@ use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
+
 use CMW\Manager\Router\Link;
 use CMW\Model\Forum\ForumFollowedModel;
 use CMW\Model\Forum\ForumTopicModel;
@@ -34,7 +34,7 @@ class ForumFollowedController extends AbstractController
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/follow", Link::GET, ["id" => "[0-9]+"], "/forum")]
-    private function followThisTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    private function followThisTopic(string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de suivre topic.");
@@ -52,7 +52,7 @@ class ForumFollowedController extends AbstractController
     }
 
     #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/unfollow", Link::GET, ["id" => "[0-9]+"], "/forum")]
-    private function unfollowThisTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug): void
+    private function unfollowThisTopic(string $catSlug, string $forumSlug, string $topicSlug): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de suivre topic.");

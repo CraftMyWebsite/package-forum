@@ -1,4 +1,5 @@
 <?php
+
 namespace CMW\Controller\Forum\Public;
 
 
@@ -8,7 +9,6 @@ use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -29,10 +29,11 @@ use CMW\Utils\Website;
  * @desc You can create "reportTopic.view.php" or "reportResponse.view.php" in Theme/Views/Forum/** or directly use à modal and call action"" form > POST
  * @version 1.0
  */
-class PublicForumReportController extends AbstractController {
+class PublicForumReportController extends AbstractController
+{
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportTopic/:topicId", Link::GET, ['.*?'], "/forum")]
-    public function publicReportTopic(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId): void
+    private function publicReportTopic(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -49,8 +50,9 @@ class PublicForumReportController extends AbstractController {
         $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
         $view->view();
     }
+
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId", Link::GET, ['.*?'], "/forum")]
-    public function publicReportResponse(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
+    private function publicReportResponse(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -69,7 +71,7 @@ class PublicForumReportController extends AbstractController {
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportTopic/:topicId", Link::POST, ['.*?'], "/forum")]
-    public function publicReportTopicPost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId): void
+    private function publicReportTopicPost(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de signaler ce topic.");
@@ -77,7 +79,17 @@ class PublicForumReportController extends AbstractController {
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category){
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum){
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -87,10 +99,10 @@ class PublicForumReportController extends AbstractController {
             Redirect::redirect("forum");
         }
 
-        $userId = UsersModel::getCurrentUser()->getId();
+        $userId = UsersModel::getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
+            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
 
@@ -98,7 +110,7 @@ class PublicForumReportController extends AbstractController {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
         if (!$topic) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
+            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             Website::refresh();
             return;
@@ -106,15 +118,15 @@ class PublicForumReportController extends AbstractController {
 
         [$reason] = Utils::filterInput("reason");
 
-        ForumReportedModel::getInstance()->creatTopicReport($userId,$topicId,$reason);
+        ForumReportedModel::getInstance()->creatTopicReport($userId, $topicId, $reason);
 
-        Flash::send("success", "Forum",
+        Flash::send(Alert::ERROR, "Forum",
             "Votre signalement est pris en compte et sera éxaminer");
         Redirect::redirectPreviousRoute();
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId", Link::POST, ['.*?'], "/forum")]
-    public function publicReportResponsePost(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
+    private function publicReportResponsePost(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId): void
     {
         if (!UsersController::isUserLogged()) {
             Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de signaler ce topic.");
@@ -122,7 +134,17 @@ class PublicForumReportController extends AbstractController {
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category){
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum){
+            Redirect::errorPage(404);
+        }
+
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
             Redirect::redirect("forum");
@@ -132,9 +154,9 @@ class PublicForumReportController extends AbstractController {
             Redirect::redirect("forum");
         }
 
-        $userId = UsersModel::getCurrentUser()->getId();
+        $userId = UsersModel::getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
-        if ($userBlocked->getUserBlockedByUserId($userId)->isBlocked()) {
+        if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)->getReason());
             Redirect::redirectPreviousRoute();
         }
@@ -143,7 +165,7 @@ class PublicForumReportController extends AbstractController {
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
         if (!$topic) {
-            Flash::send("error", LangManager::translate("core.toaster.error"),
+            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
                 LangManager::translate("core.toaster.internalError"));
             Website::refresh();
             return;
@@ -151,7 +173,7 @@ class PublicForumReportController extends AbstractController {
 
         [$reason] = Utils::filterInput("reason");
 
-        ForumReportedModel::getInstance()->creatResponseReport($userId,$responseId,$reason);
+        ForumReportedModel::getInstance()->creatResponseReport($userId, $responseId, $reason);
 
         Flash::send("success", "Forum",
             "Votre signalement est pris en compte et sera éxaminer");

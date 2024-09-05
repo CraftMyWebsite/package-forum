@@ -1,12 +1,11 @@
 <?php
+
 namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
 use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -24,7 +23,7 @@ use CMW\Utils\Redirect;
 class PublicForumCatController extends AbstractController
 {
     #[Link("/c/:catSlug", Link::GET, ['.*?'], "/forum")]
-    public function publicCatView(Request $request, string $catSlug): void
+    private function publicCatView(string $catSlug): void
     {
         $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
 
@@ -33,6 +32,10 @@ class PublicForumCatController extends AbstractController
         }
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");

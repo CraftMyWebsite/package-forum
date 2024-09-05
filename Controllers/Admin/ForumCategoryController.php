@@ -4,7 +4,7 @@ namespace CMW\Controller\Forum\Admin;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
+
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Manager\Router\Link;
@@ -24,7 +24,7 @@ use CMW\Utils\Website;
 class ForumCategoryController extends AbstractController
 {
     #[Link("/manage", Link::GET, [], "/cmw-admin/forum")]
-    public function adminListCategoryView(): void
+    private function adminListCategoryView(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories");
 
@@ -38,7 +38,7 @@ class ForumCategoryController extends AbstractController
     }
 
     #[Link("/manage/add", Link::POST, [], "/cmw-admin/forum")]
-    public function adminAddCategoryPost(): void
+    private function adminAddCategoryPost(): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
         if (Utils::isValuesEmpty($_POST, "name")) {
@@ -65,7 +65,7 @@ class ForumCategoryController extends AbstractController
     }
 
     #[Link("/manage/edit/:id", Link::POST, ['[0-9]+'], "/cmw-admin/forum")]
-    public function adminEditCategory(Request $request, int $id): void
+    private function adminEditCategory(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.edit");
 
@@ -97,7 +97,7 @@ class ForumCategoryController extends AbstractController
     }
 
     #[Link("/manage/delete/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
-    public function adminDeleteCategory(Request $request, int $id): void
+    private function adminDeleteCategory(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 

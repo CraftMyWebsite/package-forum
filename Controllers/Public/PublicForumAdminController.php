@@ -1,20 +1,19 @@
 <?php
+
 namespace CMW\Controller\Forum\Public;
 
-use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
 use CMW\Manager\Router\Link;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
-use CMW\Utils\Website;
+use JetBrains\PhpStorm\NoReturn;
 
 
 /**
@@ -29,12 +28,21 @@ class PublicForumAdminController extends AbstractController
     /*
      * POST METHOD
      * */
-    #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/adminedit", Link::POST, ['.*?'], "/forum")]
-    public function publicForumAdminEditTopicPost(Request $request, string $catSlug, string $forumSlug, int $forumPage): void
+    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/fp:forumPage/adminedit", Link::POST, ['.*?'], "/forum")]
+    private function publicForumAdminEditTopicPost(string $catSlug, string $forumSlug, int $forumPage): void
     {
 
         $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+        if (!$category) {
+            Redirect::errorPage(404);
+        }
+
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+        if (!$forum) {
+            Redirect::errorPage(404);
+        }
 
         if (!$category->isUserAllowed()) {
             Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
@@ -52,7 +60,7 @@ class PublicForumAdminController extends AbstractController
             $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
 
             if (is_null($forum)) {
-                Flash::send("error", LangManager::translate("core.toaster.error"),
+                Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
                     LangManager::translate("core.toaster.internalError"));
                 Redirect::redirectPreviousRoute();
             }
@@ -76,7 +84,7 @@ class PublicForumAdminController extends AbstractController
                 ForumTopicModel::getInstance()->addTag($tag, $topicId);
             }
 
-            Flash::send("success", LangManager::translate("core.toaster.success"),"Le topic viens d'être éditer");
+            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.success"), "Le topic viens d'être éditer");
 
             Redirect::redirectPreviousRoute();
         } else {
@@ -90,7 +98,7 @@ class PublicForumAdminController extends AbstractController
      * */
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/pinned", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicPinned(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicPinned(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -101,7 +109,17 @@ class PublicForumAdminController extends AbstractController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+            if (!$category) {
+                Redirect::errorPage(404);
+            }
+
             $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+            if (!$forum) {
+                Redirect::errorPage(404);
+            }
+
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
                 Redirect::redirect("forum");
@@ -113,7 +131,7 @@ class PublicForumAdminController extends AbstractController
 
             if (ForumTopicModel::getInstance()->pinTopic($topic)) {
 
-                Flash::send("success", LangManager::translate("core.toaster.success"),
+                Flash::send(Alert::ERROR, LangManager::translate("core.toaster.success"),
                     $topic->isPinned() ?
                         LangManager::translate("forum.topic.unpinned.success") :
                         LangManager::translate("forum.topic.pinned.success"));
@@ -127,7 +145,7 @@ class PublicForumAdminController extends AbstractController
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/disallowreplies", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicDisallowReplies(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicDisallowReplies(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -138,7 +156,17 @@ class PublicForumAdminController extends AbstractController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+            if (!$category) {
+                Redirect::errorPage(404);
+            }
+
             $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+            if (!$forum) {
+                Redirect::errorPage(404);
+            }
+
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
                 Redirect::redirect("forum");
@@ -164,7 +192,7 @@ class PublicForumAdminController extends AbstractController
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/isimportant", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsImportant(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicIsImportant(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -175,7 +203,17 @@ class PublicForumAdminController extends AbstractController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+            if (!$category) {
+                Redirect::errorPage(404);
+            }
+
             $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+            if (!$forum) {
+                Redirect::errorPage(404);
+            }
+
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
                 Redirect::redirect("forum");
@@ -201,7 +239,7 @@ class PublicForumAdminController extends AbstractController
     }
 
     #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/trash", Link::GET, ['.*?'], "/forum")]
-    public function publicTopicIsTrash(Request $request, string $catSlug, string $forumSlug, string $topicSlug, int $page): void
+    private function publicTopicIsTrash(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (UsersController::isAdminLogged()) {
             $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
@@ -212,7 +250,17 @@ class PublicForumAdminController extends AbstractController
             }
 
             $category = ForumCategoryModel::getInstance()->getCatBySlug($catSlug);
+
+            if (!$category) {
+                Redirect::errorPage(404);
+            }
+
             $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
+
+            if (!$forum) {
+                Redirect::errorPage(404);
+            }
+
             if (!$category->isUserAllowed()) {
                 Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
                 Redirect::redirect("forum");
@@ -224,7 +272,7 @@ class PublicForumAdminController extends AbstractController
 
             if (ForumTopicModel::getInstance()->trashTopic($topic)) {
 
-                Flash::send("success", LangManager::translate("core.toaster.success"), "Topic mis à la poubelle !");
+                Flash::send(Alert::ERROR, LangManager::translate("core.toaster.success"), "Topic mis à la poubelle !");
 
                 Redirect::redirectPreviousRoute();
             }

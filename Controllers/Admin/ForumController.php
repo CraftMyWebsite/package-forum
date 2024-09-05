@@ -6,7 +6,7 @@ use CMW\Event\Users\RegisterEvent;
 use CMW\Manager\Events\Listener;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
-use CMW\Manager\Requests\Request;
+
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
@@ -25,7 +25,7 @@ use CMW\Utils\Utils;
 class ForumController extends AbstractController
 {
     #[Link("/manage/addForum/:catId", Link::GET, [], "/cmw-admin/forum")]
-    public function adminAddForum(Request $request, int $catId): void
+    private function adminAddForum(int $catId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
@@ -38,7 +38,7 @@ class ForumController extends AbstractController
     }
 
     #[Link("/manage/addForum/:catId", Link::POST, [], "/cmw-admin/forum")]
-    public function adminAddForumPost(Request $request, int $catId): void
+    private function adminAddForumPost(int $catId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
@@ -62,7 +62,7 @@ class ForumController extends AbstractController
     }
 
     #[Link("/manage/addSubForum/:forumId", Link::GET, [], "/cmw-admin/forum")]
-    public function adminAddSubForum(Request $request, int $forumId): void
+    private function adminAddSubForum(int $forumId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
@@ -75,7 +75,7 @@ class ForumController extends AbstractController
     }
 
     #[Link("/manage/addSubForum/:forumId", Link::POST, [], "/cmw-admin/forum")]
-    public function adminAddSubForumPost(Request $request, int $forumId): void
+    private function adminAddSubForumPost(int $forumId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.add");
 
@@ -99,7 +99,7 @@ class ForumController extends AbstractController
     }
 
     #[Link("/manage/editForum/:forumId", Link::GET, [], "/cmw-admin/forum")]
-    public function adminEditForum(Request $request, int $forumId): void
+    private function adminEditForum(int $forumId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.edit");
 
@@ -113,7 +113,7 @@ class ForumController extends AbstractController
     }
 
     #[Link("/manage/editForum/:forumId", Link::POST, [], "/cmw-admin/forum")]
-    public function adminEditForumPost(Request $request, int $forumId): void
+    private function adminEditForumPost(int $forumId): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.edit");
 
@@ -142,7 +142,7 @@ class ForumController extends AbstractController
     }
 
     #[Link("/manage/deleteForum/:id", Link::GET, ['[0-9]+'], "/cmw-admin/forum")]
-    public function adminDeleteForum(Request $request, int $id): void
+    private function adminDeleteForum(int $id): void
     {
         UsersController::redirectIfNotHavePermissions("core.dashboard", "forum.categories.delete");
 
