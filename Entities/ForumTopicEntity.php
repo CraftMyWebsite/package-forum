@@ -2,8 +2,8 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Entity\Users\userEntity;
 use CMW\Controller\Core\CoreController;
+use CMW\Entity\Users\userEntity;
 use CMW\Manager\Env\EnvManager;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumResponseModel;
@@ -13,7 +13,6 @@ use CMW\Utils\Website;
 
 class ForumTopicEntity
 {
-
     private int $topicId;
     private string $topicName;
     private string $topicPrefix;
@@ -28,6 +27,7 @@ class ForumTopicEntity
     private bool $important;
     private userEntity $topicUser;
     private ForumEntity $topicForum;
+
     /* @var \CMW\Entity\Forum\ForumTopicTagEntity[] $tags */
     private array $tags;
 
@@ -49,8 +49,8 @@ class ForumTopicEntity
      * @param \CMW\Entity\Forum\ForumTopicTagEntity[] $tags
      */
     public function __construct(int $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, int $topicTrashReason, string $topicCreated, string $topicUpdate,
-                                bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
-                                ForumEntity $topicForum, array $tags)
+        bool $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
+        ForumEntity $topicForum, array $tags)
     {
         $this->topicId = $topicId;
         $this->topicName = $topicName;
@@ -98,7 +98,7 @@ class ForumTopicEntity
      */
     public function getPrefixName(): string
     {
-        if ($this->topicPrefix === "") {
+        if ($this->topicPrefix === '') {
             return false;
         }
         return ForumTopicModel::getInstance()->getPrefixName($this->topicPrefix);
@@ -109,7 +109,7 @@ class ForumTopicEntity
      */
     public function getPrefixColor(): string
     {
-        if ($this->topicPrefix === "") {
+        if ($this->topicPrefix === '') {
             return false;
         }
         return ForumTopicModel::getInstance()->getPrefixColor($this->topicPrefix);
@@ -120,7 +120,7 @@ class ForumTopicEntity
      */
     public function getPrefixTextColor(): string
     {
-        if ($this->topicPrefix === "") {
+        if ($this->topicPrefix === '') {
             return false;
         }
         return ForumTopicModel::getInstance()->getPrefixTextColor($this->topicPrefix);
@@ -156,7 +156,7 @@ class ForumTopicEntity
     public function getTrashReason(): string
     {
         if ($this->topicTrashReason == 0) {
-            return "Supprimer par un staff";
+            return 'Supprimer par un staff';
         }
     }
 
@@ -240,10 +240,10 @@ class ForumTopicEntity
      */
     public function getLink(): string
     {
-        $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/";
+        $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'forum/';
         $catSlug = $this->getCat()->getSlug();
         $forumSlug = $this->getForum()->getSlug();
-        return $baseUrl."c/$catSlug/f/$forumSlug/t/$this->topicSlug/p1";
+        return $baseUrl . "c/$catSlug/f/$forumSlug/t/$this->topicSlug/p1";
     }
 
     /**
@@ -251,7 +251,7 @@ class ForumTopicEntity
      */
     public function getPinnedLink(): string
     {
-        return $this->getLink()."/pinned";
+        return $this->getLink() . '/pinned';
     }
 
     /**
@@ -259,7 +259,7 @@ class ForumTopicEntity
      */
     public function getDisallowRepliesLink(): string
     {
-        return $this->getLink()."/disallowreplies";
+        return $this->getLink() . '/disallowreplies';
     }
 
     /**
@@ -267,7 +267,7 @@ class ForumTopicEntity
      */
     public function getIsImportantLink(): string
     {
-        return $this->getLink()."/isimportant";
+        return $this->getLink() . '/isimportant';
     }
 
     /**
@@ -275,7 +275,7 @@ class ForumTopicEntity
      */
     public function trashLink(): string
     {
-        return $this->getLink()."/trash";
+        return $this->getLink() . '/trash';
     }
 
     /**
@@ -283,7 +283,7 @@ class ForumTopicEntity
      */
     public function reportLink(): string
     {
-        return $this->getLink()."/reportTopic/$this->topicId/p1";
+        return $this->getLink() . "/reportTopic/$this->topicId/p1";
     }
 
     /**
@@ -300,7 +300,7 @@ class ForumTopicEntity
      */
     public function getTagsFormatted(): string
     {
-        return implode(", ", $this->tags);
+        return implode(', ', $this->tags);
     }
 
     /**
@@ -318,17 +318,17 @@ class ForumTopicEntity
 
     public function editTopicLink(): string
     {
-        return $this->getLink()."/edit";
+        return $this->getLink() . '/edit';
     }
 
     public function followTopicLink(): string
     {
-        return $this->getLink()."/follow";
+        return $this->getLink() . '/follow';
     }
 
     public function unfollowTopicLink(): string
     {
-        return $this->getLink()."/unfollow";
+        return $this->getLink() . '/unfollow';
     }
 
     /**
@@ -336,7 +336,7 @@ class ForumTopicEntity
      */
     public function getFeedbackAddTopicLink(int $feedbackId): string
     {
-        return $this->getLink()."/react/$this->topicId/$feedbackId";
+        return $this->getLink() . "/react/$this->topicId/$feedbackId";
     }
 
     /**
@@ -344,7 +344,7 @@ class ForumTopicEntity
      */
     public function getFeedbackDeleteTopicLink(int $feedbackId): string
     {
-        return $this->getLink()."/un_react/$this->topicId/$feedbackId";
+        return $this->getLink() . "/un_react/$this->topicId/$feedbackId";
     }
 
     /**
@@ -352,6 +352,6 @@ class ForumTopicEntity
      */
     public function getFeedbackChangeTopicLink(int $feedbackId): string
     {
-        return $this->getLink()."change_react/$this->topicId/$feedbackId";
+        return $this->getLink() . "change_react/$this->topicId/$feedbackId";
     }
 }

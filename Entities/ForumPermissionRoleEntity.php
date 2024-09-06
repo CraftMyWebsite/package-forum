@@ -4,14 +4,12 @@ namespace CMW\Entity\Forum;
 
 class ForumPermissionRoleEntity
 {
-
     private int $forumRoleId;
     private string $forumRoleName;
     private string $forumRoleDescription;
     private int $forumRoleWeight;
     private bool $forumRoleIsDefault;
     private array $forumRolePermissions;
-
 
     /**
      * @param int $forumRoleId
@@ -71,7 +69,6 @@ class ForumPermissionRoleEntity
         return $this->forumRoleIsDefault;
     }
 
-
     /**
      * @return ForumPermissionEntity[]
      */
@@ -79,6 +76,4 @@ class ForumPermissionRoleEntity
     {
         return $this->forumRolePermissions;
     }
-
-
 }

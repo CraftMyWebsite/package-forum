@@ -19,15 +19,15 @@ use CMW\Utils\Website;
 /* @var CMW\Controller\Forum\Admin\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\Admin\ForumSettingsController $iconClosed */
 
-Website::setTitle("Forum");
-Website::setDescription("Consultez les sujets de discussion et répondez aux questions posées par les membres de votre communauté.");
+Website::setTitle('Forum');
+Website::setDescription('Consultez les sujets de discussion et répondez aux questions posées par les membres de votre communauté.');
 ?>
 
 <!--optional for breadcrumbs-->
 <nav class="flex" aria-label="Breadcrumb">
     <ol>
         <li>
-            <a href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum">Home</a>
+            <a href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum">Home</a>
         </li>
         <li>
             <a href="<?= $category->getLink() ?>"><?= $category->getName() ?></a>
@@ -42,7 +42,7 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
 
 <!--Create topic-->
 <?php if (UsersController::isUserLogged()): ?>
-    <?php if (!$forum->disallowTopics() && ForumPermissionController::getInstance()->hasPermission("user_create_topic") || ForumPermissionController::getInstance()->hasPermission("operator") || ForumPermissionController::getInstance()->hasPermission("admin_bypass_forum_disallow_topics")): ?>
+    <?php if (!$forum->disallowTopics() && ForumPermissionController::getInstance()->hasPermission('user_create_topic') || ForumPermissionController::getInstance()->hasPermission('operator') || ForumPermissionController::getInstance()->hasPermission('admin_bypass_forum_disallow_topics')): ?>
         <a href="<?= $forum->getLink() ?>/add">New topic</a>
     <?php endif; ?>
 <?php endif; ?>
@@ -59,7 +59,7 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
         <?php if ($forumObj->isUserAllowed()): ?>
             <div>
                 <a href="<?= $forumObj->getLink() ?>">
-                    <div><?= $forumObj->getFontAwesomeIcon("fa-xl") ?></div>
+                    <div><?= $forumObj->getFontAwesomeIcon('fa-xl') ?></div>
                     <div><?= $forumObj->getName() ?></div>
                     <div><?= $forumObj->getDescription() ?></div>
                 </a>
@@ -67,11 +67,11 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
             <div><?= $forumModel->countTopicInForum($forumObj->getId()) ?></div>
             <div><?= $forumModel->countMessagesInForum($forumObj->getId()) ?></div>
             <!--Last Message-->
-            <?php if ($forumObj->getLastResponse() !== null) : ?>
+            <?php if ($forumObj->getLastResponse() !== null): ?>
                 <a href="<?= $forumObj->getParent()->getLink() ?>/f/<?= $forumObj->getLastResponse()->getResponseTopic()->getForum()->getSlug() ?>/t/<?= $forumObj->getLastResponse()->getResponseTopic()->getSlug() ?>/p<?= $forumObj->getLastResponse()->getPageNumber() ?>/#<?= $forumObj->getLastResponse()?->getId() ?>">
-                    <img src="<?= $forumObj->getLastResponse()?->getUser()->getUserPicture()->getImage()?>"/>
-                    <div><?= $forumObj->getLastResponse()?->getUser()->getPseudo() ?? "" ?></div>
-                    <div><?= $forumObj->getLastResponse()?->getCreated() ?? "" ?></div>
+                    <img src="<?= $forumObj->getLastResponse()?->getUser()->getUserPicture()->getImage() ?>"/>
+                    <div><?= $forumObj->getLastResponse()?->getUser()->getPseudo() ?? '' ?></div>
+                    <div><?= $forumObj->getLastResponse()?->getCreated() ?? '' ?></div>
                 </a>
             <?php endif; ?>
         <?php endif; ?>
@@ -97,25 +97,25 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
             </p>
             <p><?= $topic->getUser()->getPseudo() ?> <?= $topic->getCreated() ?></p>
             <div>
-                <?= $topic->isImportant() ? "<i class='<?= $iconImportant ?>></i>" : "" ?>
-                <?= $topic->isPinned() ? "<i class='<?= $iconPin ?>'></i>" : "" ?>
-                <?= $topic->isDisallowReplies() ? "<i class='<?= $iconClosed ?>'></i>" : "" ?>
+                <?= $topic->isImportant() ? "<i class='<?= $iconImportant ?>></i>" : '' ?>
+                <?= $topic->isPinned() ? "<i class='<?= $iconPin ?>'></i>" : '' ?>
+                <?= $topic->isDisallowReplies() ? "<i class='<?= $iconClosed ?>'></i>" : '' ?>
             </div>
         </a>
         <div><?= $topic->countViews() ?></div>
         <div><?= $responseModel->countResponseInTopic($topic->getId()) ?></div>
         <!--Last message-->
 
-        <?php if ($topic->getLastResponse() !== null) : ?>
+        <?php if ($topic->getLastResponse() !== null): ?>
             <a href="t/<?= $topic->getLastResponse()->getResponseTopic()->getSlug() ?>/p<?= $topic->getLastResponse()->getPageNumber() ?>/#<?= $topic->getLastResponse()?->getId() ?>">
-                <img src="<?= $topic->getLastResponse()?->getUser()->getUserPicture()->getImage()?>"/>
-                <div><?= $topic->getLastResponse()?->getUser()->getPseudo() ?? "" ?></div>
-                <div><?= $topic->getLastResponse()?->getCreated() ?? "" ?></div>
+                <img src="<?= $topic->getLastResponse()?->getUser()->getUserPicture()->getImage() ?>"/>
+                <div><?= $topic->getLastResponse()?->getUser()->getPseudo() ?? '' ?></div>
+                <div><?= $topic->getLastResponse()?->getCreated() ?? '' ?></div>
             </a>
         <?php endif; ?>
 
         <!--optional but recommended-->
-        <?php if (UsersController::isAdminLogged()) : ?>
+        <?php if (UsersController::isAdminLogged()): ?>
             <!------------------
              -- ADMIN SECTION --
             -------------------->
@@ -132,14 +132,14 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
                 <label for="title">Topic title* :</label>
                 <input name="name" id="title" type="text" value="<?= $topic->getName() ?>" required>
                 <label for="tags">Tags* :</label>
-                <input name="tags" id="tags" type="text" value="<?php foreach ($topic->getTags() as $tag) {echo "" . $tag->getContent() . ",";} ?>">
+                <input name="tags" id="tags" type="text" value="<?php foreach ($topic->getTags() as $tag) { echo '' . $tag->getContent() . ','; } ?>">
 
                 <label for="prefix">Prefix :</label>
                 <select name="prefix" id="prefix">
                     <option value="">Nothing</option>
-                    <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix) : ?>
+                    <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix): ?>
                         <option value="<?= $prefix->getId() ?>"
-                            <?= ($topic->getPrefixName() === $prefix->getName() ? "selected" : "") ?>>
+                            <?= ($topic->getPrefixName() === $prefix->getName() ? 'selected' : '') ?>>
                             <?= $prefix->getName() ?>
                         </option>
                     <?php endforeach; ?>
@@ -150,9 +150,9 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
                     <?php foreach ($categoryModel->getCategories() as $cat): ?>
                         <option disabled>──── <?= $cat->getName() ?> ────</option>
                         <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObj): ?>
-                            <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObj->getName() ?></option>
+                            <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? 'selected' : '') ?>><?= $forumObj->getName() ?></option>
                             <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
-                                <option value="<?= $subForum["subforum"]->getId() ?>" <?= ($subForum["subforum"]->getName() === $topic->getForum()->getName() ? "selected" : "") ?>> <?=str_repeat("      ", $subForum["depth"])?> ↪ <?= $subForum["subforum"]->getName() ?></option>
+                                <option value="<?= $subForum['subforum']->getId() ?>" <?= ($subForum['subforum']->getName() === $topic->getForum()->getName() ? 'selected' : '') ?>> <?= str_repeat("\u{00A0}\u{00A0}\u{00A0}\u{00A0}\u{00A0}\u{00A0}", $subForum['depth']) ?> ↪ <?= $subForum['subforum']->getName() ?></option>
                             <?php endforeach; ?>
                         <?php endforeach; ?>
                     <?php endforeach; ?>
@@ -166,16 +166,16 @@ Website::setDescription("Consultez les sujets de discussion et répondez aux que
     <?php endforeach; ?>
 
     <!--page-->
-    <?php if ($totalPage > "1"): ?>
+    <?php if ($totalPage > '1'): ?>
         <div>
-            <?php if ($currentPage !== "1"): ?>
+            <?php if ($currentPage !== '1'): ?>
                 <a href="fp1"><<</a>
-                <a href="fp<?=$currentPage-1?>"><</a>
+                <a href="fp<?= $currentPage - 1 ?>"><</a>
             <?php endif; ?>
-            <span><?= $currentPage?>/<?= $totalPage?></span>
+            <span><?= $currentPage ?>/<?= $totalPage ?></span>
             <?php if ($currentPage !== $totalPage): ?>
-                <a href="fp<?=$currentPage+1?>">></a>
-                <a href="fp<?=$totalPage?>">>></a>
+                <a href="fp<?= $currentPage + 1 ?>">></a>
+                <a href="fp<?= $totalPage ?>">>></a>
             <?php endif; ?>
         </div>
     <?php endif; ?>

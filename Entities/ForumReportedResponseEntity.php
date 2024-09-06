@@ -59,16 +59,16 @@ class ForumReportedResponseEntity
     public function getReason(): string
     {
         if ($this->reason === 0) {
-            return "Autre";
+            return 'Autre';
         }
         if ($this->reason === 1) {
-            return "Réponse inapproprié";
+            return 'Réponse inapproprié';
         }
         if ($this->reason === 2) {
-            return "Contenue choquant";
+            return 'Contenue choquant';
         }
         if ($this->reason === 3) {
-            return "Harcèlement, discrimination ...";
+            return 'Harcèlement, discrimination ...';
         }
 
         return $this->reason;

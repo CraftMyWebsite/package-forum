@@ -2,8 +2,8 @@
 
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
-use CMW\Model\Forum\ForumPrefixModel;
 use CMW\Manager\Security\SecurityManager;
+use CMW\Model\Forum\ForumPrefixModel;
 
 /* @var CMW\Model\Forum\ForumModel $forumModel */
 /* @var CMW\Model\Forum\ForumCategoryModel $categoryModel */
@@ -20,8 +20,8 @@ use CMW\Manager\Security\SecurityManager;
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosedColor */
 /* @var \CMW\Entity\Forum\ForumPermissionRoleEntity[] $ForumRoles */
 
-$title = LangManager::translate("forum.forum.list.title");
-$description = LangManager::translate("forum.forum.list.description");
+$title = LangManager::translate('forum.forum.list.title');
+$description = LangManager::translate('forum.forum.list.description');
 ?>
 <h3><i class="fa-solid fa-book"></i> Gestion des topics</h3>
 
@@ -39,22 +39,22 @@ $description = LangManager::translate("forum.forum.list.description");
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($topicModel->getTopic() as $topic) : ?>
+        <?php foreach ($topicModel->getTopic() as $topic): ?>
             <tr>
                 <td>
                     <?= $topic->isImportant() ? "
                             <i style='color: $iconImportantColor'  class='$iconImportant fa-sm'></i>                           
-                            " : "" ?>
+                            " : '' ?>
                     <?= $topic->isPinned() ? "
                             <i style='color: $iconPinColor' class='$iconPin fa-sm'></i>                         
-                             " : "" ?>
+                             " : '' ?>
                     <?= $topic->isDisallowReplies() ? "
                             <i style='color: $iconClosedColor' class='$iconClosed fa-sm'></i>
-                             " : "" ?>
+                             " : '' ?>
                     <?php if ($topic->getPrefixId()): ?><span class="px-1 rounded-2"
                                                               style="color: <?= $topic->getPrefixTextColor() ?>; background: <?= $topic->getPrefixColor() ?>"><?= $topic->getPrefixName() ?></span> <?php endif; ?>
                     <?= mb_strimwidth($topic->getName(), 0, 30, '...') ?>
-                    <?php if ($topic->getIsTrash()) : ?><small style="color: #d00d0d">En
+                    <?php if ($topic->getIsTrash()): ?><small style="color: #d00d0d">En
                         corbeille</small><?php endif; ?>
                 </td>
                 <td>
@@ -89,7 +89,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             <div class="lg:flex justify-between">
                                 <div>
                                     <label class="toggle">
-                                        <p class="toggle-label"><i style='color: <?=  $iconImportantColor ?>' class="<?= $iconImportant ?>"></i> Important</p>
+                                        <p class="toggle-label"><i style='color: <?= $iconImportantColor ?>' class="<?= $iconImportant ?>"></i> Important</p>
                                         <input type="checkbox" class="toggle-input" name="important"
                                                id="important<?= $topic->getId() ?>" <?= $topic->isImportant() ? 'checked' : '' ?>>
                                         <div class="toggle-slider"></div>
@@ -97,7 +97,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <p class="toggle-label"><i style='color: <?=  $iconPinColor ?>' class="<?= $iconPin ?>"></i> Épinglé</p>
+                                        <p class="toggle-label"><i style='color: <?= $iconPinColor ?>' class="<?= $iconPin ?>"></i> Épinglé</p>
                                         <input type="checkbox" class="toggle-input" name="pin"
                                                id="pin<?= $topic->getId() ?>" <?= $topic->isPinned() ? 'checked' : '' ?>>
                                         <div class="toggle-slider"></div>
@@ -105,7 +105,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                 </div>
                                 <div>
                                     <label class="toggle">
-                                        <p class="toggle-label"><i style='color: <?=  $iconClosedColor ?>' class="<?= $iconClosed ?>"></i> Fermer</p>
+                                        <p class="toggle-label"><i style='color: <?= $iconClosedColor ?>' class="<?= $iconClosed ?>"></i> Fermer</p>
                                         <input type="checkbox" class="toggle-input" name="disallow_replies"
                                                id="closed<?= $topic->getId() ?>" <?= $topic->isDisallowReplies() ? 'checked' : '' ?>>
                                         <div class="toggle-slider"></div>
@@ -119,14 +119,14 @@ $description = LangManager::translate("forum.forum.list.description");
                             <label for="default-input">Tags du topic :</label>
                             <input type="text" id="default-input" class="input" name="tags"
                                    value="<?php foreach ($topic->getTags() as $tag) {
-                                       echo "" . $tag->getContent() . ",";
-                                   } ?>">
+        echo '' . $tag->getContent() . ',';
+    } ?>">
                             <label for="prefix">Prefix :</label>
                             <select id="prefix" name="prefix" class="form-select">
                                 <option value="">Aucun</option>
-                                <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix) : ?>
+                                <?php foreach ($prefixesModel = ForumPrefixModel::getInstance()->getPrefixes() as $prefix): ?>
                                     <option value="<?= $prefix->getId() ?>"
-                                        <?= ($topic->getPrefixName() === $prefix->getName() ? "selected" : "") ?>>
+                                        <?= ($topic->getPrefixName() === $prefix->getName() ? 'selected' : '') ?>>
                                         <?= $prefix->getName() ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -136,9 +136,9 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <?php foreach ($categoryModel->getCategories() as $cat): ?>
                                     <option disabled>──── <?= $cat->getName() ?> ────</option>
                                     <?php foreach ($forumModel->getForumByCat($cat->getId()) as $forumObj): ?>
-                                        <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? "selected" : "") ?>><?= $forumObj->getName() ?></option>
+                                        <option value="<?= $forumObj->getId() ?>" <?= ($forumObj->getName() === $topic->getForum()->getName() ? 'selected' : '') ?>><?= $forumObj->getName() ?></option>
                                         <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
-                                            <option value="<?= $subForum["subforum"]->getId() ?>" <?= ($subForum["subforum"]->getName() === $topic->getForum()->getName() ? "selected" : "") ?>> <?=str_repeat("      ", $subForum["depth"])?> ↪ <?= $subForum["subforum"]->getName() ?></option>
+                                            <option value="<?= $subForum['subforum']->getId() ?>" <?= ($subForum['subforum']->getName() === $topic->getForum()->getName() ? 'selected' : '') ?>> <?= str_repeat("\u{00A0}\u{00A0}\u{00A0}\u{00A0}\u{00A0}\u{00A0}", $subForum['depth']) ?> ↪ <?= $subForum['subforum']->getName() ?></option>
                                         <?php endforeach; ?>
                                     <?php endforeach; ?>
                                 <?php endforeach; ?>
@@ -146,7 +146,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn-primary">
-                                <?= LangManager::translate("core.btn.save") ?>
+                                <?= LangManager::translate('core.btn.save') ?>
                             </button>
                         </div>
                     </form>

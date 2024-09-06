@@ -6,7 +6,6 @@ use CMW\Controller\Core\CoreController;
 
 class ForumPrefixesEntity
 {
-
     private int $prefixId;
     private string $prefixName;
     private string $prefixColor;
@@ -81,5 +80,4 @@ class ForumPrefixesEntity
     {
         return CoreController::formatDate($this->prefixUpdated);
     }
-
 }

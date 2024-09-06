@@ -20,7 +20,7 @@ class ForumSettingsModel extends AbstractModel
     public function getSettings(): array
     {
         $db = DatabaseManager::getInstance();
-        $req = $db->prepare("SELECT * FROM cmw_forums_settings");
+        $req = $db->prepare('SELECT * FROM cmw_forums_settings');
 
         if ($req->execute()) {
             return $req->fetchAll();
@@ -37,7 +37,7 @@ class ForumSettingsModel extends AbstractModel
     public function getOptionValue(string $option): string
     {
         $db = DatabaseManager::getInstance();
-        $req = $db->prepare("SELECT forum_settings_value FROM cmw_forums_settings WHERE forum_settings_name = ?");
+        $req = $db->prepare('SELECT forum_settings_value FROM cmw_forums_settings WHERE forum_settings_name = ?');
         $req->execute(array($option));
         $option = $req->fetch();
 
@@ -59,7 +59,7 @@ class ForumSettingsModel extends AbstractModel
     {
         $db = DatabaseManager::getInstance();
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'IconNotRead' THEN :iconNotRead WHEN 'IconImportant' THEN :iconImportant WHEN 'IconPin' THEN :iconPin WHEN 'IconClosed' THEN :iconClosed WHEN 'IconNotReadColor' THEN :iconNotReadColor WHEN 'IconImportantColor' THEN :iconImportantColor WHEN 'IconPinColor' THEN :iconPinColor WHEN 'IconClosedColor' THEN :iconClosedColor ELSE forum_settings_value END WHERE forum_settings_name IN('IconNotRead','IconImportant','IconPin','IconClosed','IconNotReadColor','IconImportantColor','IconPinColor','IconClosedColor')");
-        $req->execute(array("iconNotRead" => $iconNotRead, "iconImportant" => $iconImportant, "iconPin" => $iconPin, "iconClosed" => $iconClosed, "iconNotReadColor" => $iconNotReadColor, "iconImportantColor" => $iconImportantColor, "iconPinColor" => $iconPinColor, "iconClosedColor" => $iconClosedColor));
+        $req->execute(array('iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor));
     }
 
     /**
@@ -70,7 +70,7 @@ class ForumSettingsModel extends AbstractModel
     {
         $db = DatabaseManager::getInstance();
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :visitorCanViewForum WHERE forum_settings_name = 'visitorCanViewForum'");
-        $req->execute(array("visitorCanViewForum" => $visitorCanViewForum));
+        $req->execute(array('visitorCanViewForum' => $visitorCanViewForum));
     }
 
     /**
@@ -81,7 +81,7 @@ class ForumSettingsModel extends AbstractModel
     {
         $db = DatabaseManager::getInstance();
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'responsePerPage' THEN :responsePerPage WHEN 'topicPerPage' THEN :topicPerPage ELSE forum_settings_value END WHERE forum_settings_name IN ('responsePerPage','topicPerPage')");
-        $req->execute(array("responsePerPage" => $responsePerPage, "topicPerPage" => $topicPerPage));
+        $req->execute(array('responsePerPage' => $responsePerPage, 'topicPerPage' => $topicPerPage));
     }
 
     /**
@@ -93,7 +93,7 @@ class ForumSettingsModel extends AbstractModel
     {
         $db = DatabaseManager::getInstance();
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= CASE forum_settings_name WHEN 'needConnectUrl' THEN :needConnectUrl WHEN 'needConnectText' THEN :needConnectText ELSE forum_settings_value END WHERE forum_settings_name IN ('needConnectUrl','needConnectText')");
-        $req->execute(array("needConnectUrl" => $needConnectUrl, "needConnectText" => $needConnectText));
+        $req->execute(array('needConnectUrl' => $needConnectUrl, 'needConnectText' => $needConnectText));
     }
 
     /**
@@ -104,6 +104,6 @@ class ForumSettingsModel extends AbstractModel
     {
         $db = DatabaseManager::getInstance();
         $req = $db->prepare("UPDATE cmw_forums_settings SET forum_settings_value= :blinkResponse WHERE forum_settings_name = 'blinkResponse'");
-        $req->execute(array("blinkResponse" => $blinkResponse));
+        $req->execute(array('blinkResponse' => $blinkResponse));
     }
 }

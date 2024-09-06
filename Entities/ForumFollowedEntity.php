@@ -11,12 +11,10 @@ class ForumFollowedEntity
     private userEntity $user;
     private ForumTopicEntity $topic;
 
-
     /**
      * @param int $id
      * @param \CMW\Entity\Users\userEntity $user
      * @param \CMW\Entity\Forum\ForumTopicEntity $topic
-
      */
     public function __construct(int $id, userEntity $user, ForumTopicEntity $topic)
     {

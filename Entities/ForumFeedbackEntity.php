@@ -32,7 +32,7 @@ class ForumFeedbackEntity
      */
     public function getImage(): string
     {
-        return EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . "Public/Uploads/Forum/" . $this->feedbackImage;
+        return EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'Public/Uploads/Forum/' . $this->feedbackImage;
     }
 
     /**
@@ -48,7 +48,7 @@ class ForumFeedbackEntity
      */
     public function countTopicFeedbackReceived(int $topicId): string
     {
-        return ForumFeedbackModel::getinstance()->countTopicFeedbackByTopic($topicId,$this->getId());
+        return ForumFeedbackModel::getinstance()->countTopicFeedbackByTopic($topicId, $this->getId());
     }
 
     /**
@@ -56,7 +56,7 @@ class ForumFeedbackEntity
      */
     public function countResponseFeedbackReceived(int $responseId): string
     {
-        return ForumFeedbackModel::getinstance()->countResponseFeedbackByTopic($responseId,$this->getId());
+        return ForumFeedbackModel::getinstance()->countResponseFeedbackByTopic($responseId, $this->getId());
     }
 
     /**
@@ -64,7 +64,7 @@ class ForumFeedbackEntity
      */
     public function countUserFeedbackReceived(int $topicId): string
     {
-        return ForumFeedbackModel::getinstance()->countTopicFeedbackByUser($topicId,$this->getId());
+        return ForumFeedbackModel::getinstance()->countTopicFeedbackByUser($topicId, $this->getId());
     }
 
     /**
@@ -80,7 +80,7 @@ class ForumFeedbackEntity
      */
     public function getFeedbackTopicReacted(int $topicId): int
     {
-        return ForumFeedbackModel::getInstance()->getFeedbackTopicReactedByUser($topicId,(new UsersModel())::getCurrentUser()?->getId());
+        return ForumFeedbackModel::getInstance()->getFeedbackTopicReactedByUser($topicId, (new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
@@ -96,7 +96,7 @@ class ForumFeedbackEntity
      */
     public function getFeedbackResponseReacted(int $responseId): int
     {
-        return ForumFeedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
+        return ForumFeedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId, (new UsersModel())::getCurrentUser()?->getId());
     }
 
     /**
@@ -104,7 +104,6 @@ class ForumFeedbackEntity
      */
     public function getUserFeedbackList(int $responseId): int
     {
-        return ForumFeedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId,(new UsersModel())::getCurrentUser()?->getId());
+        return ForumFeedbackModel::getInstance()->getFeedbackResponseReactedByUser($responseId, (new UsersModel())::getCurrentUser()?->getId());
     }
-
 }

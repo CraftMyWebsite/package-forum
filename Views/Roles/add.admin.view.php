@@ -4,14 +4,14 @@ use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Security\SecurityManager;
 
-$title = "Forum - Rôles";
-$description = "desc";
+$title = 'Forum - Rôles';
+$description = 'desc';
 
 ?>
 
 <div class="page-title">
     <h3><i class="fa-solid fa-gavel"></i> Ajout d'un rôle </h3>
-    <button form="add_role" type="submit" class="btn-primary"><?= LangManager::translate("core.btn.add") ?></button>
+    <button form="add_role" type="submit" class="btn-primary"><?= LangManager::translate('core.btn.add') ?></button>
 </div>
 
 <form id="add_role" method="post" action="" class="card">

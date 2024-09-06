@@ -14,7 +14,6 @@ use CMW\Model\Users\UsersModel;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-
 class ForumReportedModel extends AbstractModel
 {
     /**
@@ -22,8 +21,7 @@ class ForumReportedModel extends AbstractModel
      */
     public function getTopicsReported(): array
     {
-
-        $sql = "SELECT forums_reported_topic_id FROM cmw_forums_topic_reported";
+        $sql = 'SELECT forums_reported_topic_id FROM cmw_forums_topic_reported';
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
@@ -35,7 +33,7 @@ class ForumReportedModel extends AbstractModel
         $toReturn = array();
 
         while ($topic = $res->fetch()) {
-            $toReturn[] = $this->getReportedTopicById($topic["forums_reported_topic_id"]);
+            $toReturn[] = $this->getReportedTopicById($topic['forums_reported_topic_id']);
         }
         return $toReturn;
     }
@@ -45,8 +43,7 @@ class ForumReportedModel extends AbstractModel
      */
     public function getResponsesReported(): array
     {
-
-        $sql = "SELECT forums_reported_response_id FROM cmw_forums_response_reported";
+        $sql = 'SELECT forums_reported_response_id FROM cmw_forums_response_reported';
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
@@ -58,7 +55,7 @@ class ForumReportedModel extends AbstractModel
         $toReturn = array();
 
         while ($response = $res->fetch()) {
-            $toReturn[] = $this->getReportedResponseById($response["forums_reported_response_id"]);
+            $toReturn[] = $this->getReportedResponseById($response['forums_reported_response_id']);
         }
         return $toReturn;
     }
@@ -69,27 +66,27 @@ class ForumReportedModel extends AbstractModel
      */
     public function getReportedTopicById(int $id): ?ForumReportedTopicEntity
     {
-        $sql = "SELECT * FROM cmw_forums_topic_reported WHERE forums_reported_topic_id = :forums_reported_topic_id";
+        $sql = 'SELECT * FROM cmw_forums_topic_reported WHERE forums_reported_topic_id = :forums_reported_topic_id';
 
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forums_reported_topic_id" => $id))) {
+        if (!$res->execute(array('forums_reported_topic_id' => $id))) {
             return null;
         }
 
         $res = $res->fetch();
 
-        $user = UsersModel::getInstance()->getUserById($res["user_id"]);
-        $topic = ForumTopicModel::getInstance()->getTopicById($res["forum_reported_topic_id"]);
+        $user = UsersModel::getInstance()->getUserById($res['user_id']);
+        $topic = ForumTopicModel::getInstance()->getTopicById($res['forum_reported_topic_id']);
 
         return new ForumReportedTopicEntity(
-            $res["forums_reported_topic_id"],
+            $res['forums_reported_topic_id'],
             $user,
             $topic,
-            $res["forum_reported_topic_reason"],
-            $res["forum_reported_updated"]
+            $res['forum_reported_topic_reason'],
+            $res['forum_reported_updated']
         );
     }
 
@@ -99,27 +96,27 @@ class ForumReportedModel extends AbstractModel
      */
     public function getReportedResponseById(int $id): ?ForumReportedResponseEntity
     {
-        $sql = "SELECT * FROM cmw_forums_response_reported WHERE forums_reported_response_id = :forums_reported_response_id";
+        $sql = 'SELECT * FROM cmw_forums_response_reported WHERE forums_reported_response_id = :forums_reported_response_id';
 
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forums_reported_response_id" => $id))) {
+        if (!$res->execute(array('forums_reported_response_id' => $id))) {
             return null;
         }
 
         $res = $res->fetch();
 
-        $user = UsersModel::getInstance()->getUserById($res["user_id"]);
-        $response = ForumResponseModel::getInstance()->getResponseById($res["forum_reported_response_id"]);
+        $user = UsersModel::getInstance()->getUserById($res['user_id']);
+        $response = ForumResponseModel::getInstance()->getResponseById($res['forum_reported_response_id']);
 
         return new ForumReportedResponseEntity(
-            $res["forums_reported_response_id"],
+            $res['forums_reported_response_id'],
             $user,
             $response,
-            $res["forum_reported_response_reason"],
-            $res["forum_reported_updated"]
+            $res['forum_reported_response_reason'],
+            $res['forum_reported_updated']
         );
     }
 
@@ -131,14 +128,13 @@ class ForumReportedModel extends AbstractModel
      */
     public function creatTopicReport(int $userId, int $topicId, int $reason): ?ForumReportedTopicEntity
     {
-
         $data = array(
-            "user_id" => $userId,
-            "forum_reported_topic_id" => $topicId,
-            "forum_reported_topic_reason" => $reason
+            'user_id' => $userId,
+            'forum_reported_topic_id' => $topicId,
+            'forum_reported_topic_reason' => $reason
         );
 
-        $sql = "INSERT INTO cmw_forums_topic_reported(user_id, forum_reported_topic_id, forum_reported_topic_reason) VALUES (:user_id, :forum_reported_topic_id, :forum_reported_topic_reason)";
+        $sql = 'INSERT INTO cmw_forums_topic_reported(user_id, forum_reported_topic_id, forum_reported_topic_reason) VALUES (:user_id, :forum_reported_topic_id, :forum_reported_topic_reason)';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
@@ -159,14 +155,13 @@ class ForumReportedModel extends AbstractModel
      */
     public function creatResponseReport(int $userId, int $responseId, int $reason): ?ForumReportedResponseEntity
     {
-
         $data = array(
-            "user_id" => $userId,
-            "forum_reported_response_id" => $responseId,
-            "forum_reported_response_reason" => $reason
+            'user_id' => $userId,
+            'forum_reported_response_id' => $responseId,
+            'forum_reported_response_reason' => $reason
         );
 
-        $sql = "INSERT INTO cmw_forums_response_reported(user_id, forum_reported_response_id, forum_reported_response_reason) VALUES (:user_id, :forum_reported_response_id, :forum_reported_response_reason)";
+        $sql = 'INSERT INTO cmw_forums_response_reported(user_id, forum_reported_response_id, forum_reported_response_reason) VALUES (:user_id, :forum_reported_response_id, :forum_reported_response_reason)';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
@@ -185,10 +180,10 @@ class ForumReportedModel extends AbstractModel
      */
     public function removeReportTopic(int $id): bool
     {
-        $sql = "DELETE FROM cmw_forums_topic_reported WHERE `forums_reported_topic_id` = :id";
+        $sql = 'DELETE FROM cmw_forums_topic_reported WHERE `forums_reported_topic_id` = :id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
-        if (!$req->execute(array("id" => $id))) {
+        if (!$req->execute(array('id' => $id))) {
             return false;
         }
         return $req->rowCount() === 1;
@@ -200,14 +195,12 @@ class ForumReportedModel extends AbstractModel
      */
     public function removeReportResponse(int $id): bool
     {
-        $sql = "DELETE FROM cmw_forums_response_reported WHERE `forums_reported_response_id` = :id";
+        $sql = 'DELETE FROM cmw_forums_response_reported WHERE `forums_reported_response_id` = :id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
-        if (!$req->execute(array("id" => $id))) {
+        if (!$req->execute(array('id' => $id))) {
             return false;
         }
         return $req->rowCount() === 1;
     }
-
-
 }

@@ -11,7 +11,6 @@ use CMW\Model\Forum\ForumSettingsModel;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-
 class ForumSettingsEntity
 {
     private int $settingsId;

@@ -1,12 +1,11 @@
 <?php
 
-
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Security\SecurityManager;
 
-$title = "Forum - Rôles";
-$description = "desc";
+$title = 'Forum - Rôles';
+$description = 'desc';
 
 /* @var CMW\Model\Forum\ForumSettingsModel $visitorCanViewForum */
 /* @var CMW\Entity\Forum\ForumPermissionRoleEntity[] $roles */
@@ -24,7 +23,7 @@ $description = "desc";
             <div class="lg:flex justify-between">
                 <h6>Rôles</h6>
                 <a type="button" href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>cmw-admin/forum/roles/add"
-                   class="btn-primary"><?= LangManager::translate("core.btn.add") ?></a>
+                   class="btn-primary"><?= LangManager::translate('core.btn.add') ?></a>
             </div>
             <div class="table-container">
                 <table class="table" id="table1">
@@ -33,11 +32,11 @@ $description = "desc";
                         <th>Nom</th>
                         <th>Description</th>
                         <th>Rôle par défaut</th>
-                        <th class="text-center"><?= LangManager::translate("core.btn.edit") ?></th>
+                        <th class="text-center"><?= LangManager::translate('core.btn.edit') ?></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($roles as $role) : ?>
+                    <?php foreach ($roles as $role): ?>
                         <tr>
                             <td><?= $role->getName() ?></td>
                             <td><?= $role->getDescription() ?></td>
@@ -122,7 +121,7 @@ $description = "desc";
                 </div>
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">
-                        <?= LangManager::translate("core.btn.save") ?>
+                        <?= LangManager::translate('core.btn.save') ?>
                     </button>
                 </div>
             </form>
@@ -143,7 +142,7 @@ $description = "desc";
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($userList as $user) : ?>
+                <?php foreach ($userList as $user): ?>
                     <tr>
                         <td><?= $user->getPseudo() ?></td>
                         <td><small><?= $user->getHighestRole()->getName() ?></small></td>
@@ -160,53 +159,53 @@ $description = "desc";
                         </td>
                         <td class="text-center space-x-2">
                             <?php if ($userBlocked->getUserBlockedByUserId($user->getId())->isBlocked()): ?>
-                                <button class="text-center me-2" type="button" data-modal-toggle="modal-unblock-user-<?= $user->getId()?>">
+                                <button class="text-center me-2" type="button" data-modal-toggle="modal-unblock-user-<?= $user->getId() ?>">
                                     <i class="text-success fa-solid fa-user-check"></i>
                                 </button>
                             <?php else: ?>
-                                <button class="text-center me-2" type="button" data-modal-toggle="modal-block-user-<?= $user->getId()?>">
+                                <button class="text-center me-2" type="button" data-modal-toggle="modal-block-user-<?= $user->getId() ?>">
                                     <i class="text-danger fa-solid fa-gavel"></i>
                                 </button>
                             <?php endif; ?>
-                            <button class="text-center" type="button" data-modal-toggle="modal-edit-user-role-<?= $user->getId()?>">
+                            <button class="text-center" type="button" data-modal-toggle="modal-edit-user-role-<?= $user->getId() ?>">
                                 <i class="text-info fa-solid fa-edit"></i>
                             </button>
                         </td>
                     </tr>
 
                     <!------MODAL EDIT ROLE FOR USER ------>
-                    <div id="modal-edit-user-role-<?= $user->getId()?>" class="modal-container">
+                    <div id="modal-edit-user-role-<?= $user->getId() ?>" class="modal-container">
                         <div class="modal">
                             <div class="modal-header">
                                 <h6>Modifier le rôle de <?= $user->getPseudo() ?></h6>
-                                <button type="button" data-modal-hide="modal-edit-user-role-<?= $user->getId()?>"><i class="fa-solid fa-xmark"></i></button>
+                                <button type="button" data-modal-hide="modal-edit-user-role-<?= $user->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="roles/user_role/<?= $user->getId() ?>" method="post">
                                 <?php (new SecurityManager())->insertHiddenToken() ?>
                             <div class="modal-body">
                                 <label>Nouveau rôle :</label>
                                 <select class="form-select" name="role_id" required>
-                                    <?php foreach ($roles as $role) : ?>
+                                    <?php foreach ($roles as $role): ?>
                                         <option value="<?= $role->getId() ?>"
-                                            <?= ($userRole->getHighestRoleByUser($user->getId())->getName() === $role->getName() ? "selected" : "") ?>>
+                                            <?= ($userRole->getHighestRoleByUser($user->getId())->getName() === $role->getName() ? 'selected' : '') ?>>
                                             <?= $role->getName() ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn-primary">
-                                    <?= LangManager::translate("core.btn.edit") ?>
+                                    <?= LangManager::translate('core.btn.edit') ?>
                                 </button>
                             </div>
                             </form>
                         </div>
                     </div>
                     <!------MODAL BLOCK USER ------>
-                    <div id="modal-block-user-<?= $user->getId()?>" class="modal-container">
+                    <div id="modal-block-user-<?= $user->getId() ?>" class="modal-container">
                         <div class="modal">
                             <div class="modal-header-danger">
                                 <h6>Bloquer <?= $user->getPseudo() ?></h6>
-                                <button type="button" data-modal-hide="modal-block-user-<?= $user->getId()?>"><i class="fa-solid fa-xmark"></i></button>
+                                <button type="button" data-modal-hide="modal-block-user-<?= $user->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="roles/block/<?= $user->getId() ?>" method="post">
                                 <?php (new SecurityManager())->insertHiddenToken() ?>
@@ -237,11 +236,11 @@ $description = "desc";
                         </div>
                     </div>
                     <!------MODAL UNBLOCK USER ------>
-                    <div id="modal-unblock-user-<?= $user->getId()?>" class="modal-container">
+                    <div id="modal-unblock-user-<?= $user->getId() ?>" class="modal-container">
                         <div class="modal">
                             <div class="modal-header-success">
                                 <h6>Débloquer <?= $user->getPseudo() ?></h6>
-                                <button type="button" data-modal-hide="modal-unblock-user-<?= $user->getId()?>"><i class="fa-solid fa-xmark"></i></button>
+                                <button type="button" data-modal-hide="modal-unblock-user-<?= $user->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="roles/unblock/<?= $user->getId() ?>" method="post">
                                 <?php (new SecurityManager())->insertHiddenToken() ?>

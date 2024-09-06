@@ -18,15 +18,15 @@ use CMW\Utils\Website;
 /* @var CMW\Model\Forum\ForumFeedbackModel $feedbackModel */
 /* @var CMW\Entity\Forum\ForumTopicEntity $topic */
 /* @var CMW\Entity\Forum\ForumResponseEntity[] $responses */
-Website::setTitle("Forum");
-Website::setDescription("Lisez les sujets et les réponses de la communauté");
+Website::setTitle('Forum');
+Website::setDescription('Lisez les sujets et les réponses de la communauté');
 ?>
 
 <!--optional for breadcrumbs-->
 <nav class="flex" aria-label="Breadcrumb">
     <ol>
         <li>
-            <a href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum">Home</a>
+            <a href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum">Home</a>
         </li>
         <li>
             <a href="<?= $category->getLink() ?>"><?= $category->getName() ?></a>
@@ -43,9 +43,9 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
 </nav>
 
 <!--page selector-->
-<?php if ($totalPage > "1"): ?>
+<?php if ($totalPage > '1'): ?>
     <div>
-        <?php if ($currentPage !== "1"): ?>
+        <?php if ($currentPage !== '1'): ?>
             <a href="p1"> << </a>
             <a href="p<?= $currentPage - 1 ?>"> < </a>
         <?php endif; ?>
@@ -126,7 +126,7 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
         </div>
 
         <div>
-            <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
+            <?php foreach ($feedbackModel->getFeedbacks() as $feedback): ?>
                 <?php if ($feedback->userCanTopicReact($topic->getId())): ?>
                     <?php if (UsersController::isUserLogged()): ?>
                         <?php if ($feedback->getFeedbackTopicReacted($topic->getId()) == $feedback->getId()): ?>
@@ -139,7 +139,7 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
                             <img alt="..." src="<?= $feedback->getImage() ?>">
                             <?= $feedback->countTopicFeedbackReceived($topic->getId()) ?>
                             <div>
-                                <?php foreach ($feedbackModel->getTopicUsersFeedbackByFeedbackId($topic->getId(), $feedback->getId()) as $userId) : ?>
+                                <?php foreach ($feedbackModel->getTopicUsersFeedbackByFeedbackId($topic->getId(), $feedback->getId()) as $userId): ?>
                                     <small>- <?= $user = UsersModel::getInstance()->getUserById($userId)->getPseudo() ?></small>
                                 <?php endforeach; ?>
                                 <p class="p-1"><small><?= $feedback->getName() ?></small></p>
@@ -173,14 +173,14 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
 
 <!--response-->
 <section>
-    <?php foreach ($responses as $response) : ?>
+    <?php foreach ($responses as $response): ?>
 
         <div>
             <p><?= $response->getCreated() ?></p>
             <div>
-                <span><?= $response->isTopicAuthor() ? "Topic author" : "" ?></span>
+                <span><?= $response->isTopicAuthor() ? 'Topic author' : '' ?></span>
                 <!--optional (see end JS requierement):-->
-                <span onclick="copyURL('<?= Website::getProtocol() . "://" . $_SERVER['HTTP_HOST'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . "forum/c/" . $category->getSlug() . "/f/" . $forum->getSlug() . "/t/" . $response->getResponseTopic()->getSlug()."/p".$currentPage."/#" . $response->getId() ?>')">copy response ref</span>
+                <span onclick="copyURL('<?= Website::getProtocol() . '://' . $_SERVER['HTTP_HOST'] . EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'forum/c/' . $category->getSlug() . '/f/' . $forum->getSlug() . '/t/' . $response->getResponseTopic()->getSlug() . '/p' . $currentPage . '/#' . $response->getId() ?>')">copy response ref</span>
                 <!--for a better user experience we advise you to use modals for report (view WIPE theme template) :-->
                 <a href="<?= $response->getReportLink() ?>">Report</a>
                 <span class="ml-2">#<?= $response->getResponsePosition() ?></span>
@@ -204,7 +204,7 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
         </div>
 
         <div>
-            <?php foreach ($feedbackModel->getFeedbacks() as $responseFeedback) : ?>
+            <?php foreach ($feedbackModel->getFeedbacks() as $responseFeedback): ?>
                 <?php if ($responseFeedback->userCanResponseReact($response->getId())): ?>
                     <?php if (UsersController::isUserLogged()): ?>
                         <?php if ($responseFeedback->getFeedbackResponseReacted($response->getId()) === $responseFeedback->getId()): ?>
@@ -242,9 +242,9 @@ Website::setDescription("Lisez les sujets et les réponses de la communauté");
 </section>
 
 <!--page selector-->
-<?php if ($totalPage > "1"): ?>
+<?php if ($totalPage > '1'): ?>
     <div>
-        <?php if ($currentPage !== "1"): ?>
+        <?php if ($currentPage !== '1'): ?>
             <a href="p1"> << </a>
             <a href="p<?= $currentPage - 1 ?>"> < </a>
         <?php endif; ?>

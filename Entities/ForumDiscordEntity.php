@@ -7,7 +7,6 @@ class ForumDiscordEntity
     private int $DiscordId;
     private string $DiscordWebhook;
     private string $DiscordDescription;
-
     private string $DiscordEmbedColor;
 
     public function __construct(int $DiscordId, string $DiscordWebhook, string $DiscordDescription, string $DiscordEmbedColor)

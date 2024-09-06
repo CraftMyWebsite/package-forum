@@ -20,21 +20,21 @@ class ForumPermissionModel extends AbstractModel
      */
     public function getPermissionById(int $id): ?ForumPermissionEntity
     {
-        $sql = "SELECT * FROM cmw_forums_permissions WHERE forum_permission_id = :forum_permission_id";
+        $sql = 'SELECT * FROM cmw_forums_permissions WHERE forum_permission_id = :forum_permission_id';
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_permission_id" => $id))) {
+        if (!$res->execute(array('forum_permission_id' => $id))) {
             return null;
         }
 
         $res = $res->fetch();
 
         return new ForumPermissionEntity(
-            $res["forum_permission_id"],
-            $res["forum_permission_parent_id"],
-            $res["forum_permission_code"]
+            $res['forum_permission_id'],
+            $res['forum_permission_parent_id'],
+            $res['forum_permission_code']
         );
     }
 
@@ -43,8 +43,7 @@ class ForumPermissionModel extends AbstractModel
      */
     public function getPermissions(): array
     {
-
-        $sql = "SELECT forum_permission_id FROM cmw_forums_permissions";
+        $sql = 'SELECT forum_permission_id FROM cmw_forums_permissions';
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
@@ -56,11 +55,10 @@ class ForumPermissionModel extends AbstractModel
         $toReturn = array();
 
         while ($perm = $res->fetch()) {
-            $toReturn[] = $this->getPermissionById($perm["forum_permission_id"]);
+            $toReturn[] = $this->getPermissionById($perm['forum_permission_id']);
         }
 
         return $toReturn;
-
     }
 
     /**
@@ -71,7 +69,7 @@ class ForumPermissionModel extends AbstractModel
     public function hasForumPermission(int $userId, string $permissionCode): bool
     {
         foreach ($this->getPermissionsByUser($userId) as $userPermission) {
-            if ($userPermission->getCode() === "operator") {
+            if ($userPermission->getCode() === 'operator') {
                 return true;
             }
             if ($permissionCode === $userPermission->getCode()) {
@@ -81,28 +79,23 @@ class ForumPermissionModel extends AbstractModel
         return false;
     }
 
-
     /**
      * @return \CMW\Entity\Users\PermissionEntity[]
      */
     public function getPermissionsByUser(int $userId): array
     {
-
         $roles = ForumPermissionRoleModel::getInstance()->getRolesByUser($userId);
 
         $rolesModel = new ForumPermissionRoleModel();
 
         $toReturn = array();
         foreach ($roles as $role) {
-
             $permissions = $rolesModel->getPermissions($role->getId());
             foreach ($permissions as $permission) {
                 $toReturn[] = $permission;
             }
-
         }
 
         return $toReturn;
-
     }
 }

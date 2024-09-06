@@ -26,7 +26,6 @@ use CMW\Utils\Utils;
 use CMW\Utils\Website;
 use JetBrains\PhpStorm\NoReturn;
 
-
 /**
  * Class: @PublicForumResponseController
  * @package Forum
@@ -35,11 +34,11 @@ use JetBrains\PhpStorm\NoReturn;
  */
 class PublicForumResponseController extends AbstractController
 {
-    #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page", Link::POST, ['.*?'], "/forum")]
+    #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page', Link::POST, ['.*?'], '/forum')]
     private function publicTopicResponsePost(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         if (!UsersController::isUserLogged()) {
-            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de répondre.");
+            Flash::send(Alert::ERROR, 'Forum', 'Connectez-vous avant de répondre.');
             Redirect::redirect('login');
         }
 
@@ -56,39 +55,38 @@ class PublicForumResponseController extends AbstractController
         }
 
         if (!$category->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Cette catégorie est privé !');
+            Redirect::redirect('forum');
         }
         if (!$forum->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Ce forum est privé !');
+            Redirect::redirect('forum');
         }
 
         $userId = UsersModel::getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
+            Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
-        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, "user_response_topic")) {
-            ForumPermissionController::getInstance()->alertNotHavePermissions("user_response_topic");
+        if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, 'user_response_topic')) {
+            ForumPermissionController::getInstance()->alertNotHavePermissions('user_response_topic');
             Redirect::redirectPreviousRoute();
         }
-
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         $responseModel = ForumResponseModel::getInstance();
 
         if (!$topic) {
-            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
+            Flash::send(Alert::ERROR, LangManager::translate('core.toaster.error'),
+                LangManager::translate('core.toaster.internalError'));
             Website::refresh();
             return;
         }
 
         if ($topic->isDisallowReplies()) {
-            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
-                LangManager::translate("forum.topic.replies.error.disallow_replies"));
+            Flash::send(Alert::ERROR, LangManager::translate('core.toaster.error'),
+                LangManager::translate('forum.topic.replies.error.disallow_replies'));
             Website::refresh();
             return;
         }
@@ -98,8 +96,8 @@ class PublicForumResponseController extends AbstractController
         [$topicId, $content] = Utils::filterInput('topicId', 'topicResponse');
 
         if (Utils::containsNullValue($topicId, $content)) {
-            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
-                LangManager::translate("forum.category.toaster.error.empty_input"));
+            Flash::send(Alert::ERROR, LangManager::translate('core.toaster.error'),
+                LangManager::translate('forum.category.toaster.error.empty_input'));
             Website::refresh();
             return;
         }
@@ -107,8 +105,8 @@ class PublicForumResponseController extends AbstractController
         $responseEntity = $responseModel::getInstance()->createResponse($content, $userId, $topicId);
 
         if (is_null($responseEntity)) {
-            Flash::send(Alert::ERROR, LangManager::translate("core.toaster.error"),
-                LangManager::translate("core.toaster.internalError"));
+            Flash::send(Alert::ERROR, LangManager::translate('core.toaster.error'),
+                LangManager::translate('core.toaster.internalError'));
             Website::refresh();
             return;
         }
@@ -117,7 +115,7 @@ class PublicForumResponseController extends AbstractController
             $followers = ForumFollowedModel::getInstance()->getFollowerByTopicId($topicId);
             foreach ($followers as $follower) {
                 $mail = $follower->getUser()->getMail();
-                $responseURL = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . $_SERVER['REQUEST_URI'] . "#" . $responseEntity->getId();
+                $responseURL = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . $_SERVER['REQUEST_URI'] . '#' . $responseEntity->getId();
                 $topicName = $follower->getTopic()->getName();
                 $responseUser = $follower->getTopic()->getLastResponse()?->getUser()->getPseudo();
                 $responseContent = $follower->getTopic()->getLastResponse()?->getContent();
@@ -125,18 +123,18 @@ class PublicForumResponseController extends AbstractController
             }
         }
 
+        Flash::send('success', LangManager::translate('core.toaster.success'),
+            LangManager::translate('forum.topic.replies.success'));
 
-        Flash::send("success", LangManager::translate("core.toaster.success"),
-            LangManager::translate("forum.topic.replies.success"));
-
-        header("Location: " . EnvManager::getInstance()->getValue("PATH_SUBFOLDER") . "forum/c/$catSlug/f/$forumSlug/t/$topicSlug/p" . $responseEntity->getPageNumber() . "/#" . $responseEntity->getId());
+        header('Location: ' . EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . "forum/c/$catSlug/f/$forumSlug/t/$topicSlug/p" . $responseEntity->getPageNumber() . '/#' . $responseEntity->getId());
     }
 
-    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    #[NoReturn]
+    #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_react/:responseId/:feedbackId', Link::GET, ['.*?'], '/forum')]
     private function publicResponseAddFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
-            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Flash::send(Alert::ERROR, 'Forum', 'Connectez-vous avant de réagire.');
             Redirect::redirect('login');
         }
 
@@ -153,19 +151,19 @@ class PublicForumResponseController extends AbstractController
         }
 
         if (!$category->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Cette catégorie est privé !');
+            Redirect::redirect('forum');
         }
         if (!$forum->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Ce forum est privé !');
+            Redirect::redirect('forum');
         }
 
-        ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_response_react");
+        ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_response_react');
         $userBlocked = ForumUserBlockedModel::getInstance();
         $userId = UsersModel::getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
+            Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         $user = usersModel::getInstance()::getCurrentUser();
@@ -174,11 +172,12 @@ class PublicForumResponseController extends AbstractController
         Redirect::redirectPreviousRoute();
     }
 
-    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_un_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    #[NoReturn]
+    #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_un_react/:responseId/:feedbackId', Link::GET, ['.*?'], '/forum')]
     private function publicResponseDeleteFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
-            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Flash::send(Alert::ERROR, 'Forum', 'Connectez-vous avant de réagire.');
             Redirect::redirect('login');
         }
 
@@ -195,19 +194,19 @@ class PublicForumResponseController extends AbstractController
         }
 
         if (!$category->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Cette catégorie est privé !');
+            Redirect::redirect('forum');
         }
         if (!$forum->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Ce forum est privé !');
+            Redirect::redirect('forum');
         }
 
-        ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_response_remove_react");
+        ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_response_remove_react');
         $userBlocked = ForumUserBlockedModel::getInstance();
         $userId = UsersModel::getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
+            Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         $user = usersModel::getInstance()::getCurrentUser();
@@ -216,11 +215,12 @@ class PublicForumResponseController extends AbstractController
         Redirect::redirectPreviousRoute();
     }
 
-    #[NoReturn] #[Link("/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_change_react/:responseId/:feedbackId", Link::GET, ['.*?'], "/forum")]
+    #[NoReturn]
+    #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/response_change_react/:responseId/:feedbackId', Link::GET, ['.*?'], '/forum')]
     private function publicResponseChangeFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $responseId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
-            Flash::send(Alert::ERROR, "Forum", "Connectez-vous avant de réagire.");
+            Flash::send(Alert::ERROR, 'Forum', 'Connectez-vous avant de réagire.');
             Redirect::redirect('login');
         }
 
@@ -237,19 +237,19 @@ class PublicForumResponseController extends AbstractController
         }
 
         if (!$category->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Cette catégorie est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Cette catégorie est privé !');
+            Redirect::redirect('forum');
         }
         if (!$forum->isUserAllowed()) {
-            Flash::send(Alert::ERROR, "Forum", "Ce forum est privé !");
-            Redirect::redirect("forum");
+            Flash::send(Alert::ERROR, 'Forum', 'Ce forum est privé !');
+            Redirect::redirect('forum');
         }
 
-        ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_response_change_react");
+        ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_response_change_react');
         $userBlocked = ForumUserBlockedModel::getInstance();
         $userId = UsersModel::getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
-            Flash::send(Alert::ERROR, "Forum", "Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : " . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
+            Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
         $user = usersModel::getInstance()::getCurrentUser();

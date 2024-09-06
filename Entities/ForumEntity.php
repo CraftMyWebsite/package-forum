@@ -12,7 +12,6 @@ use CMW\Utils\Website;
 
 class ForumEntity
 {
-
     private int $forumId;
     private string $forumName;
     private string $forumIcon;
@@ -151,9 +150,9 @@ class ForumEntity
      */
     public function getLink(): string
     {
-        $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/";
+        $baseUrl = Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'forum/';
         $catSlug = ForumCategoryModel::getInstance()->getCategoryByForumId($this->forumId)->getSlug();
-        return $baseUrl."c/$catSlug/f/$this->forumSlug/fp1";
+        return $baseUrl . "c/$catSlug/f/$this->forumSlug/fp1";
     }
 
     public function getParent(): ForumEntity|ForumCategoryEntity
@@ -178,6 +177,4 @@ class ForumEntity
     {
         return (new ForumResponseModel())->getLatestResponseInForum($this->forumId);
     }
-
-
 }

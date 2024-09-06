@@ -3,8 +3,8 @@
 use CMW\Manager\Security\SecurityManager;
 use CMW\Utils\Website;
 
-Website::setTitle("Forum");
-Website::setDescription("Report");
+Website::setTitle('Forum');
+Website::setDescription('Report');
 
 ?>
 <form action="" method="post">

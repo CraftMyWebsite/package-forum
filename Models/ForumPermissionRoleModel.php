@@ -21,9 +21,6 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     private ForumPermissionModel $forumPermissionModel;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->forumPermissionModel = new ForumPermissionModel();
@@ -35,13 +32,12 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function getRoleById($id): ?ForumPermissionRoleEntity
     {
-
-        $sql = "SELECT * FROM cmw_forums_roles WHERE forums_role_id = :forums_role_id";
+        $sql = 'SELECT * FROM cmw_forums_roles WHERE forums_role_id = :forums_role_id';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
-        if (!$req->execute(array("forums_role_id" => $id))) {
+        if (!$req->execute(array('forums_role_id' => $id))) {
             return null;
         }
 
@@ -59,7 +55,6 @@ class ForumPermissionRoleModel extends AbstractModel
             $res['forums_role_is_default'],
             $this->getPermissions($id)
         );
-
     }
 
     /**
@@ -67,8 +62,7 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function getRole(): array
     {
-
-        $sql = "SELECT forums_role_id FROM cmw_forums_roles";
+        $sql = 'SELECT forums_role_id FROM cmw_forums_roles';
         $db = DatabaseManager::getInstance();
 
         $res = $db->prepare($sql);
@@ -80,11 +74,10 @@ class ForumPermissionRoleModel extends AbstractModel
         $toReturn = array();
 
         while ($role = $res->fetch()) {
-            $toReturn[] = $this->getRoleById($role["forums_role_id"]);
+            $toReturn[] = $this->getRoleById($role['forums_role_id']);
         }
 
         return $toReturn;
-
     }
 
     /**
@@ -93,22 +86,21 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function getPermissions(int $forumRoleId): array
     {
-        $sql = "SELECT forum_permission_id FROM cmw_forums_roles_permissions WHERE forum_role_id = :forum_role_id";
+        $sql = 'SELECT forum_permission_id FROM cmw_forums_roles_permissions WHERE forum_role_id = :forum_role_id';
         $db = DatabaseManager::getInstance();
         $res = $db->prepare($sql);
 
-        if (!$res->execute(array("forum_role_id" => $forumRoleId))) {
+        if (!$res->execute(array('forum_role_id' => $forumRoleId))) {
             return array();
         }
 
         $toReturn = array();
 
         while ($perm = $res->fetch()) {
-            $toReturn[] = $this->forumPermissionModel->getPermissionById($perm["forum_permission_id"]);
+            $toReturn[] = $this->forumPermissionModel->getPermissionById($perm['forum_permission_id']);
         }
 
         return $toReturn;
-
     }
 
     /**
@@ -116,19 +108,19 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function getRolesByUser(int $userId): array
     {
-        $sql = "SELECT forums_role_id FROM cmw_forums_users_roles WHERE user_id = :user_id";
+        $sql = 'SELECT forums_role_id FROM cmw_forums_users_roles WHERE user_id = :user_id';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
-        if (!$req->execute(array("user_id" => $userId))) {
+        if (!$req->execute(array('user_id' => $userId))) {
             return array();
         }
 
         $toReturn = array();
 
         while ($role = $req->fetch()) {
-            $toReturn[] = $this->getRoleById($role["forums_role_id"]);
+            $toReturn[] = $this->getRoleById($role['forums_role_id']);
         }
 
         return $toReturn;
@@ -140,17 +132,17 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function getHighestRoleByUser(int $userId): ?ForumPermissionRoleEntity
     {
-        $sql = "SELECT cmw_forums_users_roles.forums_role_id 
+        $sql = 'SELECT cmw_forums_users_roles.forums_role_id 
                 FROM cmw_forums_users_roles
                 JOIN cmw_forums_roles ON cmw_forums_users_roles.forums_role_id = cmw_forums_roles.forums_role_id
                 WHERE user_id = :user_id
                 ORDER BY cmw_forums_roles.forums_role_weight DESC
-                LIMIT 1";
+                LIMIT 1';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
-        if (!$req->execute(array("user_id" => $userId))) {
+        if (!$req->execute(array('user_id' => $userId))) {
             return null;
         }
 
@@ -160,7 +152,7 @@ class ForumPermissionRoleModel extends AbstractModel
             return null;
         }
 
-        return $this->getRoleById($res["forums_role_id"]);
+        return $this->getRoleById($res['forums_role_id']);
     }
 
     /**
@@ -172,9 +164,9 @@ class ForumPermissionRoleModel extends AbstractModel
     public function addRole(string $name, int $weight, string $description): ?ForumPermissionRoleEntity
     {
         $data = array(
-            "name" => $name,
-            "weight" => $weight,
-            "description" => $description
+            'name' => $name,
+            'weight' => $weight,
+            'description' => $description
         );
         $sql = "INSERT INTO `cmw_forums_roles` (`forums_role_name`, `forums_role_description`, `forums_role_weight`, `forums_role_is_default`) VALUES (:name, :description, :weight, '0');";
         $db = DatabaseManager::getInstance();
@@ -191,10 +183,10 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function editRole(string $name, int $weight, string $description, int $roleId): void
     {
-        $sql = "UPDATE cmw_forums_roles SET forums_role_name = :role_name, forums_role_description = :role_description, forums_role_weight = :role_weight  WHERE forums_role_id = :role_id";
+        $sql = 'UPDATE cmw_forums_roles SET forums_role_name = :role_name, forums_role_description = :role_description, forums_role_weight = :role_weight  WHERE forums_role_id = :role_id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
-        $req->execute(["role_id" =>$roleId, "role_name" =>$name, "role_description" =>$description, "role_weight" =>$weight]);
+        $req->execute(['role_id' => $roleId, 'role_name' => $name, 'role_description' => $description, 'role_weight' => $weight]);
     }
 
     /**
@@ -204,9 +196,9 @@ class ForumPermissionRoleModel extends AbstractModel
     public function removeRole(int $roleId): void
     {
         $data = array(
-            "role_id" => $roleId
+            'role_id' => $roleId
         );
-        $sql = "DELETE FROM `cmw_forums_roles` WHERE `forums_role_id` = :role_id";
+        $sql = 'DELETE FROM `cmw_forums_roles` WHERE `forums_role_id` = :role_id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
         $req->execute($data);
@@ -220,10 +212,10 @@ class ForumPermissionRoleModel extends AbstractModel
     public function addRolePermissions(int $roleId, int $permissionId): void
     {
         $data = array(
-            "permission_id" => $permissionId,
-            "role_id" => $roleId
+            'permission_id' => $permissionId,
+            'role_id' => $roleId
         );
-        $sql = "INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`) VALUES (:permission_id, :role_id);";
+        $sql = 'INSERT INTO `cmw_forums_roles_permissions` (`forum_permission_id`, `forum_role_id`) VALUES (:permission_id, :role_id);';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
         $req->execute($data);
@@ -237,10 +229,10 @@ class ForumPermissionRoleModel extends AbstractModel
     public function removeRolePermissions(int $roleId, int $permissionId): void
     {
         $data = array(
-            "permission_id" => $permissionId,
-            "role_id" => $roleId
+            'permission_id' => $permissionId,
+            'role_id' => $roleId
         );
-        $sql = "DELETE FROM `cmw_forums_roles_permissions` WHERE `forum_permission_id` = :permission_id AND `forum_role_id` = :role_id";
+        $sql = 'DELETE FROM `cmw_forums_roles_permissions` WHERE `forum_permission_id` = :permission_id AND `forum_role_id` = :role_id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
         $req->execute($data);
@@ -253,10 +245,10 @@ class ForumPermissionRoleModel extends AbstractModel
     public function roleHasPerm(int $roleId, int $permissionId): bool
     {
         $data = array(
-            "permission_id" => $permissionId,
-            "role_id" => $roleId
+            'permission_id' => $permissionId,
+            'role_id' => $roleId
         );
-        $sql = "SELECT * FROM `cmw_forums_roles_permissions` WHERE forum_permission_id = :permission_id AND forum_role_id = :role_id";
+        $sql = 'SELECT * FROM `cmw_forums_roles_permissions` WHERE forum_permission_id = :permission_id AND forum_role_id = :role_id';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
@@ -273,10 +265,10 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function changeUserRole(int $userId, int $roleId): void
     {
-        $sql = "UPDATE cmw_forums_users_roles SET forums_role_id = :role_id WHERE user_id = :user_id";
+        $sql = 'UPDATE cmw_forums_users_roles SET forums_role_id = :role_id WHERE user_id = :user_id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
-        $req->execute(["role_id" =>$roleId, "user_id" =>$userId]);
+        $req->execute(['role_id' => $roleId, 'user_id' => $userId]);
     }
 
     /**
@@ -284,15 +276,15 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function changeDefaultRole(int $id, string $question): void
     {
-        if ($question === "yes") {
+        if ($question === 'yes') {
             $this->updateDefaultRoleForAllUser($id);
         }
         $this->removePreviousDefaultRole();
 
-        $sql = "UPDATE cmw_forums_roles SET forums_role_is_default = 1 WHERE forums_role_id = :id";
+        $sql = 'UPDATE cmw_forums_roles SET forums_role_is_default = 1 WHERE forums_role_id = :id';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
-        $req->execute(array("id" => $id));
+        $req->execute(array('id' => $id));
     }
 
     /**
@@ -300,7 +292,7 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public function removePreviousDefaultRole(): void
     {
-        $sql = "UPDATE cmw_forums_roles SET forums_role_is_default = 0 WHERE forums_role_is_default = 1";
+        $sql = 'UPDATE cmw_forums_roles SET forums_role_is_default = 0 WHERE forums_role_is_default = 1';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
@@ -316,10 +308,10 @@ class ForumPermissionRoleModel extends AbstractModel
         foreach (UsersModel::getInstance()->getUsers() as $user) {
             $userId = $user->getId();
             if ($this->getHighestRoleByUser($userId)->isDefault()) {
-                $sql = "UPDATE cmw_forums_users_roles SET forums_role_id = :newDefaultRole WHERE user_id = :userId";
+                $sql = 'UPDATE cmw_forums_users_roles SET forums_role_id = :newDefaultRole WHERE user_id = :userId';
                 $db = DatabaseManager::getInstance();
                 $res = $db->prepare($sql);
-                $res->execute(["newDefaultRole" =>$newDefaultRole, "userId" =>$userId]);
+                $res->execute(['newDefaultRole' => $newDefaultRole, 'userId' => $userId]);
             }
         }
     }
@@ -331,16 +323,15 @@ class ForumPermissionRoleModel extends AbstractModel
     public function addUserForumDefaultRoleOnRegister(int $userId): void
     {
         $data = array(
-            "user_id" => $userId
+            'user_id' => $userId
         );
 
-        $sql = "INSERT INTO cmw_forums_users_roles (user_id, forums_role_id) SELECT :user_id, forums_role_id FROM cmw_forums_roles WHERE forums_role_is_default = 1;";
+        $sql = 'INSERT INTO cmw_forums_users_roles (user_id, forums_role_id) SELECT :user_id, forums_role_id FROM cmw_forums_roles WHERE forums_role_is_default = 1;';
 
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);
 
         $req->execute($data);
-
     }
 
     /**

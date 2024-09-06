@@ -2,14 +2,14 @@
 
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
-use CMW\Utils\Utils;
 use CMW\Manager\Security\SecurityManager;
+use CMW\Utils\Utils;
 
-/* @var \CMW\Entity\Forum\ForumResponseEntity $response*/
-/* @var \CMW\Entity\Forum\ForumTopicEntity $topic*/
+/* @var \CMW\Entity\Forum\ForumResponseEntity $response */
+/* @var \CMW\Entity\Forum\ForumTopicEntity $topic */
 
-$title = LangManager::translate("forum.forum.list.title");
-$description = LangManager::translate("forum.forum.list.description");
+$title = LangManager::translate('forum.forum.list.title');
+$description = LangManager::translate('forum.forum.list.description');
 ?>
 
 <h3><i class="fa-solid fa-trash"></i> Corbeille</h3>
@@ -28,7 +28,7 @@ $description = LangManager::translate("forum.forum.list.description");
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <?php foreach ($responseModel->getTrashResponse() as $response) : ?>
+                <?php foreach ($responseModel->getTrashResponse() as $response): ?>
                     <tr>
                         <td><?= $response->getUser()->getPseudo() ?></td>
                         <td><?= $response->getTrashReason() ?></td>
@@ -55,13 +55,13 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <button type="button" data-modal-hide="modal-view-<?= $response->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <div class="modal-body">
-                                <p><b>Était dans : </b> <a class="link" href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum/c/<?=$response->getResponseTopic()->getCat()->getSlug()?>/f/<?=$response->getResponseTopic()->getForum()->getSlug()?>/t/<?= $response->getResponseTopic()->getSlug() ?>/p1" target="_blank"><?= $response->getResponseTopic()->getName() ?></a></p>
+                                <p><b>Était dans : </b> <a class="link" href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum/c/<?= $response->getResponseTopic()->getCat()->getSlug() ?>/f/<?= $response->getResponseTopic()->getForum()->getSlug() ?>/t/<?= $response->getResponseTopic()->getSlug() ?>/p1" target="_blank"><?= $response->getResponseTopic()->getName() ?></a></p>
                                 <p><b>Messages :</b><?= $response->getContent() ?></p>
                                 <p><b>Publié le :</b> <?= $response->getCreated() ?></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn-primary" data-modal-hide="modal-view-<?= $response->getId() ?>">
-                                    <?= LangManager::translate("core.btn.close") ?>
+                                    <?= LangManager::translate('core.btn.close') ?>
                                 </button>
                             </div>
                         </div>
@@ -99,7 +99,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             </div>
                             <div class="modal-footer">
                                 <a href="trash/deletereply/<?= $response->getId() ?>" class="btn-danger">
-                                    <?= LangManager::translate("core.btn.delete") ?>
+                                    <?= LangManager::translate('core.btn.delete') ?>
                                 </a>
                             </div>
                         </div>
@@ -122,7 +122,7 @@ $description = LangManager::translate("forum.forum.list.description");
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <?php foreach ($topicModel->getTrashTopic() as $topic) : ?>
+                <?php foreach ($topicModel->getTrashTopic() as $topic): ?>
                     <tr>
                         <td><?= $topic->getUser()->getPseudo() ?></td>
                         <td><?= $topic->getTrashReason() ?></td>
@@ -155,7 +155,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                 <p><b>Publié le :</b> <?= $topic->getCreated() ?></p>
                             </div>
                             <div class="modal-footer">
-                                <button data-modal-hide="modal-vieww-<?= $topic->getId() ?>" type="button" class="btn-primary"><?= LangManager::translate("core.btn.close") ?></button>
+                                <button data-modal-hide="modal-vieww-<?= $topic->getId() ?>" type="button" class="btn-primary"><?= LangManager::translate('core.btn.close') ?></button>
                             </div>
                         </div>
                     </div>
@@ -192,7 +192,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             </div>
                             <div class="modal-footer">
                                 <a href="trash/deletetopic/<?= $topic->getId() ?>" class="btn-danger">
-                                    <?= LangManager::translate("core.btn.delete") ?>
+                                    <?= LangManager::translate('core.btn.delete') ?>
                                 </a>
                             </div>
                         </div>

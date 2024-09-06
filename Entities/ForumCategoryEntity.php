@@ -1,6 +1,7 @@
 <?php
 
 namespace CMW\Entity\Forum;
+
 use CMW\Controller\Core\CoreController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
@@ -12,7 +13,6 @@ use CMW\Utils\Website;
 
 class ForumCategoryEntity
 {
-
     private int $categoryId;
     private string $categoryName;
     private string $categorySlug;
@@ -34,8 +34,7 @@ class ForumCategoryEntity
      * @param int $categoryIsRestricted
      * @param \CMW\Entity\Forum\ForumPermissionRoleEntity[]|null $restrictedRoles
      */
-
-    public function __construct(int $id, string $name, string $categorySlug, string $icon,string $categoryCreated, string $categoryUpdate, ?string $desc, int $categoryIsRestricted, ?array $restrictedRoles)
+    public function __construct(int $id, string $name, string $categorySlug, string $icon, string $categoryCreated, string $categoryUpdate, ?string $desc, int $categoryIsRestricted, ?array $restrictedRoles)
     {
         $this->categoryId = $id;
         $this->categoryName = $name;
@@ -77,7 +76,7 @@ class ForumCategoryEntity
      */
     public function getLink(): string
     {
-        return Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue("PATH_SUBFOLDER")."forum/c/".$this->categorySlug;
+        return Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'forum/c/' . $this->categorySlug;
     }
 
     /**
@@ -112,7 +111,6 @@ class ForumCategoryEntity
     {
         return $this->categoryIsRestricted;
     }
-
 
     /**
      * @return bool
@@ -178,5 +176,4 @@ class ForumCategoryEntity
     {
         return (new ForumCategoryModel())->getNumberOfMessages($this->categoryId);
     }
-
 }

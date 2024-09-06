@@ -1,9 +1,9 @@
 <?php
 
 use CMW\Controller\Forum\Admin\ForumPermissionController;
+use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Security\SecurityManager;
-use CMW\Controller\Users\UsersController;
 use CMW\Utils\Website;
 
 /** @var \CMW\Entity\Forum\ForumCategoryEntity $category */
@@ -14,14 +14,14 @@ use CMW\Utils\Website;
 /* @var CMW\Controller\Forum\ForumSettingsController $iconPin */
 /* @var CMW\Controller\Forum\ForumSettingsController $iconClosed */
 
-Website::setTitle("Forum");
-Website::setDescription("Ajouter un sujet");
+Website::setTitle('Forum');
+Website::setDescription('Ajouter un sujet');
 ?>
     <!--optional for breadcrumbs-->
     <nav class="flex" aria-label="Breadcrumb">
         <ol>
             <li>
-                <a href="<?= EnvManager::getInstance()->getValue("PATH_SUBFOLDER") ?>forum">Home</a>
+                <a href="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum">Home</a>
             </li>
             <li>
                 <a href="<?= $category->getLink() ?>"><?= $category->getName() ?></a>
@@ -41,7 +41,7 @@ Website::setDescription("Ajouter un sujet");
         <form action="" method="post">
             <?php (new SecurityManager())->insertHiddenToken() ?>
             <!--ADMIN optional-->
-            <?php if (UsersController::isAdminLogged() || ForumPermissionController::getInstance()->hasPermission("operator")) : ?>
+            <?php if (UsersController::isAdminLogged() || ForumPermissionController::getInstance()->hasPermission('operator')): ?>
                 <input name="important" value="1" id="important" type="checkbox" >
                 <label for="important"><i class="<?= $iconImportant ?> text-orange-500 fa-sm"></i> Important</label>
                 <input name="pin" id="pin" type="checkbox" value="">

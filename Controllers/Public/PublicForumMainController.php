@@ -18,18 +18,18 @@ use CMW\Model\Forum\ForumSettingsModel;
  */
 class PublicForumMainController extends AbstractController
 {
-    #[Link("/", Link::GET, [], "/forum")]
+    #[Link('/', Link::GET, [], '/forum')]
     private function publicBaseView(): void
     {
-        $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue("visitorCanViewForum");
+        $visitorCanViewForum = ForumSettingsModel::getInstance()->getOptionValue('visitorCanViewForum');
 
-        if ($visitorCanViewForum === "0") {
-            ForumPermissionController::getInstance()->redirectIfNotHavePermissions("user_view_forum");
+        if ($visitorCanViewForum === '0') {
+            ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_view_forum');
         }
 
-        $view = new View("Forum", "main");
-        $view->addVariableList(["forumModel" => forumModel::getInstance(), "categoryModel" => ForumCategoryModel::getInstance()]);
-        $view->addStyle("Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css");
+        $view = new View('Forum', 'main');
+        $view->addVariableList(['forumModel' => forumModel::getInstance(), 'categoryModel' => ForumCategoryModel::getInstance()]);
+        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
         $view->view();
     }
 }

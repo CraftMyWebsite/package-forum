@@ -2,22 +2,22 @@
 
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
-use CMW\Model\Forum\ForumPrefixModel;
 use CMW\Manager\Security\SecurityManager;
+use CMW\Model\Forum\ForumPrefixModel;
 use CMW\Utils\Website;
 
 /* @var CMW\Model\Forum\ForumModel $forumModel */
 /* @var CMW\Model\Forum\ForumCategoryModel $categoryModel */
 /* @var \CMW\Entity\Forum\ForumPermissionRoleEntity[] $ForumRoles */
 
-$title = LangManager::translate("forum.manage.list.title");
-$description = LangManager::translate("forum.forum.list.description");
+$title = LangManager::translate('forum.manage.list.title');
+$description = LangManager::translate('forum.forum.list.description');
 ?>
 
 <div class="page-title">
-    <h3><i class="fa-solid fa-book"></i> <?= LangManager::translate("forum.manage.list.title") ?></h3>
+    <h3><i class="fa-solid fa-book"></i> <?= LangManager::translate('forum.manage.list.title') ?></h3>
     <button data-modal-toggle="modal-add-cat" class="btn-primary" type="button"><i
-            class="fa-solid fa-circle-plus"></i> <?= LangManager::translate("forum.manage.list.buton.addCat") ?>
+            class="fa-solid fa-circle-plus"></i> <?= LangManager::translate('forum.manage.list.buton.addCat') ?>
     </button>
 </div>
 
@@ -38,7 +38,7 @@ $description = LangManager::translate("forum.forum.list.description");
                     </div>
                     <div class="space-x-2">
                         <a target="_blank"
-                           href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . "/forum/c/" . $category->getSlug() ?>"><i
+                           href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . '/forum/c/' . $category->getSlug() ?>"><i
                                 class="fa-solid fa-up-right-from-square"></i></a>
                         <a href="manage/addForum/<?= $category->getId() ?>">
                             <i class="text-success fa-solid fa-circle-plus"></i>
@@ -61,7 +61,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                    class="fa-sharp fa-solid fa-circle-info"></i></small>
                             <?php endif; ?>
                             <?php if ($forumObj->disallowTopics()): ?> - <i data-bs-toggle="tooltip"
-                                                                            title=<?= LangManager::translate("forum.manage.list.text.noNewTopics") ?> class="fa-sharp
+                                                                            title=<?= LangManager::translate('forum.manage.list.text.noNewTopics') ?> class="fa-sharp
                                                                             fa-solid
                                                                             fa-lock"></i></small> <?php endif; ?>
                             -
@@ -69,7 +69,7 @@ $description = LangManager::translate("forum.forum.list.description");
                         </div>
                         <div class="space-x-2">
                             <a target="_blank"
-                               href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . "/forum/c/" . $category->getSlug() . "/f/" . $forumObj->getLink() ?>"><i
+                               href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . '/forum/c/' . $category->getSlug() . '/f/' . $forumObj->getLink() ?>"><i
                                     class="fa-solid fa-up-right-from-square"></i></a>
                             <a href="manage/addSubForum/<?= $forumObj->getId() ?>">
                                 <i class="text-success fas fa-circle-plus"></i>
@@ -84,53 +84,53 @@ $description = LangManager::translate("forum.forum.list.description");
                     <!----LISTAGE SOUS-FORUM ---->
                     <?php foreach ($forumModel->getSubsForums($forumObj->getId()) as $subForum): ?>
                         <div class="flex justify-between hover:bg-gray-100 dark:hover:bg-gray-800 text-lg"
-                             style="padding-left: <?= 1 + $subForum["depth"] * 2 ?>rem">
+                             style="padding-left: <?= 1 + $subForum['depth'] * 2 ?>rem">
                             <div>
                                 <i class="text-secondary fa-solid fa-turn-up fa-rotate-90"></i>
-                                <?= $subForum["subforum"]->getFontAwesomeIcon() ?>
-                                <?= $subForum["subforum"]->getName() ?>
-                                <?php if ($subForum["subforum"]->isRestricted()): ?><small style="color: #af1a1a">
+                                <?= $subForum['subforum']->getFontAwesomeIcon() ?>
+                                <?= $subForum['subforum']->getName() ?>
+                                <?php if ($subForum['subforum']->isRestricted()): ?><small style="color: #af1a1a">
                                     Restreint
                                     <i data-bs-toggle="tooltip"
-                                       title="<?php foreach ($forumModel->getAllowedRoles($subForum["subforum"]->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>"
+                                       title="<?php foreach ($forumModel->getAllowedRoles($subForum['subforum']->getId()) as $allowedRoles): ?> - <?= $allowedRoles->getName() ?> <?php endforeach ?>"
                                        class="fa-sharp fa-solid fa-circle-info"></i></small>
                                 <?php endif; ?>
-                                <?php if ($subForum["subforum"]->disallowTopics()): ?> - <i data-bs-toggle="tooltip"
-                                                                                            title=<?= LangManager::translate("forum.manage.list.text.noNewTopics") ?>> </i></small> <?php endif; ?>
+                                <?php if ($subForum['subforum']->disallowTopics()): ?> - <i data-bs-toggle="tooltip"
+                                                                                            title=<?= LangManager::translate('forum.manage.list.text.noNewTopics') ?>> </i></small> <?php endif; ?>
                                     -
-                                    <i><small><?= mb_strimwidth($subForum["subforum"]->getDescription(), 0, 45, '...') ?></small></i>
+                                    <i><small><?= mb_strimwidth($subForum['subforum']->getDescription(), 0, 45, '...') ?></small></i>
                             </div>
                             <div class="space-x-2">
                                 <a target="_blank"
-                                   href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . "/forum/c/" . $category->getSlug() . "/f/" . $subForum["subforum"]->getLink() ?>"><i
+                                   href="<?= Website::getProtocol() . '://' . $_SERVER['SERVER_NAME'] . '/forum/c/' . $category->getSlug() . '/f/' . $subForum['subforum']->getLink() ?>"><i
                                         class="fa-solid fa-up-right-from-square"></i></a>
-                                <a href="manage/addSubForum/<?= $subForum["subforum"]->getId() ?>">
+                                <a href="manage/addSubForum/<?= $subForum['subforum']->getId() ?>">
                                     <i class="text-success fas fa-circle-plus"></i>
                                 </a>
-                                <a href="manage/editForum/<?= $subForum["subforum"]->getId() ?>">
+                                <a href="manage/editForum/<?= $subForum['subforum']->getId() ?>">
                                     <i class="text-info fas fa-edit"></i>
                                 </a>
                                 <button type="button"
-                                        data-modal-toggle="modal-delete-sub-<?= $subForum["subforum"]->getId() ?>"><i
+                                        data-modal-toggle="modal-delete-sub-<?= $subForum['subforum']->getId() ?>"><i
                                         class="text-danger fas fa-trash-alt"></i></button>
                             </div>
                         </div>
                         <!----MODAL SUPRESSION SOUS FORUM---->
-                        <div id="modal-delete-sub-<?= $subForum["subforum"]->getId() ?>" class="modal-container">
+                        <div id="modal-delete-sub-<?= $subForum['subforum']->getId() ?>" class="modal-container">
                             <div class="modal">
                                 <div class="modal-header-danger">
-                                    <h6><?= LangManager::translate("forum.manage.list.modal.delete") ?> <?= $subForum["subforum"]->getName() ?></h6>
+                                    <h6><?= LangManager::translate('forum.manage.list.modal.delete') ?> <?= $subForum['subforum']->getName() ?></h6>
                                     <button type="button"
-                                            data-modal-hide="modal-delete-sub-<?= $subForum["subforum"]->getId() ?>"><i
+                                            data-modal-hide="modal-delete-sub-<?= $subForum['subforum']->getId() ?>"><i
                                             class="fa-solid fa-xmark"></i></button>
                                 </div>
                                 <div class="modal-body">
-                                    <?= LangManager::translate("forum.manage.list.modal.definitiveDelete") ?>
+                                    <?= LangManager::translate('forum.manage.list.modal.definitiveDelete') ?>
                                 </div>
                                 <div class="modal-footer">
-                                    <a href="manage/deleteForum/<?= $subForum["subforum"]->getId() ?>"
+                                    <a href="manage/deleteForum/<?= $subForum['subforum']->getId() ?>"
                                        class="btn-danger">
-                                        <?= LangManager::translate("core.btn.delete") ?>
+                                        <?= LangManager::translate('core.btn.delete') ?>
                                     </a>
                                 </div>
                             </div>
@@ -140,17 +140,17 @@ $description = LangManager::translate("forum.forum.list.description");
                     <div id="modal-deletee-<?= $forumObj->getId() ?>" class="modal-container">
                         <div class="modal">
                             <div class="modal-header-danger">
-                                <h6><?= LangManager::translate("forum.manage.list.modal.delete") ?> <?= $forumObj->getName() ?></h6>
+                                <h6><?= LangManager::translate('forum.manage.list.modal.delete') ?> <?= $forumObj->getName() ?></h6>
                                 <button type="button" data-modal-hide="modal-deletee-<?= $forumObj->getId() ?>"><i
                                         class="fa-solid fa-xmark"></i></button>
                             </div>
                             <div class="modal-body">
-                                <?= LangManager::translate("forum.manage.list.modal.definitiveDelete") ?>
+                                <?= LangManager::translate('forum.manage.list.modal.definitiveDelete') ?>
                             </div>
                             <div class="modal-footer">
                                 <a href="manage/deleteForum/<?= $forumObj->getId() ?>"
                                    class="btn btn-danger ml-1">
-                                    <?= LangManager::translate("core.btn.delete") ?>
+                                    <?= LangManager::translate('core.btn.delete') ?>
                                 </a>
                             </div>
                         </div>
@@ -160,7 +160,7 @@ $description = LangManager::translate("forum.forum.list.description");
                 <div id="modal-edit-categories-<?= $category->getId() ?>" class="modal-container">
                     <div class="modal">
                         <div class="modal-header">
-                            <h6><?= LangManager::translate("forum.manage.list.modal.edit") ?> <?= $category->getName() ?></h6>
+                            <h6><?= LangManager::translate('forum.manage.list.modal.edit') ?> <?= $category->getName() ?></h6>
                             <button type="button" data-modal-hide="modal-edit-categories-<?= $category->getId() ?>"><i
                                     class="fa-solid fa-xmark"></i></button>
                         </div>
@@ -172,24 +172,24 @@ $description = LangManager::translate("forum.forum.list.description");
                                     <i class="fa-solid fa-heading"></i>
                                     <input type="text" id="name" name="name" value="<?= $category->getName() ?>"
                                            required
-                                           placeholder=<?= LangManager::translate("forum.manage.list.text.commu") ?>>
+                                           placeholder=<?= LangManager::translate('forum.manage.list.text.commu') ?>>
                                 </div>
                                 <div class="icon-picker" data-id="icon" data-name="icon" data-label="Icon :"
                                      data-placeholder="Sélectionner un icon"
                                      data-value="<?= $category->getIcon() ?>"></div>
                                 <label
-                                    for="description"><?= LangManager::translate("forum.manage.list.text.desc") ?></label>
+                                    for="description"><?= LangManager::translate('forum.manage.list.text.desc') ?></label>
                                 <div class="input-group">
                                     <i class="fa-solid fa-paragraph"></i>
                                     <input type="text" id="description" name="description"
                                            value="<?= $category->getDescription() ?>"
-                                           placeholder="<?= LangManager::translate("forum.manage.list.text.espDesc") ?>">
+                                           placeholder="<?= LangManager::translate('forum.manage.list.text.espDesc') ?>">
                                 </div>
 
                                 <div class="private-container">
                                     <div>
                                         <label class="toggle">
-                                            <p class="toggle-label"><?= LangManager::translate("forum.manage.list.text.Cat") ?></p>
+                                            <p class="toggle-label"><?= LangManager::translate('forum.manage.list.text.Cat') ?></p>
                                             <input type="checkbox" class="toggle-input private-checkbox"
                                                    id="checkbox_<?= $category->getId() ?>"
                                                    name="allowedGroupsToggle" <?= $category->isRestricted() ? 'checked' : '' ?>>
@@ -199,7 +199,7 @@ $description = LangManager::translate("forum.forum.list.description");
                                     <div style="display: none" class="mt-2 allowedGroups"
                                          id="allowedroles_<?= $category->getId() ?>">
                                         <label
-                                            for="selectBox"><?= LangManager::translate("forum.manage.list.text.role") ?></label>
+                                            for="selectBox"><?= LangManager::translate('forum.manage.list.text.role') ?></label>
                                         <div class="form-group">
                                             <select class="choices" id="selectBox" name="allowedGroups[]" multiple>
                                                 <?php foreach ($ForumRoles as $ForumRole): ?>
@@ -216,7 +216,7 @@ $description = LangManager::translate("forum.forum.list.description");
                             </div>
                             <div class="modal-footer">
                                 <button type="submit"
-                                        class="btn-primary"><?= LangManager::translate("core.btn.edit") ?></button>
+                                        class="btn-primary"><?= LangManager::translate('core.btn.edit') ?></button>
                             </div>
                         </form>
                     </div>
@@ -225,16 +225,16 @@ $description = LangManager::translate("forum.forum.list.description");
                 <div id="modal-delete-<?= $category->getId() ?>" class="modal-container">
                     <div class="modal">
                         <div class="modal-header-danger">
-                            <h6><?= LangManager::translate("forum.manage.list.modal.delete") ?> <?= $category->getName() ?></h6>
+                            <h6><?= LangManager::translate('forum.manage.list.modal.delete') ?> <?= $category->getName() ?></h6>
                             <button type="button" data-modal-hide="modal-delete-<?= $category->getId() ?>"><i
                                     class="fa-solid fa-xmark"></i></button>
                         </div>
                         <div class="modal-body">
-                            <?= LangManager::translate("forum.manage.list.modal.deleteCat") ?>
+                            <?= LangManager::translate('forum.manage.list.modal.deleteCat') ?>
                         </div>
                         <div class="modal-footer">
                             <a href="manage/delete/<?= $category->getId() ?>" class="btn-danger">
-                                <?= LangManager::translate("core.btn.delete") ?>
+                                <?= LangManager::translate('core.btn.delete') ?>
                             </a>
                         </div>
                     </div>
@@ -243,7 +243,7 @@ $description = LangManager::translate("forum.forum.list.description");
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div class="alert alert-info"><?= LangManager::translate("forum.manage.list.text.alert") ?></div>
+    <div class="alert alert-info"><?= LangManager::translate('forum.manage.list.text.alert') ?></div>
 <?php endif ?>
 <!--
     --MODAL AJOUT CATEGORIE--
@@ -251,7 +251,7 @@ $description = LangManager::translate("forum.forum.list.description");
 <div id="modal-add-cat" class="modal-container">
     <div class="modal">
         <div class="modal-header">
-            <h6><?= LangManager::translate("forum.manage.list.buton.addCat") ?></h6>
+            <h6><?= LangManager::translate('forum.manage.list.buton.addCat') ?></h6>
             <button type="button" data-modal-hide="modal-add-cat"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <form method="post" action="manage/add">
@@ -261,27 +261,27 @@ $description = LangManager::translate("forum.forum.list.description");
                 <div class="input-group">
                     <i class="fa-solid fa-heading"></i>
                     <input type="text" id="name" name="name" required
-                           placeholder=<?= LangManager::translate("forum.manage.list.text.commu") ?>>
+                           placeholder=<?= LangManager::translate('forum.manage.list.text.commu') ?>>
                 </div>
                 <div class="icon-picker" data-id="icon" data-name="icon" data-label="Icon :"
                      data-placeholder="Sélectionner un icon" data-value=""></div>
-                <label for="description"><?= LangManager::translate("forum.manage.list.text.desc") ?></label>
+                <label for="description"><?= LangManager::translate('forum.manage.list.text.desc') ?></label>
                 <div class="input-group">
                     <i class="fa-solid fa-paragraph"></i>
                     <input type="text" id="description" name="description"
-                           placeholder="<?= LangManager::translate("forum.manage.list.text.espDesc") ?>">
+                           placeholder="<?= LangManager::translate('forum.manage.list.text.espDesc') ?>">
                 </div>
 
                 <div>
                     <label class="toggle">
-                        <p class="toggle-label"><?= LangManager::translate("forum.manage.list.text.Cat") ?></p>
+                        <p class="toggle-label"><?= LangManager::translate('forum.manage.list.text.Cat') ?></p>
                         <input type="checkbox" class="toggle-input allowedGroups" id="allowedGroupsToggle"
                                name="allowedGroupsToggle">
                         <div class="toggle-slider"></div>
                     </label>
                 </div>
                 <div style="display: none" class="mt-2 listAllowedGroups" id="allowedGroups">
-                    <label for="selectBox"><?= LangManager::translate("forum.manage.list.text.role") ?></label>
+                    <label for="selectBox"><?= LangManager::translate('forum.manage.list.text.role') ?></label>
                     <div class="form-group">
                         <select class="choices form-select" id="selectBox" name="allowedGroups[]" multiple>
                             <?php foreach ($ForumRoles as $ForumRole): ?>
@@ -294,7 +294,7 @@ $description = LangManager::translate("forum.forum.list.description");
             </div>
             <div class="modal-footer">
                 <button type="submit"
-                        class="btn btn-primary ml-1"><?= LangManager::translate("core.btn.add") ?></button>
+                        class="btn btn-primary ml-1"><?= LangManager::translate('core.btn.add') ?></button>
             </div>
         </form>
     </div>

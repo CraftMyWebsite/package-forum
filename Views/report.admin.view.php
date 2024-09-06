@@ -4,8 +4,8 @@ use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Lang\LangManager;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 
-$title = "Paramètres";
-$description = "desc";
+$title = 'Paramètres';
+$description = 'desc';
 
 /* @var \CMW\Model\Forum\ForumReportedModel $reportModel */
 ?>
@@ -26,7 +26,7 @@ $description = "desc";
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <?php foreach ($reportModel->getTopicsReported() as $topicReported) : ?>
+                <?php foreach ($reportModel->getTopicsReported() as $topicReported): ?>
                     <tr>
                         <td><?= mb_strimwidth($topicReported->getTopic()->getName(), 0, 20, '...') ?></td>
                         <td><?= $topicReported->getUser()->getPseudo() ?></td>
@@ -87,7 +87,7 @@ $description = "desc";
                             </div>
                             <div class="modal-footer">
                                 <button type="button" data-modal-hide="modal-view-topic-<?= $topicReported->getId() ?>" class="btn btn-primary">
-                                    <?= LangManager::translate("core.btn.close") ?>
+                                    <?= LangManager::translate('core.btn.close') ?>
                                 </button>
                             </div>
                         </div>
@@ -128,7 +128,7 @@ $description = "desc";
                             </div>
                             <div class="modal-footer">
                                 <a href="report/removeTopic/<?= $topicReported->getTopic()->getId() ?>"
-                                   class="btn-danger"><?= LangManager::translate("core.btn.delete") ?>
+                                   class="btn-danger"><?= LangManager::translate('core.btn.delete') ?>
                                 </a>
                             </div>
                         </div>
@@ -154,7 +154,7 @@ $description = "desc";
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <?php foreach ($reportModel->getResponsesReported() as $responsesReported) : ?>
+                <?php foreach ($reportModel->getResponsesReported() as $responsesReported): ?>
                     <tr>
                         <td><?= $responsesReported->getResponse()->getUser()->getPseudo() ?></td>
                         <td><?= $responsesReported->getUser()->getPseudo() ?></td>
@@ -214,7 +214,7 @@ $description = "desc";
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn-primary" data-bs-dismiss="modal-view-response-<?= $responsesReported->getId() ?>">
-                                    <span class=""><?= LangManager::translate("core.btn.close") ?></span>
+                                    <span class=""><?= LangManager::translate('core.btn.close') ?></span>
                                 </button>
                             </div>
                         </div>
@@ -255,7 +255,7 @@ $description = "desc";
                             <div class="modal-footer">
                                 <a href="report/removeResponse/<?= $responsesReported->getResponse()->getId() ?>"
                                    class="btn-danger">
-                                    <span class=""><?= LangManager::translate("core.btn.delete") ?></span>
+                                    <span class=""><?= LangManager::translate('core.btn.delete') ?></span>
                                 </a>
                             </div>
                         </div>

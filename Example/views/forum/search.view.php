@@ -8,8 +8,8 @@ use CMW\Utils\Website;
 /** @var \CMW\Entity\Forum\ForumTopicEntity[] $results */
 /* @var CMW\Model\Forum\ForumResponseModel $responseModel */
 
-Website::setTitle("Forum");
-Website::setDescription("Recherchez un sujet dans le forum");
+Website::setTitle('Forum');
+Website::setDescription('Recherchez un sujet dans le forum');
 ?>
 
 <section>
@@ -39,14 +39,14 @@ Website::setDescription("Recherchez un sujet dans le forum");
                                         <?= mb_strimwidth($result->getName(), 0, 65, '...') ?>
                                         <?= $result->isImportant() ? "
                             <i class='<?= $iconImportant ?>'></i>
-                            " : "" ?>
+                            " : '' ?>
 
                                     <?= $result->isPinned() ? "
                             <i class='<?= $iconPin ?>'></i>
-                             " : "" ?>
+                             " : '' ?>
                                         <?= $result->isDisallowReplies() ? "
                             <i class='<?= $iconClosed ?>'></i>
-                             " : "" ?>
+                             " : '' ?>
                                     </p>
                             </a>
                         <div><?= mb_strimwidth($result->getContent(), 0, 150, '...') ?></div>

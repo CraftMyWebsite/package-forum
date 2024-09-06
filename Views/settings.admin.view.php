@@ -3,8 +3,8 @@
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Security\SecurityManager;
 
-$title = "Paramètres";
-$description = "desc";
+$title = 'Paramètres';
+$description = 'desc';
 
 /* @var CMW\Controller\Forum\ForumSettingsController $needConnectUrl */
 /* @var CMW\Controller\Forum\ForumSettingsController $needConnectText */
@@ -60,10 +60,10 @@ $description = "desc";
                 </div>
             </div>
             <label for="needConnectText">Texte pour les non connecté :</label>
-            <textarea class="tinymce" id="needConnectText" name="needConnectText" data-tiny-height="100"><?= $needConnectText?></textarea>
+            <textarea class="tinymce" id="needConnectText" name="needConnectText" data-tiny-height="100"><?= $needConnectText ?></textarea>
             <div class="mt-4">
                 <button type="submit" class="btn-center btn-primary">
-                    <?= LangManager::translate("core.btn.save") ?>
+                    <?= LangManager::translate('core.btn.save') ?>
                 </button>
             </div>
         </form>
@@ -109,7 +109,7 @@ $description = "desc";
             </div>
                 <div class="mt-4">
                     <button type="submit" class="btn-center btn-primary">
-                        <?= LangManager::translate("core.btn.save") ?>
+                        <?= LangManager::translate('core.btn.save') ?>
                     </button>
                 </div>
             </div>
@@ -120,7 +120,7 @@ $description = "desc";
     <div class="card">
         <div class="lg:flex justify-between">
             <h6>Réactions</h6>
-            <button type="button" data-modal-toggle="modal-add-reaction" class="btn-primary"><?= LangManager::translate("core.btn.add") ?></button>
+            <button type="button" data-modal-toggle="modal-add-reaction" class="btn-primary"><?= LangManager::translate('core.btn.add') ?></button>
         </div>
         <div class="table-container">
             <table class="table" id="table1">
@@ -132,7 +132,7 @@ $description = "desc";
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($feedbackModel->getFeedbacks() as $feedback) : ?>
+                <?php foreach ($feedbackModel->getFeedbacks() as $feedback): ?>
                     <tr>
                         <td class="text-center mx-auto"><img alt="..." width="32px" src="<?= $feedback->getImage() ?>"></td>
                         <td><?= $feedback->getName() ?></td>
@@ -166,7 +166,7 @@ $description = "desc";
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn-primary">
-                                        <span class=""><?= LangManager::translate("core.btn.save") ?></span>
+                                        <span class=""><?= LangManager::translate('core.btn.save') ?></span>
                                     </button>
                                 </div>
                             </form>
@@ -189,7 +189,7 @@ $description = "desc";
                             <div class="modal-footer">
                                 <a href="settings/deletereaction/<?= $feedback->getId() ?>"
                                    class="btn-danger">
-                                    <?= LangManager::translate("core.btn.delete") ?>
+                                    <?= LangManager::translate('core.btn.delete') ?>
                                 </a>
                             </div>
                         </div>
@@ -203,7 +203,7 @@ $description = "desc";
     <div class="card">
         <div class="lg:flex justify-between">
             <h6>Prefix</h6>
-            <button type="button" data-modal-toggle="modal-add-prefix" class="btn-primary"><?= LangManager::translate("core.btn.add") ?></button>
+            <button type="button" data-modal-toggle="modal-add-prefix" class="btn-primary"><?= LangManager::translate('core.btn.add') ?></button>
         </div>
 
         <div class="table-container">
@@ -216,7 +216,7 @@ $description = "desc";
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <?php foreach ($prefixesModel->getPrefixes() as $prefix) : ?>
+                <?php foreach ($prefixesModel->getPrefixes() as $prefix): ?>
                     <tr>
                         <td><span class="px-2 rounded-2"
                                   style="color: <?= $prefix->getTextColor() ?>; background: <?= $prefix->getColor() ?>"><?= $prefix->getName() ?></span>
@@ -270,7 +270,7 @@ $description = "desc";
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn-primary">
-                                        <?= LangManager::translate("core.btn.save") ?>
+                                        <?= LangManager::translate('core.btn.save') ?>
                                     </button>
                                 </div>
                             </form>
@@ -292,7 +292,7 @@ $description = "desc";
                             <div class="modal-footer">
                                 <a href="settings/deleteprefix/<?= $prefix->getId() ?>"
                                    class="btn-danger">
-                                    <?= LangManager::translate("core.btn.delete") ?>
+                                    <?= LangManager::translate('core.btn.delete') ?>
                                 </a>
                             </div>
                         </div>
@@ -338,7 +338,7 @@ $description = "desc";
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn-primary">
-                    <?= LangManager::translate("core.btn.add") ?>
+                    <?= LangManager::translate('core.btn.add') ?>
                 </button>
             </div>
         </form>
@@ -364,7 +364,7 @@ $description = "desc";
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn-primary">
-                    <span class=""><?= LangManager::translate("core.btn.add") ?></span>
+                    <span class=""><?= LangManager::translate('core.btn.add') ?></span>
                 </button>
             </div>
         </form>

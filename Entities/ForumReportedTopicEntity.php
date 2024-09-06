@@ -59,19 +59,19 @@ class ForumReportedTopicEntity
     public function getReason(): string
     {
         if ($this->reason === 0) {
-            return "Autre";
+            return 'Autre';
         }
         if ($this->reason === 1) {
-            return "Nom du topic inapproprié";
+            return 'Nom du topic inapproprié';
         }
         if ($this->reason === 2) {
             return "Le topic n'est pas au bon endroit";
         }
         if ($this->reason === 3) {
-            return "Contenue choquant";
+            return 'Contenue choquant';
         }
         if ($this->reason === 4) {
-            return "Harcèlement, discrimination ...";
+            return 'Harcèlement, discrimination ...';
         }
 
         return $this->reason;

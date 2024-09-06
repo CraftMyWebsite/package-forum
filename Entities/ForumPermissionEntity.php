@@ -6,7 +6,6 @@ use CMW\Controller\Core\CoreController;
 
 class ForumPermissionEntity
 {
-
     private int $permissionId;
     private ?int $permissionParentId;
     private string $permissionCode;
@@ -41,5 +40,4 @@ class ForumPermissionEntity
     {
         return $this->permissionCode;
     }
-
 }

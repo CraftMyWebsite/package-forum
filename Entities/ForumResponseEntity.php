@@ -2,15 +2,14 @@
 
 namespace CMW\Entity\Forum;
 
+use CMW\Controller\Core\CoreController;
 use CMW\Entity\Users\userEntity;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Users\UsersModel;
-use CMW\Controller\Core\CoreController;
 
 class ForumResponseEntity
 {
-
     private int $responseId;
     private string $responseContent;
     private string $responseIsTrash;
@@ -62,13 +61,13 @@ class ForumResponseEntity
     public function getTrashReason(): string
     {
         if ($this->responseTrashReason == 0) {
-            return "Topic en corbeille";
+            return 'Topic en corbeille';
         }
         if ($this->responseTrashReason == 1) {
             return "Suppression par l'auteur";
         }
         if ($this->responseTrashReason == 2) {
-            return "Supprimer par un staff";
+            return 'Supprimer par un staff';
         }
     }
 
@@ -119,7 +118,6 @@ class ForumResponseEntity
         } else {
             return "p1/trash/$this->responseId/2";
         }
-        
     }
 
     /**
@@ -169,8 +167,8 @@ class ForumResponseEntity
     {
         $topic = $this->getResponseTopic()->getId();
         $response = $this->getId();
-        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
-        return ForumResponseModel::getInstance()->getResponsePageNumber($topic, $response,$responsePerPage);
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue('responsePerPage');
+        return ForumResponseModel::getInstance()->getResponsePageNumber($topic, $response, $responsePerPage);
     }
 
     /**
@@ -180,7 +178,7 @@ class ForumResponseEntity
     {
         $topic = $this->getResponseTopic()->getId();
         $response = $this->getId();
-        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue("responsePerPage");
-        return ForumResponseModel::getInstance()->getResponsePosition($topic, $response,$responsePerPage);
+        $responsePerPage = ForumSettingsModel::getInstance()->getOptionValue('responsePerPage');
+        return ForumResponseModel::getInstance()->getResponsePosition($topic, $response, $responsePerPage);
     }
 }

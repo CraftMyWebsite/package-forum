@@ -13,46 +13,45 @@ class Permissions implements IPermissionInit
         return [
             new PermissionInitType(
                 code: 'forum.categories',
-                description: "Catégories et Forums",
+                description: 'Catégories et Forums',
             ),
             new PermissionInitType(
                 code: 'forum.categories.add',
-                description: "Ajouter",
+                description: 'Ajouter',
             ),
             new PermissionInitType(
                 code: 'forum.categories.edit',
-                description: "Éditer",
+                description: 'Éditer',
             ),
             new PermissionInitType(
                 code: 'forum.categories.delete',
-                description: "Supprimer",
+                description: 'Supprimer',
             ),
-            /*TOPICS*/
+            /* TOPICS */
             new PermissionInitType(
                 code: 'forum.topics',
-                description: "Gérer les topics",
+                description: 'Gérer les topics',
             ),
-            /*REPORT*/
+            /* REPORT */
             new PermissionInitType(
                 code: 'forum.report',
-                description: "Gérer les signalements",
+                description: 'Gérer les signalements',
             ),
-            /*ROLES*/
+            /* ROLES */
             new PermissionInitType(
                 code: 'forum.roles',
-                description: "Gérer les rôles",
+                description: 'Gérer les rôles',
             ),
-            /*SETTINGS*/
+            /* SETTINGS */
             new PermissionInitType(
                 code: 'forum.settings',
-                description: "Gérer les paramètres",
+                description: 'Gérer les paramètres',
             ),
-            /*TRASH*/
+            /* TRASH */
             new PermissionInitType(
                 code: 'forum.trash',
-                description: "Gérer la corbeille",
+                description: 'Gérer la corbeille',
             ),
         ];
     }
-
 }
