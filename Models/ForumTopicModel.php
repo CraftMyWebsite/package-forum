@@ -8,6 +8,7 @@ use CMW\Entity\Forum\ForumTopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Client;
 use CMW\Utils\Website;
 use PDO;
 
@@ -221,7 +222,7 @@ class ForumTopicModel extends AbstractModel
      */
     public function addViews(int $topicId): void
     {
-        $ip = Website::getClientIp();
+        $ip = Client::getIp();
         $sql = 'INSERT INTO cmw_forums_topics_views (forum_topics_views_topic_id, forum_topics_views_ip) VALUES (:topicId, :ip);';
         $db = DatabaseManager::getInstance();
         $req = $db->prepare($sql);

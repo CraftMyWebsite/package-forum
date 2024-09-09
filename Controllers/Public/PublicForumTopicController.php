@@ -21,6 +21,7 @@ use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Forum\ForumUserBlockedModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Client;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Utils\Website;
@@ -249,7 +250,7 @@ class PublicForumTopicController extends AbstractController
 
         $forumModel = forumModel::getInstance();
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
-        $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(), Website::getClientIp());
+        $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(), Client::getIp());
         $currentUser = usersModel::getInstance()::getCurrentUser();
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue('IconNotRead');
