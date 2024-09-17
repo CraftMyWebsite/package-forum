@@ -37,7 +37,6 @@ class Package implements IPackageConfig
     {
         return [
             new PackageMenuType(
-                lang: 'fr',
                 icon: 'fas fa-comment',
                 title: 'Forum',
                 url: null,
@@ -70,45 +69,6 @@ class Package implements IPackageConfig
                     ),
                     new PackageSubMenuType(
                         title: 'Paramètres',
-                        permission: 'forum.settings',
-                        url: 'forum/settings',
-                    ),
-                ]
-            ),
-            new PackageMenuType(
-                lang: 'en',
-                icon: 'fas fa-comment',
-                title: 'Forum',
-                url: null,
-                permission: null,
-                subMenus: [
-                    new PackageSubMenuType(
-                        title: 'Categories and forums',
-                        permission: 'forum.categories',
-                        url: 'forum/manage',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Topics',
-                        permission: 'forum.topics',
-                        url: 'forum/topics',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Reports',
-                        permission: 'forum.report',
-                        url: 'forum/report',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Trash',
-                        permission: 'forum.trash',
-                        url: 'forum/trash',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Roles and users',
-                        permission: 'forum.roles',
-                        url: 'forum/roles',
-                    ),
-                    new PackageSubMenuType(
-                        title: 'Settings',
                         permission: 'forum.settings',
                         url: 'forum/settings',
                     ),
