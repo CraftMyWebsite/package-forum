@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Utils\Date;
 use CMW\Entity\Users\userEntity;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
@@ -76,7 +76,7 @@ class ForumResponseEntity
      */
     public function getCreated(): string
     {
-        return CoreController::formatDate($this->responseCreated);
+        return Date::formatDate($this->responseCreated);
     }
 
     /**
@@ -84,7 +84,7 @@ class ForumResponseEntity
      */
     public function getUpdate(): string
     {
-        return CoreController::formatDate($this->responseUpdated);
+        return Date::formatDate($this->responseUpdated);
     }
 
     /**

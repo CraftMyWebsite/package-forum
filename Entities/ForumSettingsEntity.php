@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Utils\Date;
 use CMW\Model\Forum\ForumSettingsModel;
 
 /**
@@ -55,6 +55,6 @@ class ForumSettingsEntity
      */
     public function getUpdate(): string
     {
-        return CoreController::formatDate($this->settingsUpdate);
+        return Date::formatDate($this->settingsUpdate);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Utils\Date;
 use CMW\Entity\Users\UserEntity;
 
 class ForumUserBlockedEntity
@@ -70,6 +70,6 @@ class ForumUserBlockedEntity
      */
     public function getUpdate(): string
     {
-        return CoreController::formatDate($this->update);
+        return Date::formatDate($this->update);
     }
 }

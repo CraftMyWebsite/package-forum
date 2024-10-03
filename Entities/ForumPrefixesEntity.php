@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Utils\Date;
 
 class ForumPrefixesEntity
 {
@@ -70,7 +70,7 @@ class ForumPrefixesEntity
      */
     public function getCreated(): string
     {
-        return CoreController::formatDate($this->prefixCreated);
+        return Date::formatDate($this->prefixCreated);
     }
 
     /**
@@ -78,6 +78,6 @@ class ForumPrefixesEntity
      */
     public function getUpdated(): string
     {
-        return CoreController::formatDate($this->prefixUpdated);
+        return Date::formatDate($this->prefixUpdated);
     }
 }

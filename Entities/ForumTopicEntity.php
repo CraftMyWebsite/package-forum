@@ -2,7 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Utils\Date;
 use CMW\Entity\Users\userEntity;
 use CMW\Manager\Env\EnvManager;
 use CMW\Model\Forum\ForumCategoryModel;
@@ -165,7 +165,7 @@ class ForumTopicEntity
      */
     public function getCreated(): string
     {
-        return CoreController::formatDate($this->topicCreated);
+        return Date::formatDate($this->topicCreated);
     }
 
     /**
@@ -173,7 +173,7 @@ class ForumTopicEntity
      */
     public function getUpdate(): string
     {
-        return CoreController::formatDate($this->topicUpdate);
+        return Date::formatDate($this->topicUpdate);
     }
 
     /**
