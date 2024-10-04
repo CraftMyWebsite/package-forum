@@ -59,4 +59,12 @@ return [
             'role' => 'Rôle(s) autorisé(s) : ',
         ],
     ],
+    'menu' => [
+        'cats' => 'Catégories et forums',
+        'topics' => 'Topics',
+        'signal' => 'Signalement',
+        'trash' => 'Corbeille',
+        'roles' => 'Rôles et utilisateurs',
+        'settings' => 'Paramètres',
+    ],
 ];

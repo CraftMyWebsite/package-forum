@@ -2,6 +2,7 @@
 
 namespace CMW\Package\Forum;
 
+use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\IPackageConfig;
 use CMW\Manager\Package\PackageMenuType;
 use CMW\Manager\Package\PackageSubMenuType;
@@ -43,32 +44,32 @@ class Package implements IPackageConfig
                 permission: null,
                 subMenus: [
                     new PackageSubMenuType(
-                        title: 'Catégories et forums',
+                        title: LangManager::translate('forum.menu.cats'),
                         permission: 'forum.categories',
                         url: 'forum/manage',
                     ),
                     new PackageSubMenuType(
-                        title: 'Topics',
+                        title: LangManager::translate('forum.menu.topics'),
                         permission: 'forum.topics',
                         url: 'forum/topics',
                     ),
                     new PackageSubMenuType(
-                        title: 'Signalement',
+                        title: LangManager::translate('forum.menu.signal'),
                         permission: 'forum.report',
                         url: 'forum/report',
                     ),
                     new PackageSubMenuType(
-                        title: 'Corbeille',
+                        title: LangManager::translate('forum.menu.trash'),
                         permission: 'forum.trash',
                         url: 'forum/trash',
                     ),
                     new PackageSubMenuType(
-                        title: 'Rôles et utilisateurs',
+                        title: LangManager::translate('forum.menu.roles'),
                         permission: 'forum.roles',
                         url: 'forum/roles',
                     ),
                     new PackageSubMenuType(
-                        title: 'Paramètres',
+                        title: LangManager::translate('forum.menu.settings'),
                         permission: 'forum.settings',
                         url: 'forum/settings',
                     ),

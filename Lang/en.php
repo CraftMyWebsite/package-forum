@@ -59,4 +59,12 @@ return [
             'role' => 'Authorized role(s): ',
         ],
     ],
+    'menu' => [
+        'cats' => 'Categories and Forums',
+        'topics' => 'Topics',
+        'signal' => 'Reporting',
+        'trash' => 'Trash can',
+        'roles' => 'Roles and users',
+        'settings' => 'Settings',
+    ],
 ];
