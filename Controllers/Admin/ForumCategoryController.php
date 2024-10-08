@@ -18,7 +18,7 @@ use CMW\Utils\Website;
  * Class: @ForumCategoryController
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
- * @version 1.0
+ * @version 0.0.1
  */
 class ForumCategoryController extends AbstractController
 {

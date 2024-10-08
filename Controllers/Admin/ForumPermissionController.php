@@ -14,7 +14,7 @@ use CMW\Utils\Redirect;
  * Class: @ForumPermissionController
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
- * @version 1.0
+ * @version 0.0.1
  */
 class ForumPermissionController extends AbstractController
 {

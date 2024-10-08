@@ -30,7 +30,7 @@ use JetBrains\PhpStorm\NoReturn;
  * Class: @PublicForumResponseController
  * @package Forum
  * @author Zomb
- * @version 1.0
+ * @version 0.0.1
  */
 class PublicForumResponseController extends AbstractController
 {

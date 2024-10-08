@@ -26,7 +26,7 @@ use CMW\Utils\Website;
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @desc You can create "reportTopic.view.php" or "reportResponse.view.php" in Theme/Views/Forum/** or directly use à modal and call action"" form > POST
- * @version 1.0
+ * @version 0.0.1
  */
 class PublicForumReportController extends AbstractController
 {

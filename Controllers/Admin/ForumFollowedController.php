@@ -19,7 +19,7 @@ use JetBrains\PhpStorm\NoReturn;
  * Class: @ForumFollowedController
  * @package Forum
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
- * @version 1.0
+ * @version 0.0.1
  */
 class ForumFollowedController extends AbstractController
 {
