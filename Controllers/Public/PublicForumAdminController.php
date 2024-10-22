@@ -18,7 +18,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * Class: @PublicForumAdminController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class PublicForumAdminController extends AbstractController

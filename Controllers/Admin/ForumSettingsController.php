@@ -18,7 +18,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * Class: @ForumSettingsController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class ForumSettingsController extends AbstractController

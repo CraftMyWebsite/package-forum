@@ -19,7 +19,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * Class: @ForumTopicController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class ForumTopicController extends AbstractController

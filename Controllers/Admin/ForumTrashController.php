@@ -16,7 +16,7 @@ use CMW\Model\Forum\ForumTopicModel;
 /**
  * Class: @ForumTrashController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class ForumTrashController extends AbstractController

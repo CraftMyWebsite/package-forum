@@ -13,7 +13,7 @@ use CMW\Model\Forum\ForumSettingsModel;
 /**
  * Class: @PublicForumMainController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class PublicForumMainController extends AbstractController
@@ -27,9 +27,9 @@ class PublicForumMainController extends AbstractController
             ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_view_forum');
         }
 
-        $view = new View('Forum', 'main');
-        $view->addVariableList(['forumModel' => forumModel::getInstance(), 'categoryModel' => ForumCategoryModel::getInstance()]);
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'main')
+            ->addVariableList(['forumModel' => forumModel::getInstance(), 'categoryModel' => ForumCategoryModel::getInstance()])
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 }

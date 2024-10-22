@@ -18,7 +18,7 @@ use CMW\Utils\Utils;
 /**
  * Class: @ForumController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class ForumController extends AbstractController

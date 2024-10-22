@@ -16,7 +16,7 @@ use CMW\Utils\Redirect;
 /**
  * Class: @PublicForumCatController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class PublicForumCatController extends AbstractController
@@ -41,9 +41,9 @@ class PublicForumCatController extends AbstractController
             Redirect::redirect('forum');
         }
 
-        $view = new View('Forum', 'cat');
-        $view->addVariableList(['forumModel' => forumModel::getInstance(), 'category' => $category]);
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'cat')
+            ->addVariableList(['forumModel' => forumModel::getInstance(), 'category' => $category])
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 }

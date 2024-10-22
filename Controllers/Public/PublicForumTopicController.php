@@ -30,7 +30,7 @@ use JetBrains\PhpStorm\NoReturn;
 /**
  * Class: @PublicForumTopicController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class PublicForumTopicController extends AbstractController
@@ -51,10 +51,10 @@ class PublicForumTopicController extends AbstractController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue('IconClosed');
         $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue('IconClosedColor');
 
-        $view = new View('Forum', 'search');
-        $view->addVariableList(['forumModel' => $forumModel, 'results' => $results, 'for' => $for, 'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor, 'responseModel' => ForumResponseModel::getInstance()]);
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'search')
+            ->addVariableList(['forumModel' => $forumModel, 'results' => $results, 'for' => $for, 'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor, 'responseModel' => ForumResponseModel::getInstance()])
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 
     #[Link('/c/:catSlug/f/:forumSlug/fp:forumPage/add', Link::GET, ['.*?'], '/forum')]
@@ -104,11 +104,11 @@ class PublicForumTopicController extends AbstractController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue('IconClosed');
         $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue('IconClosedColor');
 
-        $view = new View('Forum', 'addTopic');
-        $view->addVariableList(['forumModel' => $forumModel, 'forum' => $forum, 'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'category' => $category, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor]);
-        $view->addScriptBefore('Admin/Resources/Vendors/Tinymce/tinymce.min.js', 'App/Package/Forum/Views/Assets/Js/tinyConfig.js');
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'addTopic')
+            ->addVariableList(['forumModel' => $forumModel, 'forum' => $forum, 'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'category' => $category, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor])
+            ->addScriptBefore('Admin/Resources/Vendors/Tinymce/tinymce.min.js', 'App/Package/Forum/Views/Assets/Js/tinyConfig.js')
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 
     #[Link('/c/:catSlug/f/:forumSlug/fp:forumPage/add', Link::POST, ['.*?'], '/forum')]
@@ -341,11 +341,11 @@ class PublicForumTopicController extends AbstractController
             Redirect::redirect('forum');
         }
 
-        $view = new View('Forum', 'editTopic');
-        $view->addVariableList(['topic' => $topic, 'category' => $category, 'forum' => $forum]);
-        $view->addScriptBefore('Admin/Resources/Vendors/Tinymce/tinymce.min.js', 'App/Package/Forum/Views/Assets/Js/tinyConfig.js');
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'editTopic')
+            ->addVariableList(['topic' => $topic, 'category' => $category, 'forum' => $forum])
+            ->addScriptBefore('Admin/Resources/Vendors/Tinymce/tinymce.min.js', 'App/Package/Forum/Views/Assets/Js/tinyConfig.js')
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 
     #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/edit', Link::POST, ['.*?'], '/forum')]
@@ -423,7 +423,7 @@ class PublicForumTopicController extends AbstractController
     private function publicTopicAddFeedback(string $catSlug, string $forumSlug, string $topicSlug, int $page, int $topicId, int $feedbackId): void
     {
         if (!UsersController::isUserLogged()) {
-            Flash::send(Alert::ERROR, 'Forum', 'Connectez-vous avant de réagire.');
+            Flash::send(Alert::ERROR, 'Forum', 'Connectez-vous avant de réagir.');
             Redirect::redirect('login');
         }
 

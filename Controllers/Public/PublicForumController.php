@@ -18,7 +18,7 @@ use CMW\Utils\Redirect;
 /**
  * Class: @PublicForumController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @version 0.0.1
  */
 class PublicForumController extends AbstractController
@@ -71,8 +71,9 @@ class PublicForumController extends AbstractController
         $iconClosed = ForumSettingsModel::getInstance()->getOptionValue('IconClosed');
         $iconClosedColor = ForumSettingsModel::getInstance()->getOptionValue('IconClosedColor');
 
-        $view = new View('Forum', 'forum');
-        $view->addVariableList(['currentPage' => $currentPage, 'totalPage' => $totalPage, 'forumModel' => $forumModel, 'categoryModel' => $categoryModel, 'topics' => $topics, 'forum' => $forum, 'topicModel' => ForumTopicModel::getInstance(), 'responseModel' => ForumResponseModel::getInstance(), 'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'category' => $category, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor]);
-        $view->view();
+        View::createPublicView('Forum', 'forum')
+            ->addVariableList(['currentPage' => $currentPage, 'totalPage' => $totalPage, 'forumModel' => $forumModel, 'categoryModel' => $categoryModel, 'topics' => $topics, 'forum' => $forum, 'topicModel' => ForumTopicModel::getInstance(), 'responseModel' => ForumResponseModel::getInstance(), 'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin, 'iconClosed' => $iconClosed, 'category' => $category, 'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor, 'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor])
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 }

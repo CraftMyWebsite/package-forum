@@ -24,7 +24,7 @@ use CMW\Utils\Website;
 /**
  * Class: @ForumSettingsController
  * @package Forum
- * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
+ * @author Zomb
  * @desc You can create "reportTopic.view.php" or "reportResponse.view.php" in Theme/Views/Forum/** or directly use à modal and call action"" form > POST
  * @version 0.0.1
  */
@@ -43,10 +43,10 @@ class PublicForumReportController extends AbstractController
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        $view = new View('Forum', 'reportTopic');
-        $view->addVariableList(['category' => $category, 'forum' => $forum, 'topic' => $topic, 'topicId' => $topicId]);
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'reportTopic')
+            ->addVariableList(['category' => $category, 'forum' => $forum, 'topic' => $topic, 'topicId' => $topicId])
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 
     #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportResponse/:responseId', Link::GET, ['.*?'], '/forum')]
@@ -62,10 +62,10 @@ class PublicForumReportController extends AbstractController
         $forum = forumModel::getInstance()->getForumBySlug($forumSlug);
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        $view = new View('Forum', 'reportResponse');
-        $view->addVariableList(['category' => $category, 'forum' => $forum, 'topic' => $topic, 'topicId' => $responseId]);
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
-        $view->view();
+        View::createPublicView('Forum', 'reportResponse')
+            ->addVariableList(['category' => $category, 'forum' => $forum, 'topic' => $topic, 'topicId' => $responseId])
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css')
+            ->view();
     }
 
     #[Link('/c/:catSlug/f/:forumSlug/t/:topicSlug/p:page/reportTopic/:topicId', Link::POST, ['.*?'], '/forum')]
