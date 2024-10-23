@@ -3,10 +3,6 @@
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Security\SecurityManager;
-use CMW\Manager\Uploads\ImagesManager;
-use CMW\Model\Core\ThemeModel;
-use CMW\Model\Forum\ForumDiscordModel;
-use CMW\Model\Forum\ForumFeedbackModel;
 use CMW\Model\Forum\ForumFollowedModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Users\UsersModel;

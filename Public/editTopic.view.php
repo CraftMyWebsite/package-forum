@@ -3,7 +3,6 @@
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Security\SecurityManager;
-use CMW\Model\Core\ThemeModel;
 use CMW\Utils\Website;
 
 /* @var \CMW\Entity\Forum\ForumCategoryEntity $category */
