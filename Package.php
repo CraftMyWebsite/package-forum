@@ -16,12 +16,12 @@ class Package implements IPackageConfig
 
     public function version(): string
     {
-        return '0.0.1';
+        return '1.0.0';
     }
 
     public function authors(): array
     {
-        return ['CraftMyWebsite Team'];
+        return ['Zomb'];
     }
 
     public function isGame(): bool
