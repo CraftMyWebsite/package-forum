@@ -6,6 +6,38 @@ document.addEventListener("DOMContentLoaded", function () {
     // Définissez le skin en fonction de hasDarkTheme
     const tinymceSkin = hasDarkTheme ? 'theme-dark' : 'theme-light';
 
+    const images_upload_handler = (blobInfo) => new Promise((success, failure) => {
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+
+        xhr.open('POST', '/editor/upload/image');
+        const imgElement = tinymce.activeEditor.selection.getNode();
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                let json = JSON.parse(xhr.responseText);
+
+                if (json && typeof json.location === 'string') {
+                    success(json.location);
+                } else {
+                    failure('Réponse JSON invalide');
+                    tinymce.activeEditor.dom.remove(imgElement);
+                }
+            } else {
+                failure('Erreur lors de l\'upload : ' + xhr.status);
+                tinymce.activeEditor.dom.remove(imgElement);
+            }
+        };
+
+        xhr.onerror = function() {
+            failure('Erreur réseau ou problème d\'accès au serveur');
+            tinymce.activeEditor.dom.remove(imgElement);
+        };
+
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+        xhr.send(formData);
+    });
+
 
     tinymce.init({
         selector: '.tinymce',
@@ -36,5 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
         statusbar: false,
         extended_valid_elements: 'a[class=needConnect|href|title|target|rel]',
         relative_urls: false,
+        images_upload_handler:images_upload_handler,
     });
 });

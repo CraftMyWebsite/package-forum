@@ -6,6 +6,7 @@ use CMW\Entity\Forum\ForumCategoryEntity;
 use CMW\Entity\Forum\ForumTopicEntity;
 use CMW\Entity\Forum\ForumTopicTagEntity;
 use CMW\Manager\Database\DatabaseManager;
+use CMW\Manager\Editor\EditorManager;
 use CMW\Manager\Package\AbstractModel;
 use CMW\Model\Users\UsersModel;
 use CMW\Utils\Client;
@@ -489,6 +490,9 @@ class ForumTopicModel extends AbstractModel
      */
     public function deleteTopic(int $topicId): bool
     {
+        $topicContent = $this->getTopicById($topicId)->getContent();
+        EditorManager::getInstance()->deleteEditorImageInContent($topicContent);
+
         $sql = 'DELETE FROM cmw_forums_topics WHERE forum_topic_id = :topic_id';
 
         $db = DatabaseManager::getInstance();
