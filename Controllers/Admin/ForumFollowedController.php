@@ -2,11 +2,11 @@
 
 namespace CMW\Controller\Forum\Admin;
 
-use CMW\Controller\Core\MailController;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
+use CMW\Manager\Mail\MailManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Router\Link;
 use CMW\Model\Forum\ForumFollowedModel;
@@ -29,7 +29,7 @@ class ForumFollowedController extends AbstractController
      */
     public function sendMailToFollower(string $userMail, string $responseUrl, string $topicName, string $responseUser, string $responseContent): void
     {
-        MailController::getInstance()->sendMail($userMail, "Nouvelle réponse sur $topicName !", "Le topic $topicName que vous suivez à reçu un nouveau méssage : <br> $responseContent <br><br>Envoyé par $responseUser<br><a href='$responseUrl' target='_blank'>Lire la réponse sur le fourm</a>");
+        MailManager::getInstance()->sendMail($userMail, "Nouvelle réponse sur $topicName !", "Le topic $topicName que vous suivez à reçu un nouveau méssage : <br> $responseContent <br><br>Envoyé par $responseUser<br><a href='$responseUrl' target='_blank'>Lire la réponse sur le fourm</a>");
     }
 
     #[NoReturn]
