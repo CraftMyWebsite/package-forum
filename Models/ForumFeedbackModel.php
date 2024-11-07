@@ -119,11 +119,10 @@ class ForumFeedbackModel extends AbstractModel
      * @param array $image
      * @param string $name
      * @return \CMW\Entity\Forum\ForumFeedbackEntity|null
-     * @throws \JsonException
      */
     public function createFeedback(array $image, string $name): ?ForumFeedbackEntity
     {
-        $imageName = ImagesManager::upload($image, 'Forum');
+        $imageName = ImagesManager::convertAndUpload($image, 'Forum');
         $data = array(
             'image' => $imageName,
             'name' => $name
@@ -151,7 +150,7 @@ class ForumFeedbackModel extends AbstractModel
      */
     public function editFeedback(array $image, string $name, int $id): ?ForumFeedbackEntity
     {
-        $imageName = ImagesManager::upload($image, 'Forum');
+        $imageName = ImagesManager::convertAndUpload($image, 'Forum');
         $data = array(
             'image' => $imageName,
             'name' => $name,

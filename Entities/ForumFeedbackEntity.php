@@ -30,6 +30,14 @@ class ForumFeedbackEntity
     /**
      * @return string
      */
+    public function getImageName(): string
+    {
+        return $this->feedbackImage;
+    }
+
+    /**
+     * @return string
+     */
     public function getImage(): string
     {
         return EnvManager::getInstance()->getValue('PATH_SUBFOLDER') . 'Public/Uploads/Forum/' . $this->feedbackImage;

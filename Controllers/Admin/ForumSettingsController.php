@@ -7,6 +7,7 @@ use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Router\Link;
+use CMW\Manager\Uploads\ImagesManager;
 use CMW\Manager\Views\View;
 use CMW\Model\Forum\ForumFeedbackModel;
 use CMW\Model\Forum\ForumPrefixModel;
@@ -163,9 +164,11 @@ class ForumSettingsController extends AbstractController
     private function settingsDeleteReaction(int $reactionId): void
     {
         UsersController::redirectIfNotHavePermissions('core.dashboard', 'forum.settings');
+        $feedback = ForumFeedbackModel::getInstance()->getFeedbackById($reactionId);
+        ImagesManager::deleteImage($feedback->getImageName(), 'Forum');
         if (ForumFeedbackModel::getInstance()->removeFeedback($reactionId)) {
             Flash::send('success', LangManager::translate('core.toaster.success'),
-                "C'est chao");
+                "Réaction supprimé");
 
             Redirect::redirectPreviousRoute();
         }
