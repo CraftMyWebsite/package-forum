@@ -2,13 +2,15 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Utils\Date;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Entity\Users\userEntity;
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Date;
 
-class ForumResponseEntity
+class ForumResponseEntity extends AbstractEntity
 {
     private int $responseId;
     private string $responseContent;
@@ -61,14 +63,16 @@ class ForumResponseEntity
     public function getTrashReason(): string
     {
         if ($this->responseTrashReason == 0) {
-            return 'Topic en corbeille';
+            return 'Topic en corbeille'; // TODO Translate
         }
         if ($this->responseTrashReason == 1) {
-            return "Suppression par l'auteur";
+            return "Suppression par l'auteur"; // TODO Translate
         }
         if ($this->responseTrashReason == 2) {
-            return 'Supprimer par un staff';
+            return 'Supprimer par un staff'; // TODO Translate
         }
+
+        //TODO Return something ???
     }
 
     /**
@@ -88,7 +92,7 @@ class ForumResponseEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumTopicEntity
+     * @return ForumTopicEntity
      */
     public function getResponseTopic(): ForumTopicEntity
     {
@@ -96,7 +100,7 @@ class ForumResponseEntity
     }
 
     /**
-     * @return \CMW\Entity\Users\userEntity
+     * @return userEntity
      */
     public function getUser(): userEntity
     {
@@ -113,11 +117,11 @@ class ForumResponseEntity
      */
     public function trashLink(): string
     {
-        if ($this->getUser()->getId() === UsersModel::getCurrentUser()?->getId()) {
+        if ($this->getUser()->getId() === UsersSessionsController::getInstance()->getCurrentUser()?->getId()) {
             return "p1/trash/$this->responseId/1";
-        } else {
-            return "p1/trash/$this->responseId/2";
         }
+
+        return "p1/trash/$this->responseId/2";
     }
 
     /**
@@ -129,6 +133,7 @@ class ForumResponseEntity
     }
 
     /**
+     * @param int $feedbackId
      * @return string
      */
     public function getFeedbackAddResponseLink(int $feedbackId): string
@@ -137,6 +142,7 @@ class ForumResponseEntity
     }
 
     /**
+     * @param int $feedbackId
      * @return string
      */
     public function getFeedbackDeleteResponseLink(int $feedbackId): string
@@ -145,6 +151,7 @@ class ForumResponseEntity
     }
 
     /**
+     * @param int $feedbackId
      * @return string
      */
     public function getFeedbackChangeResponseLink(int $feedbackId): string

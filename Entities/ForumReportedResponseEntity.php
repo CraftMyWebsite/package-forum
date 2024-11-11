@@ -2,10 +2,11 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Utils\Date;
 use CMW\Entity\Users\UserEntity;
+use CMW\Manager\Package\AbstractEntity;
+use CMW\Utils\Date;
 
-class ForumReportedResponseEntity
+class ForumReportedResponseEntity extends AbstractEntity
 {
     private int $id;
     private userEntity $user;
@@ -16,9 +17,9 @@ class ForumReportedResponseEntity
     /**
      * @param int $id
      * @param \CMW\Entity\Users\userEntity $user
-     * @param \CMW\Entity\Forum\ForumResponseEntity $response
+     * @param ForumResponseEntity $response
      * @param int $reason
-     * @param string update
+     * @param string $update
      */
     public function __construct(int $id, userEntity $user, ForumResponseEntity $response, int $reason, string $update)
     {
@@ -46,7 +47,7 @@ class ForumReportedResponseEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumResponseEntity
+     * @return ForumResponseEntity
      */
     public function getResponse(): ForumResponseEntity
     {
@@ -59,16 +60,16 @@ class ForumReportedResponseEntity
     public function getReason(): string
     {
         if ($this->reason === 0) {
-            return 'Autre';
+            return 'Autre'; //TODO Translate
         }
         if ($this->reason === 1) {
-            return 'Réponse inapproprié';
+            return 'Réponse inapproprié'; //TODO Translate
         }
         if ($this->reason === 2) {
-            return 'Contenue choquant';
+            return 'Contenue choquant'; //TODO Translate
         }
         if ($this->reason === 3) {
-            return 'Harcèlement, discrimination ...';
+            return 'Harcèlement, discrimination ...'; //TODO Translate
         }
 
         return $this->reason;

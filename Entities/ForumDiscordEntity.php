@@ -2,7 +2,9 @@
 
 namespace CMW\Entity\Forum;
 
-class ForumDiscordEntity
+use CMW\Manager\Package\AbstractEntity;
+
+class ForumDiscordEntity extends AbstractEntity
 {
     private int $DiscordId;
     private string $DiscordWebhook;

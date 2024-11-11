@@ -2,16 +2,15 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Utils\Date;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
-use CMW\Model\Users\RolesModel;
-use CMW\Model\Users\UsersModel;
+use CMW\Utils\Date;
 use CMW\Utils\Website;
 
-class ForumCategoryEntity
+class ForumCategoryEntity extends AbstractEntity
 {
     private int $categoryId;
     private string $categoryName;
@@ -32,7 +31,7 @@ class ForumCategoryEntity
      * @param string $categoryUpdate
      * @param ?string $desc
      * @param int $categoryIsRestricted
-     * @param \CMW\Entity\Forum\ForumPermissionRoleEntity[]|null $restrictedRoles
+     * @param ForumPermissionRoleEntity[]|null $restrictedRoles
      */
     public function __construct(int $id, string $name, string $categorySlug, string $icon, string $categoryCreated, string $categoryUpdate, ?string $desc, int $categoryIsRestricted, ?array $restrictedRoles)
     {
@@ -165,7 +164,7 @@ class ForumCategoryEntity
      */
     public function getNumberOfTopics(): int
     {
-        return (new ForumCategoryModel())->getNumberOfTopics($this->categoryId);
+        return ForumCategoryModel::getInstance()->getNumberOfTopics($this->categoryId);
     }
 
     /**
@@ -174,6 +173,6 @@ class ForumCategoryEntity
      */
     public function getNumberOfMessages(): int
     {
-        return (new ForumCategoryModel())->getNumberOfMessages($this->categoryId);
+        return ForumCategoryModel::getInstance()->getNumberOfMessages($this->categoryId);
     }
 }

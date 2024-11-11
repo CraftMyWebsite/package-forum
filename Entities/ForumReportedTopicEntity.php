@@ -2,10 +2,11 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Utils\Date;
 use CMW\Entity\Users\UserEntity;
+use CMW\Manager\Package\AbstractEntity;
+use CMW\Utils\Date;
 
-class ForumReportedTopicEntity
+class ForumReportedTopicEntity extends AbstractEntity
 {
     private int $id;
     private userEntity $user;
@@ -16,9 +17,9 @@ class ForumReportedTopicEntity
     /**
      * @param int $id
      * @param \CMW\Entity\Users\userEntity $user
-     * @param \CMW\Entity\Forum\ForumTopicEntity $topic
+     * @param ForumTopicEntity $topic
      * @param int $reason
-     * @param string update
+     * @param string $update
      */
     public function __construct(int $id, userEntity $user, ForumTopicEntity $topic, int $reason, string $update)
     {
@@ -46,7 +47,7 @@ class ForumReportedTopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumTopicEntity
+     * @return ForumTopicEntity
      */
     public function getTopic(): ForumTopicEntity
     {
@@ -59,19 +60,19 @@ class ForumReportedTopicEntity
     public function getReason(): string
     {
         if ($this->reason === 0) {
-            return 'Autre';
+            return 'Autre'; //TODO Translate
         }
         if ($this->reason === 1) {
-            return 'Nom du topic inapproprié';
+            return 'Nom du topic inapproprié'; //TODO Translate
         }
         if ($this->reason === 2) {
-            return "Le topic n'est pas au bon endroit";
+            return "Le topic n'est pas au bon endroit"; //TODO Translate
         }
         if ($this->reason === 3) {
-            return 'Contenue choquant';
+            return 'Contenue choquant'; //TODO Translate
         }
         if ($this->reason === 4) {
-            return 'Harcèlement, discrimination ...';
+            return 'Harcèlement, discrimination ...'; //TODO Translate
         }
 
         return $this->reason;

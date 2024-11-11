@@ -2,10 +2,11 @@
 
 namespace CMW\Entity\Forum;
 
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Utils\Date;
 use CMW\Entity\Users\UserEntity;
 
-class ForumUserBlockedEntity
+class ForumUserBlockedEntity extends AbstractEntity
 {
     private int $id;
     private userEntity $user;
@@ -15,7 +16,7 @@ class ForumUserBlockedEntity
 
     /**
      * @param int $id
-     * @param \CMW\Entity\Users\userEntity $topicUser
+     * @param UserEntity $user
      * @param int $isBlocked
      * @param string $reason
      * @param string $update
@@ -38,7 +39,7 @@ class ForumUserBlockedEntity
     }
 
     /**
-     * @return \CMW\Entity\Users\userEntity
+     * @return UserEntity
      */
     public function getUser(): userEntity
     {
@@ -46,7 +47,7 @@ class ForumUserBlockedEntity
     }
 
     /**
-     * @return int
+     * @return bool
      */
     public function isBlocked(): bool
     {
@@ -58,11 +59,7 @@ class ForumUserBlockedEntity
      */
     public function getReason(): string
     {
-        if ($this->reason === NULL) {
-            return "Cet utilisateur n'a jamais été bloqué";
-        } else {
-            return $this->reason;
-        }
+        return $this->reason ?? "Cet utilisateur n'a jamais été bloqué"; //TODO Translate
     }
 
     /**

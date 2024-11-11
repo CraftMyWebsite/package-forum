@@ -2,7 +2,9 @@
 
 namespace CMW\Entity\Forum;
 
-class ForumPermissionRoleEntity
+use CMW\Manager\Package\AbstractEntity;
+
+class ForumPermissionRoleEntity extends AbstractEntity
 {
     private int $forumRoleId;
     private string $forumRoleName;

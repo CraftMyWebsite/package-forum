@@ -2,7 +2,9 @@
 
 namespace CMW\Entity\Forum;
 
-class ForumTopicTagEntity
+use CMW\Manager\Package\AbstractEntity;
+
+class ForumTopicTagEntity extends AbstractEntity
 {
     private int $id;
     private string $content;

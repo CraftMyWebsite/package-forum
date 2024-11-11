@@ -2,9 +2,10 @@
 
 namespace CMW\Entity\Forum;
 
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Utils\Date;
 
-class ForumPrefixesEntity
+class ForumPrefixesEntity extends AbstractEntity
 {
     private int $prefixId;
     private string $prefixName;

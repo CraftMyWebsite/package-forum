@@ -4,8 +4,9 @@ namespace CMW\Entity\Forum;
 
 use CMW\Controller\Core\CoreController;
 use CMW\Entity\Users\UserEntity;
+use CMW\Manager\Package\AbstractEntity;
 
-class ForumFollowedEntity
+class ForumFollowedEntity extends AbstractEntity
 {
     private int $id;
     private userEntity $user;
@@ -14,7 +15,7 @@ class ForumFollowedEntity
     /**
      * @param int $id
      * @param \CMW\Entity\Users\userEntity $user
-     * @param \CMW\Entity\Forum\ForumTopicEntity $topic
+     * @param ForumTopicEntity $topic
      */
     public function __construct(int $id, userEntity $user, ForumTopicEntity $topic)
     {
@@ -40,7 +41,7 @@ class ForumFollowedEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumTopicEntity
+     * @return ForumTopicEntity
      */
     public function getTopic(): ForumTopicEntity
     {
