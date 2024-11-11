@@ -2,6 +2,7 @@
 
 namespace CMW\Entity\Forum;
 
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Utils\Date;
 use CMW\Controller\Users\UsersController;
 use CMW\Manager\Env\EnvManager;
@@ -10,7 +11,7 @@ use CMW\Model\Forum\ForumPermissionRoleModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Utils\Website;
 
-class ForumEntity
+class ForumEntity extends AbstractEntity
 {
     private int $forumId;
     private string $forumName;
@@ -56,6 +57,7 @@ class ForumEntity
     }
 
     /**
+     * @param string|null $param
      * @return string
      */
     public function getFontAwesomeIcon(?string $param = null): string
@@ -105,7 +107,7 @@ class ForumEntity
         }
 
         foreach ($this->restrictedRoles as $restrictedRole) {
-            if (ForumPermissionRoleModel::playerHasForumRole($restrictedRole?->getId())) {
+            if (ForumPermissionRoleModel::playerHasForumRole($restrictedRole->getId())) {
                 return true;
             }
         }
@@ -171,10 +173,10 @@ class ForumEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumResponseEntity|null
+     * @return ForumResponseEntity|null
      */
     public function getLastResponse(): ?ForumResponseEntity
     {
-        return (new ForumResponseModel())->getLatestResponseInForum($this->forumId);
+        return ForumResponseModel::getInstance()->getLatestResponseInForum($this->forumId);
     }
 }

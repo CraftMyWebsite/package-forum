@@ -2,16 +2,18 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Utils\Date;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Entity\Users\userEntity;
 use CMW\Manager\Env\EnvManager;
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Users\UsersModel;
+use CMW\Utils\Date;
 use CMW\Utils\Website;
 
-class ForumTopicEntity
+class ForumTopicEntity extends AbstractEntity
 {
     private int $topicId;
     private string $topicName;
@@ -28,7 +30,7 @@ class ForumTopicEntity
     private userEntity $topicUser;
     private ForumEntity $topicForum;
 
-    /* @var \CMW\Entity\Forum\ForumTopicTagEntity[] $tags */
+    /* @var ForumTopicTagEntity[] $tags */
     private array $tags;
 
     /**
@@ -44,13 +46,13 @@ class ForumTopicEntity
      * @param bool $topicPinned
      * @param bool $disallowReplies
      * @param bool $important
-     * @param \CMW\Entity\Users\userEntity $topicUser
-     * @param \CMW\Entity\Forum\ForumEntity $topicForum
-     * @param \CMW\Entity\Forum\ForumTopicTagEntity[] $tags
+     * @param userEntity $topicUser
+     * @param ForumEntity $topicForum
+     * @param ForumTopicTagEntity[] $tags
      */
-    public function __construct(int $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, int $topicTrashReason, string $topicCreated, string $topicUpdate,
-        bool $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
-        ForumEntity $topicForum, array $tags)
+    public function __construct(int         $topicId, string $topicName, string $topicPrefix, string $topicSlug, string $topicContent, int $topicIsTrash, int $topicTrashReason, string $topicCreated, string $topicUpdate,
+                                bool        $topicPinned, bool $disallowReplies, bool $important, userEntity $topicUser,
+                                ForumEntity $topicForum, array $tags)
     {
         $this->topicId = $topicId;
         $this->topicName = $topicName;
@@ -86,7 +88,7 @@ class ForumTopicEntity
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getPrefixId(): string
     {
@@ -156,8 +158,10 @@ class ForumTopicEntity
     public function getTrashReason(): string
     {
         if ($this->topicTrashReason == 0) {
-            return 'Supprimer par un staff';
+            return 'Supprimer par un staff'; //TODO Translate
         }
+
+        //TODO Return something ???
     }
 
     /**
@@ -209,7 +213,7 @@ class ForumTopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumEntity
+     * @return ForumEntity
      */
     public function getForum(): ForumEntity
     {
@@ -217,7 +221,7 @@ class ForumTopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumCategoryEntity
+     * @return ForumCategoryEntity
      */
     public function getCat(): ForumCategoryEntity
     {
@@ -226,7 +230,7 @@ class ForumTopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Users\userEntity
+     * @return userEntity
      */
     public function getUser(): userEntity
     {
@@ -235,8 +239,6 @@ class ForumTopicEntity
 
     /**
      * @return string
-     * @param $catSlug
-     * @param $forumSlug
      */
     public function getLink(): string
     {
@@ -287,7 +289,7 @@ class ForumTopicEntity
     }
 
     /**
-     * @return \CMW\Entity\Forum\ForumTopicTagEntity[]
+     * @return ForumTopicTagEntity[]
      */
     public function getTags(): array
     {
@@ -313,7 +315,7 @@ class ForumTopicEntity
 
     public function isSelfTopic(): bool
     {
-        return $this->getUser()->getId() === UsersModel::getCurrentUser()?->getId();
+        return $this->getUser()->getId() === UsersSessionsController::getInstance()->getCurrentUser()?->getId();
     }
 
     public function editTopicLink(): string
@@ -332,6 +334,7 @@ class ForumTopicEntity
     }
 
     /**
+     * @param int $feedbackId
      * @return string
      */
     public function getFeedbackAddTopicLink(int $feedbackId): string
@@ -340,6 +343,7 @@ class ForumTopicEntity
     }
 
     /**
+     * @param int $feedbackId
      * @return string
      */
     public function getFeedbackDeleteTopicLink(int $feedbackId): string
@@ -348,6 +352,7 @@ class ForumTopicEntity
     }
 
     /**
+     * @param int $feedbackId
      * @return string
      */
     public function getFeedbackChangeTopicLink(int $feedbackId): string

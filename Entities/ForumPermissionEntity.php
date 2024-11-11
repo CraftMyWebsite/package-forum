@@ -2,9 +2,9 @@
 
 namespace CMW\Entity\Forum;
 
-use CMW\Controller\Core\CoreController;
+use CMW\Manager\Package\AbstractEntity;
 
-class ForumPermissionEntity
+class ForumPermissionEntity extends AbstractEntity
 {
     private int $permissionId;
     private ?int $permissionParentId;

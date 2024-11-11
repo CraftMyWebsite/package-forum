@@ -2,8 +2,8 @@
 
 namespace CMW\Entity\Forum;
 
+use CMW\Manager\Package\AbstractEntity;
 use CMW\Utils\Date;
-use CMW\Model\Forum\ForumSettingsModel;
 
 /**
  * Class: @ForumCategoryModel
@@ -11,7 +11,7 @@ use CMW\Model\Forum\ForumSettingsModel;
  * @author CraftMyWebsite Team <contact@craftmywebsite.fr>
  * @version 1.0
  */
-class ForumSettingsEntity
+class ForumSettingsEntity extends AbstractEntity
 {
     private int $settingsId;
     private string $settingsName;
