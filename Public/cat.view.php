@@ -26,7 +26,7 @@ Website::setDescription('Consulter les catégorie du Forum');
             <a href="<?= $category->getLink() ?>"><?= $category->getName() ?></a>
         </div>
         <form action="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum/search" method="POST">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <input type="text" name="for" placeholder="Rechercher">
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>

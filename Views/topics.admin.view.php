@@ -83,7 +83,7 @@ $description = LangManager::translate('forum.forum.list.description');
                         <button type="button" data-modal-hide="modal-edit-prefix-<?= $topic->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <form id="modal-<?= $topic->getId() ?>" method="post">
-                        <?php (new SecurityManager())->insertHiddenToken() ?>
+                        <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                         <input type="text" name="topicId" hidden value="<?= $topic->getId() ?>">
                         <div class="modal-body">
                             <div class="lg:flex justify-between">

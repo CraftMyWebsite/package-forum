@@ -39,7 +39,7 @@ Website::setDescription('Éditez un topic');
     <section style="border: 1px #b4aaaa solid; border-radius: 9px; margin-top: 10px; padding: .5rem">
         <h4>Edition du topic : <?= $topic->getName() ?></b></h4>
         <form action="" method="post">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <input type="text" name="topicId" hidden value="<?= $topic->getId() ?>">
             <label for="title">Titre du topic* :</label>
             <input name="name" id="title" type="text" style="display: block; width: 100%" placeholder="Titre du topic" <?= $topic->getName() ?> required>

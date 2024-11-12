@@ -42,7 +42,7 @@ Website::setDescription('Consultez les sujets de discussion et répondez aux que
             </a>
         </div>
         <form action="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum/search" method="POST">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <input type="text" name="for" placeholder="Rechercher">
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>

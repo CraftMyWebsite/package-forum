@@ -29,7 +29,7 @@ $description = 'desc';
     <div class="card">
         <h6>Général</h6>
         <form action="settings/general" method="post">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <div class="grid-2">
                 <div>
                     <label for="topicPerPage">Topics par page :</label>
@@ -70,7 +70,7 @@ $description = 'desc';
     </div>
 
     <form action="settings/applyicons" method="post">
-        <?php (new SecurityManager())->insertHiddenToken() ?>
+        <?php SecurityManager::getInstance()->insertHiddenToken() ?>
         <div class="card">
             <h6>Icônes :</h6>
             <div class="grid-2">
@@ -156,7 +156,7 @@ $description = 'desc';
                             </div>
                             <form action="settings/editreaction" method="post"
                                   enctype="multipart/form-data">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                                 <div class="modal-body">
                                     <input name="id" hidden value="<?= $feedback->getId() ?>">
                                     <label for="name">Nom :</label>
@@ -241,7 +241,7 @@ $description = 'desc';
                                 <button type="button" data-modal-hide="modal-edit-prefix-<?= $prefix->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="settings/editprefix" method="post">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                                 <div class="modal-body">
                                     <input name="prefixId" hidden value="<?= $prefix->getId() ?>">
                                     <div class="grid-2">
@@ -314,7 +314,7 @@ $description = 'desc';
             <button type="button" data-modal-hide="modal-add-prefix"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <form action="settings/addprefix" method="post">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <div class="modal-body">
                 <div class="grid-2">
                     <div>
@@ -356,7 +356,7 @@ $description = 'desc';
         </div>
         <form id="sendImage" action="settings/addreaction" method="post"
               enctype="multipart/form-data">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <div class="modal-body">
                 <label for="name">Nom :</label>
                 <input type="text" class="input" id="name" name="name">

@@ -47,7 +47,7 @@ Website::setDescription('Ajouter un sujet');
     <section style="border: 1px #b4aaaa solid; border-radius: 9px; margin-top: 10px; padding: .5rem">
         <h4>Nouveau topic dans : <b><?= $forum->getName() ?></b></h4>
         <form action="" method="post">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <?php if (UsersController::isAdminLogged() || ForumPermissionController::getInstance()->hasPermission('operator')): ?>
                 <!--
                 ADMINISTRATION

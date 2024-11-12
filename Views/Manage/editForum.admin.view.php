@@ -17,7 +17,7 @@ $description = LangManager::translate('forum.forum.list.description');
 <div class="center-flex">
     <div class="flex-content-lg">
         <form class="card space-y-4" method="post">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <div>
                 <label for="name"><?= LangManager::translate('forum.manage.addForum.name') ?><span style="color: red">*</span> :</label>
                 <div class="input-group">

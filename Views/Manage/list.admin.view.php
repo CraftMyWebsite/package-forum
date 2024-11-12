@@ -165,7 +165,7 @@ $description = LangManager::translate('forum.forum.list.description');
                                     class="fa-solid fa-xmark"></i></button>
                         </div>
                         <form method="post" action="manage/edit/<?= $category->getId() ?>">
-                            <?php (new SecurityManager())->insertHiddenToken() ?>
+                            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                             <div class="modal-body">
                                 <label for="name">Nom<span style="color: red">*</span> :</label>
                                 <div class="input-group">
@@ -255,7 +255,7 @@ $description = LangManager::translate('forum.forum.list.description');
             <button type="button" data-modal-hide="modal-add-cat"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <form method="post" action="manage/add">
-            <?php (new SecurityManager())->insertHiddenToken() ?>
+            <?php SecurityManager::getInstance()->insertHiddenToken() ?>
             <div class="modal-body">
                 <label for="name">Nom<span style="color: red">*</span> :</label>
                 <div class="input-group">

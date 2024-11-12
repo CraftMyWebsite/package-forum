@@ -50,7 +50,7 @@ $i = 0;
         <a href=""><?= $topic->getName() ?></a>
     </div>
     <form action="<?= EnvManager::getInstance()->getValue('PATH_SUBFOLDER') ?>forum/search" method="POST">
-        <?php (new SecurityManager())->insertHiddenToken() ?>
+        <?php SecurityManager::getInstance()->insertHiddenToken() ?>
         <input type="text" name="for" placeholder="Rechercher">
         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
     </form>
@@ -318,7 +318,7 @@ $i = 0;
         </div>
         <div style="flex: 0 0 78%;">
             <form action="" method="post">
-                <?php (new SecurityManager())->insertHiddenToken() ?>
+                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                 <input hidden type="text" name="topicId" value="<?= $topic->getId() ?>">
                 <textarea minlength="20" class="w-full tinymce" name="topicResponse"></textarea>
                 <div style="display: flex; justify-content: end">

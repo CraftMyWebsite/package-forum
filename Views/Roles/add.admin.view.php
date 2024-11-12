@@ -15,7 +15,7 @@ $description = 'desc';
 </div>
 
 <form id="add_role" method="post" action="" class="card">
-    <?php (new SecurityManager())->insertHiddenToken() ?>
+    <?php SecurityManager::getInstance()->insertHiddenToken() ?>
     <input type="number" value="1" hidden name="weight" class="form-control"
            placeholder="1"
            required>

@@ -106,7 +106,7 @@ $description = 'desc';
         <div class="card mt-4">
             <h6>Paramètres</h6>
             <form action="roles/settings" method="post">
-                <?php (new SecurityManager())->insertHiddenToken() ?>
+                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                 <div>
                     <label class="toggle">
                         <p class="toggle-label">Accès en
@@ -181,7 +181,7 @@ $description = 'desc';
                                 <button type="button" data-modal-hide="modal-edit-user-role-<?= $user->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="roles/user_role/<?= $user->getId() ?>" method="post">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                             <div class="modal-body">
                                 <label>Nouveau rôle :</label>
                                 <select class="form-select" name="role_id" required>
@@ -208,7 +208,7 @@ $description = 'desc';
                                 <button type="button" data-modal-hide="modal-block-user-<?= $user->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="roles/block/<?= $user->getId() ?>" method="post">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                             <div class="modal-body">
                                 <label>Raison :</label>
                                 <input type="text" class="input" name="reason" value="<?= $userBlocked->getUserBlockedByUserId($user->getId())->getReason() ?>" placeholder=""
@@ -243,7 +243,7 @@ $description = 'desc';
                                 <button type="button" data-modal-hide="modal-unblock-user-<?= $user->getId() ?>"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                             <form action="roles/unblock/<?= $user->getId() ?>" method="post">
-                                <?php (new SecurityManager())->insertHiddenToken() ?>
+                                <?php SecurityManager::getInstance()->insertHiddenToken() ?>
                             <div class="modal-body">
                                 <label>Raison :</label>
                                 <input type="text" class="input" name="reason" value="<?= $userBlocked->getUserBlockedByUserId($user->getId())->getReason() ?>" placeholder=""
