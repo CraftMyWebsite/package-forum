@@ -2,6 +2,7 @@
 
 namespace CMW\Model\Forum;
 
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Entity\Forum\ForumPermissionEntity;
 use CMW\Entity\Forum\ForumPermissionRoleEntity;
 use CMW\Manager\Database\DatabaseManager;
@@ -340,11 +341,11 @@ class ForumPermissionRoleModel extends AbstractModel
      */
     public static function playerHasForumRole(int $roleId): bool
     {
-        if (is_null(UsersModel::getCurrentUser()->getId())) {
+        if (is_null(UsersSessionsController::getInstance()->getCurrentUser()?->getId())) {
             return false;
         }
 
-        $roles = ForumPermissionRoleModel::getInstance()->getRolesByUser(UsersModel::getCurrentUser()->getId());
+        $roles = ForumPermissionRoleModel::getInstance()->getRolesByUser(UsersSessionsController::getInstance()->getCurrentUser()?->getId());
         foreach ($roles as $role) {
             if ($role->getId() === $roleId) {
                 return true;

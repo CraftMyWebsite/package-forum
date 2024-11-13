@@ -4,6 +4,7 @@ namespace CMW\Controller\Forum\Public;
 
 use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Controller\Users\UsersController;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
@@ -16,7 +17,6 @@ use CMW\Model\Forum\ForumReportedModel;
 use CMW\Model\Forum\ForumSettingsModel;
 use CMW\Model\Forum\ForumTopicModel;
 use CMW\Model\Forum\ForumUserBlockedModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use CMW\Utils\Utils;
 use CMW\Utils\Website;
@@ -97,7 +97,7 @@ class PublicForumReportController extends AbstractController
             Redirect::redirect('forum');
         }
 
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
@@ -151,7 +151,7 @@ class PublicForumReportController extends AbstractController
             Redirect::redirect('forum');
         }
 
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)->getReason());

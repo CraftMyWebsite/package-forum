@@ -1,11 +1,11 @@
 <?php
 
 use CMW\Controller\Users\UsersController;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Security\SecurityManager;
 use CMW\Model\Forum\ForumFollowedModel;
 use CMW\Model\Forum\ForumPermissionRoleModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Website;
 
 /* @var \CMW\Entity\Forum\ForumCategoryEntity $category */
@@ -110,7 +110,7 @@ $i = 0;
             <p><?= $topic->getCreated() ?></p>
             <div>
                 <?php if (UsersController::isUserLogged()): ?>
-                    <?php if (ForumFollowedModel::getInstance()->isFollower($topic->getId(), UsersModel::getCurrentUser()?->getId())): ?>
+                    <?php if (ForumFollowedModel::getInstance()->isFollower($topic->getId(), UsersSessionsController::getInstance()->getCurrentUser()?->getId())): ?>
                         <a href="<?= $topic->unfollowTopicLink() ?>"><i
                                 class="fa-solid fa-eye-slash text-blue-500 mr-2"></i></a>
                     <?php else: ?>
@@ -312,7 +312,7 @@ $i = 0;
             <div>
                 <img style="object-fit: fill; max-height: 144px; max-width: 144px" width="144px"
                      height="144px"
-                     src="<?= UsersModel::getCurrentUser()->getUserPicture()->getImage() ?>"/>
+                     src="<?= UsersSessionsController::getInstance()->getCurrentUser()->getUserPicture()->getImage() ?>"/>
             </div>
             <h5><?= $topic->getUser()->getPseudo() ?></h5>
         </div>

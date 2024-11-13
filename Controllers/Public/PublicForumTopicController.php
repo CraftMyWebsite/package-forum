@@ -4,6 +4,7 @@ namespace CMW\Controller\Forum\Public;
 
 use CMW\Controller\Forum\Admin\ForumPermissionController;
 use CMW\Controller\Users\UsersController;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Lang\LangManager;
@@ -89,7 +90,7 @@ class PublicForumTopicController extends AbstractController
             Redirect::redirectPreviousRoute();
         }
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
@@ -140,7 +141,7 @@ class PublicForumTopicController extends AbstractController
             Flash::send(Alert::ERROR, 'Forum', "Ce forum n'autorise pas la création de nouveau topics");
             Redirect::redirectPreviousRoute();
         }
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         $userBlocked = ForumUserBlockedModel::getInstance();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
@@ -199,7 +200,7 @@ class PublicForumTopicController extends AbstractController
         Flash::send(Alert::ERROR, LangManager::translate('core.toaster.success'),
             LangManager::translate('forum.topic.add.success'));
 
-        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), 'test', UsersModel::getCurrentUser()?->getUserPicture()?->getImage(), UsersModel::getCurrentUser()?->getPseudo());
+        ForumDiscordModel::getInstance()->sendDiscordMsgNewTopic($forum->getId(), $name, $forum->getName(), 'test', UsersSessionsController::getInstance()->getCurrentUser()?->getUserPicture()?->getImage(), UsersSessionsController::getInstance()->getCurrentUser()?->getPseudo());
 
         header('location: ' . $forum->getLink());
     }
@@ -298,7 +299,7 @@ class PublicForumTopicController extends AbstractController
             Redirect::redirect('login');
         }
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(
                 Alert::ERROR,
@@ -336,7 +337,7 @@ class PublicForumTopicController extends AbstractController
             Redirect::errorPage(404);
         }
 
-        if (UsersModel::getCurrentUser()?->getId() !== $topic->getUser()->getId()) {
+        if (UsersSessionsController::getInstance()->getCurrentUser()?->getId() !== $topic->getUser()->getId()) {
             Flash::send(Alert::ERROR, 'Erreur', "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect('forum');
         }
@@ -352,7 +353,7 @@ class PublicForumTopicController extends AbstractController
     private function publicTopicEditPost(string $catSlug, string $forumSlug, string $topicSlug, int $page): void
     {
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
@@ -382,7 +383,7 @@ class PublicForumTopicController extends AbstractController
 
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
 
-        if (UsersModel::getCurrentUser()?->getId() !== $topic?->getUser()->getId()) {
+        if (UsersSessionsController::getInstance()->getCurrentUser()?->getId() !== $topic?->getUser()->getId()) {
             Flash::send(Alert::ERROR, 'Erreur', "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect('forum');
         }
@@ -448,7 +449,7 @@ class PublicForumTopicController extends AbstractController
             Redirect::redirect('forum');
         }
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
@@ -493,7 +494,7 @@ class PublicForumTopicController extends AbstractController
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_remove_react_topic');
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
@@ -536,7 +537,7 @@ class PublicForumTopicController extends AbstractController
 
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_change_react_topic');
         $userBlocked = ForumUserBlockedModel::getInstance();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
         if ($userBlocked->getUserBlockedByUserId($userId)?->isBlocked()) {
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();

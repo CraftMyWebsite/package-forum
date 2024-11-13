@@ -3,15 +3,14 @@
 namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
-use CMW\Manager\Lang\LangManager;
 use CMW\Manager\Mail\MailManager;
 use CMW\Manager\Package\AbstractController;
 use CMW\Manager\Router\Link;
 use CMW\Model\Forum\ForumFollowedModel;
 use CMW\Model\Forum\ForumTopicModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 use JetBrains\PhpStorm\NoReturn;
 
@@ -42,7 +41,7 @@ class ForumFollowedController extends AbstractController
         }
 
         $topicId = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug)->getId();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
 
         ForumFollowedModel::getInstance()->addFollower($topicId, $userId);
 
@@ -61,7 +60,7 @@ class ForumFollowedController extends AbstractController
         }
 
         $topicId = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug)->getId();
-        $userId = UsersModel::getCurrentUser()?->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
 
         ForumFollowedModel::getInstance()->removeFollower($topicId, $userId);
 

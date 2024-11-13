@@ -3,11 +3,11 @@
 namespace CMW\Controller\Forum\Admin;
 
 use CMW\Controller\Users\UsersController;
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
 use CMW\Manager\Package\AbstractController;
 use CMW\Model\Forum\ForumPermissionModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 
 /**
@@ -25,7 +25,7 @@ class ForumPermissionController extends AbstractController
      */
     public function hasPermission(string $permCode): bool
     {
-        $userId = UsersModel::getCurrentUser()->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
 
         if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, $permCode)) {
             return false;
@@ -45,7 +45,7 @@ class ForumPermissionController extends AbstractController
             Redirect::redirect('login');
         }
 
-        $userId = UsersModel::getCurrentUser()->getId();
+        $userId = UsersSessionsController::getInstance()->getCurrentUser()?->getId();
 
         if (!ForumPermissionModel::getInstance()->hasForumPermission($userId, $permCode)) {
             Flash::send(Alert::ERROR, 'Forum', "Vous n'avez pas la permission de faire ceci");

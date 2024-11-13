@@ -2,6 +2,7 @@
 
 namespace CMW\Controller\Forum\Public;
 
+use CMW\Controller\Users\UsersSessionsController;
 use CMW\Manager\Env\EnvManager;
 use CMW\Manager\Flash\Alert;
 use CMW\Manager\Flash\Flash;
@@ -12,7 +13,6 @@ use CMW\Model\Forum\ForumCategoryModel;
 use CMW\Model\Forum\ForumModel;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumTopicModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Redirect;
 
 /**
@@ -32,7 +32,7 @@ class PublicForumTrashController extends AbstractController
             Redirect::errorPage(404);
         }
 
-        if (UsersModel::getCurrentUser()?->getId() !== $topic->getUser()->getId()) {
+        if (UsersSessionsController::getInstance()->getCurrentUser()?->getId() !== $topic->getUser()->getId()) {
             Flash::send(Alert::ERROR, 'Erreur', "Vous n'avez pas la permission de faire ceci !");
             Redirect::redirect('forum');
         }

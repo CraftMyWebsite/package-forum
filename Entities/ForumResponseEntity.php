@@ -7,7 +7,6 @@ use CMW\Entity\Users\userEntity;
 use CMW\Manager\Package\AbstractEntity;
 use CMW\Model\Forum\ForumResponseModel;
 use CMW\Model\Forum\ForumSettingsModel;
-use CMW\Model\Users\UsersModel;
 use CMW\Utils\Date;
 
 class ForumResponseEntity extends AbstractEntity
@@ -109,7 +108,7 @@ class ForumResponseEntity extends AbstractEntity
 
     public function isSelfReply(): bool
     {
-        return $this->getUser()->getId() === UsersModel::getCurrentUser()?->getId();
+        return $this->getUser()->getId() === UsersSessionsController::getInstance()->getCurrentUser()?->getId();
     }
 
     /**
