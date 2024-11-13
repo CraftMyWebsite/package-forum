@@ -252,7 +252,7 @@ class PublicForumTopicController extends AbstractController
         $forumModel = forumModel::getInstance();
         $topic = ForumTopicModel::getInstance()->getTopicBySlug($topicSlug);
         $isViewed = ForumTopicModel::getInstance()->checkViews($topic->getId(), Client::getIp());
-        $currentUser = usersModel::getInstance()::getCurrentUser();
+        $currentUser = UsersSessionsController::getInstance()->getCurrentUser();
 
         $iconNotRead = ForumSettingsModel::getInstance()->getOptionValue('IconNotRead');
         $iconNotReadColor = ForumSettingsModel::getInstance()->getOptionValue('IconNotReadColor');
@@ -456,7 +456,7 @@ class PublicForumTopicController extends AbstractController
         }
         ForumPermissionController::getInstance()->redirectIfNotHavePermissions('user_react_topic');
 
-        $user = usersModel::getInstance()::getCurrentUser();
+        $user = UsersSessionsController::getInstance()->getCurrentUser();
         ForumFeedbackModel::getInstance()->addFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
@@ -499,7 +499,7 @@ class PublicForumTopicController extends AbstractController
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
-        $user = usersModel::getInstance()::getCurrentUser();
+        $user = UsersSessionsController::getInstance()->getCurrentUser();
         ForumFeedbackModel::getInstance()->removeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
@@ -542,7 +542,7 @@ class PublicForumTopicController extends AbstractController
             Flash::send(Alert::ERROR, 'Forum', 'Vous ne pouvez plus faire ceci, vous êtes bloqué pour la raison : ' . $userBlocked->getUserBlockedByUserId($userId)?->getReason());
             Redirect::redirectPreviousRoute();
         }
-        $user = usersModel::getInstance()::getCurrentUser();
+        $user = UsersSessionsController::getInstance()->getCurrentUser();
         ForumFeedbackModel::getInstance()->changeFeedbackByFeedbackId($topicId, $feedbackId, $user?->getId());
 
         Redirect::redirectPreviousRoute();
