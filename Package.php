@@ -47,31 +47,37 @@ class Package implements IPackageConfig
                         title: LangManager::translate('forum.menu.cats'),
                         permission: 'forum.categories',
                         url: 'forum/manage',
+                        subMenus: []
                     ),
                     new PackageSubMenuType(
                         title: LangManager::translate('forum.menu.topics'),
                         permission: 'forum.topics',
                         url: 'forum/topics',
+                        subMenus: []
                     ),
                     new PackageSubMenuType(
                         title: LangManager::translate('forum.menu.signal'),
                         permission: 'forum.report',
                         url: 'forum/report',
+                        subMenus: []
                     ),
                     new PackageSubMenuType(
                         title: LangManager::translate('forum.menu.trash'),
                         permission: 'forum.trash',
                         url: 'forum/trash',
+                        subMenus: []
                     ),
                     new PackageSubMenuType(
                         title: LangManager::translate('forum.menu.roles'),
                         permission: 'forum.roles',
                         url: 'forum/roles',
+                        subMenus: []
                     ),
                     new PackageSubMenuType(
                         title: LangManager::translate('forum.menu.settings'),
                         permission: 'forum.settings',
                         url: 'forum/settings',
+                        subMenus: []
                     ),
                 ]
             ),
