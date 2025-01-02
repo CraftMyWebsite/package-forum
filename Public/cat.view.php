@@ -9,13 +9,7 @@ use CMW\Utils\Website;
 Website::setTitle('Forum');
 Website::setDescription('Consulter les catégorie du Forum');
 ?>
-<?php if (\CMW\Controller\Users\UsersController::isAdminLogged()): ?>
-    <div style="background-color: orange; padding: 6px; margin-bottom: 10px">
-        <span>Votre thème ne gère pas cette page !</span>
-        <br>
-        <small>Seuls les administrateurs voient ce message !</small>
-    </div>
-<?php endif;?>
+<section style="width: 70%;padding-bottom: 6rem;margin: 1rem auto auto;">
 
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between">
         <div>
@@ -90,3 +84,4 @@ Website::setDescription('Consulter les catégorie du Forum');
     <?php endforeach; ?>
     </div>
 <?php endif; ?>
+</section>
