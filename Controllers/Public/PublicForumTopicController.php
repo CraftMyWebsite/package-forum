@@ -271,23 +271,40 @@ class PublicForumTopicController extends AbstractController
         $needConnectUrl = ForumSettingsModel::getInstance()->getOptionValue('needConnectUrl');
         $blinkResponse = ForumSettingsModel::getInstance()->getOptionValue('blinkResponse');
 
-        $view = new View('Forum', 'topic');
-        $view->addVariableList(['currentPage' => $currentPage, 'totalPage' => $totalPage, 'responses' => $responses,
-            'forumModel' => $forumModel, 'currentUser' => $currentUser, 'topic' => $topic,
-            'feedbackModel' => $feedbackModel, 'responseModel' => ForumResponseModel::getInstance(),
-            'iconNotRead' => $iconNotRead, 'iconImportant' => $iconImportant, 'iconPin' => $iconPin,
-            'iconClosed' => $iconClosed, 'forum' => $forum, 'category' => $category,
-            'iconNotReadColor' => $iconNotReadColor, 'iconImportantColor' => $iconImportantColor,
-            'iconPinColor' => $iconPinColor, 'iconClosedColor' => $iconClosedColor]);
+        $view = View::createPublicView('Forum', 'topic')
+            ->addVariableList([
+                'currentPage' => $currentPage,
+                'totalPage' => $totalPage,
+                'responses' => $responses,
+                'forumModel' => $forumModel,
+                'currentUser' => $currentUser,
+                'topic' => $topic,
+                'feedbackModel' => $feedbackModel,
+                'responseModel' => ForumResponseModel::getInstance(),
+                'iconNotRead' => $iconNotRead,
+                'iconImportant' => $iconImportant,
+                'iconPin' => $iconPin,
+                'iconClosed' => $iconClosed,
+                'forum' => $forum,
+                'category' => $category,
+                'iconNotReadColor' => $iconNotReadColor,
+                'iconImportantColor' => $iconImportantColor,
+                'iconPinColor' => $iconPinColor,
+                'iconClosedColor' => $iconClosedColor
+            ])
+            ->addScriptBefore(
+                'Admin/Resources/Vendors/Tinymce/tinymce.min.js',
+                'App/Package/Forum/Views/Assets/Js/tinyConfig.js'
+            )
+            ->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
+
         if ($needConnectUrl) {
             $view->addPhpAfter('App/Package/Forum/Views/Assets/Php/needConnect.php');
         }
         if ($blinkResponse) {
             $view->addPhpAfter('App/Package/Forum/Views/Assets/Php/blinkResponse.php');
         }
-        $view->addScriptBefore('Admin/Resources/Vendors/Tinymce/tinymce.min.js',
-            'App/Package/Forum/Views/Assets/Js/tinyConfig.js');
-        $view->addStyle('Admin/Resources/Vendors/Fontawesome-free/Css/fa-all.min.css');
+
         $view->view();
     }
 
